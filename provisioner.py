@@ -101,7 +101,7 @@ async def install_product(tenant: str, product: str, plan: str):
         return await exec_shell(cmd)
 
     # ---- Fission installation ----
-    if product == "fission":
+     if product == "fission":
 
         precheck_res = fission_precheck(tenant)
         ns_flag = False
@@ -112,15 +112,15 @@ async def install_product(tenant: str, product: str, plan: str):
         else:
             # By default, delete anything related to Fission, helm, crd all kubectl resources then for new installation
             print("Installing Fission via Helm")
-            # await exec-shell("helm repo add fission-charts https://fission.github.io/fission-charts/")
-            # await exec-shell("helm repo update")
+            await exec_shell("helm repo add fission-charts https://fission.github.io/fission-charts/")
+            await exec_shell("helm repo update")
             await exec_shell(f"kubectl create namespace fission")
             await exec_shell("kubectl create -k 'github.com/fission/fission/crds/v1?ref=v1.21.0'")
             print("Created necessary crds")
-            await exec_shell(f"helm install fission fission-charts/fission-all --namespace fission")
+            await exec_shell(f"helm install fission fission-charts/fission-all --set persistence.enabled=false --namespace fission")
             print("Installed Fission")
             # Add code for applying yaml
-            yaml_path = "/home/vboxuser/PaaS/template/fission-multins-rbac.yaml"
+            yaml_path = "/home/admusr/Python_codebase/template/fission-multins-rbac.yaml"
             with open(yaml_path, "r") as f:
                 yaml_data = f.read()
             await kubectl_apply(yaml_data)
@@ -129,6 +129,7 @@ async def install_product(tenant: str, product: str, plan: str):
             print("Namespace Created::", tenant)
 
         return await exec_shell("fission check")
+
 
     # ---- Kafka (Strimzi) ----
     if product == "kafka":
