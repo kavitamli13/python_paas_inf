@@ -17,6 +17,7 @@ curl -Lo fission https://github.com/fission/fission/releases/download/v1.21.0/fi
 
 
 fission environment create --name python --image ghcr.io/fission/python-env --namespace tenant1
+fission env create --name python --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3 -n admin-paas
 
 
 def main():
