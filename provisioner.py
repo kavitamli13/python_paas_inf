@@ -117,7 +117,7 @@ async def install_product(tenant: str, product: str, plan: str):
             await exec_shell(f"kubectl create namespace fission")
             await exec_shell("kubectl create -k 'github.com/fission/fission/crds/v1?ref=v1.21.0'")
             print("Created necessary crds")
-            await exec_shell(f"helm install fission fission-charts/fission-all --set persistence.enabled=false --namespace fission")
+            await exec_shell(f"helm install fission fission-charts/fission-all --set persistence.enabled=false --set storagesvc.enabled=false --namespace fission")
             print("Installed Fission")
             # Add code for applying yaml
             yaml_path = "/home/admusr/Python_codebase/template/fission-multins-rbac.yaml"
