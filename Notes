@@ -14,3 +14,13 @@ Run the script:
 
 
 curl -Lo fission https://github.com/fission/fission/releases/download/v1.21.0/fission-v1.21.0-linux-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+
+
+fission environment create --name python --image ghcr.io/fission/python-env --namespace tenant1
+
+fission function create --name hellopy --env python --code hellopy.py --namespace tenant1
+
+fission route create --method GET --url /hellopy --function hellopy --namespace tenant1
+
+
+fission fn test --name=hellopy --namespace admin-paas
