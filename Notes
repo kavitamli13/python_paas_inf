@@ -5,6 +5,11 @@ curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: ap
 }'
 
 
+kubectl create clusterrolebinding fission-executor-admin \
+  --clusterrole=cluster-admin \
+  --serviceaccount=fission:fission-executor
+
+
 Download the script:
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
 Make it executable:
