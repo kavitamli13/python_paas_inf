@@ -31,6 +31,7 @@ def main():
 fission function create --name hellopy --env python --code hellopy.py --namespace tenant1
 
 fission route create --method GET --url /hellopy --function hellopy --namespace tenant1
-
+(Use namespace in the url always to avoid the http trigger error since it allows only one url at the time regardless of the namespace)
+fission route create --method GET --url /default/hellopy --function hellopy
 
 fission fn test --name=hellopy --namespace admin-paas
