@@ -101,14 +101,15 @@ async def install_product(tenant: str, product: str, plan: str):
         return await exec_shell(cmd)
 
     # ---- Fission installation ----
-     if product == "fission":
+    if product == "fission":
 
         precheck_res = fission_precheck(tenant)
         ns_flag = False
         if precheck_res['helm_status'] == 'True' or precheck_res['crd_status'] == 'True':
             print("Fission already exists in the cluster. Proceed for Namespace creation")
-            await create_fission_namespace(tenant)
-            print("Namespace Created::", tenant)
+            if tenant != 'default':
+                await create_fission_namespace(tenant)
+                print("Namespace Created::", tenant)
         else:
             # By default, delete anything related to Fission, helm, crd all kubectl resources then for new installation
             print("Installing Fission via Helm")
@@ -118,6 +119,8 @@ async def install_product(tenant: str, product: str, plan: str):
             await exec_shell("kubectl create -k 'github.com/fission/fission/crds/v1?ref=v1.21.0'")
             print("Created necessary crds")
             await exec_shell(f"helm install fission fission-charts/fission-all --set persistence.enabled=false --set storagesvc.enabled=false --namespace fission")
+            await exec_shell(f"kubectl create clusterrolebinding fission-executor-admin --clusterrole=cluster-admin --serviceaccount=fission:fission-executor")
+            await exec_shell(f"kubectl rollout restart deployment executor -n fission")
             print("Installed Fission")
             # Add code for applying yaml
             yaml_path = "/home/admusr/Python_codebase/template/fission-multins-rbac.yaml"
@@ -125,8 +128,9 @@ async def install_product(tenant: str, product: str, plan: str):
                 yaml_data = f.read()
             await kubectl_apply(yaml_data)
             print("Post YAML apply for multiple namespaces")
-            await create_fission_namespace(tenant)
-            print("Namespace Created::", tenant)
+            if tenant != 'default':
+                await create_fission_namespace(tenant)
+                print("Namespace Created::", tenant)
 
         return await exec_shell("fission check")
 
