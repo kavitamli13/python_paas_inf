@@ -31,6 +31,8 @@ def health():
 @app.post("/api/provision")
 async def provision(req: ProvisionRequest):
     try:
+        if req.tenant is None:
+            req.tenant = 'default'
         result = await provisioner.provision(
             tenant=req.tenant,
             product=req.product,
