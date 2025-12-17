@@ -3,3 +3,11 @@ curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: ap
     "product": "fission",
     "plan": "test"
 }'
+
+
+Download the script:
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+Make it executable:
+chmod 700 get_helm.sh
+Run the script:
+./get_helm.sh 
