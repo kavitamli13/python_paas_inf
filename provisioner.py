@@ -102,16 +102,18 @@ async def install_product(tenant: str, product: str, plan: str):
 
     # ---- Fission installation ----
     if product == "fission":
-        # await exec_shell("kubectl create -k 'github.com/fission/fission/crds/v1?ref=v1.21.0'")
+
         precheck_res = fission_precheck(tenant)
         ns_flag = False
-        if precheck_res['helm_status'] and precheck_res['crd_status']:
+        if precheck_res['helm_status'] == 'True' or precheck_res['crd_status'] == 'True':
             print("Fission already exists in the cluster. Proceed for Namespace creation")
             await create_fission_namespace(tenant)
             print("Namespace Created::", tenant)
         else:
             # By default, delete anything related to Fission, helm, crd all kubectl resources then for new installation
             print("Installing Fission via Helm")
+            # await exec-shell("helm repo add fission-charts https://fission.github.io/fission-charts/")
+            # await exec-shell("helm repo update")
             await exec_shell(f"kubectl create namespace fission")
             await exec_shell("kubectl create -k 'github.com/fission/fission/crds/v1?ref=v1.21.0'")
             print("Created necessary crds")
