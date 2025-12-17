@@ -3,8 +3,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 import provisioner as provisioner
-import datetime
-import Billing_Policy as bp
+# import datetime
+# import Billing_Policy as bp
 
 app = FastAPI()
 
@@ -14,11 +14,11 @@ class ProvisionRequest(BaseModel):
     product: str
     plan: str
 
-class BillingRequest(BaseModel):
-    tenant: str
-    product: list
-    from_date: datetime
-    to_date: datetime
+# class BillingRequest(BaseModel):
+#     tenant: str
+#     product: list
+#     from_date: datetime
+#     to_date: datetime
 
 
 # -------- Health check --------
@@ -41,15 +41,15 @@ async def provision(req: ProvisionRequest):
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/billing")
-def generate_billing(req: BillingRequest):
-    try:
-        result = bp.generate_billing(req.tenant, req.product, req.from_date, req.to_date)
-
-        return result
-    except Exception as e:
-        print(e)
-        raise Exception(str(e))
+# @app.post("/billing")
+# def generate_billing(req: BillingRequest):
+#     try:
+#         result = bp.generate_billing(req.tenant, req.product, req.from_date, req.to_date)
+# 
+#         return result
+#     except Exception as e:
+#         print(e)
+#         raise Exception(str(e))
 
 
 
