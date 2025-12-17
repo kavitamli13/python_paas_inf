@@ -18,6 +18,10 @@ curl -Lo fission https://github.com/fission/fission/releases/download/v1.21.0/fi
 
 fission environment create --name python --image ghcr.io/fission/python-env --namespace tenant1
 
+
+def main():
+    return "Hello Fission"
+
 fission function create --name hellopy --env python --code hellopy.py --namespace tenant1
 
 fission route create --method GET --url /hellopy --function hellopy --namespace tenant1
