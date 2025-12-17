@@ -1,0 +1,111 @@
+# ============================================================
+# 1. EXECUTOR — ClusterRole for multi-namespace resource mgmt
+# ============================================================
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fission-executor-multins
+rules:
+  # Fission Function pods, deployments, services, configmaps, secrets, SA, etc.
+  - apiGroups: [""]
+    resources:
+      - pods
+      - pods/log
+      - services
+      - configmaps
+      - secrets
+      - serviceaccounts
+      - events
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+  - apiGroups: ["apps"]
+    resources:
+      - deployments
+      - replicasets
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+  # Fission CRDs: functions, environments
+  - apiGroups: ["fission.io"]
+    resources:
+      - functions
+      - environments
+    verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fission-executor-multins
+subjects:
+  - kind: ServiceAccount
+    name: fission-executor
+    namespace: fission
+roleRef:
+  kind: ClusterRole
+  name: fission-executor-multins
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# ============================================================
+# 2. ROUTER — Needs read-only access to all namespaces
+# ============================================================
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fission-router-multins
+rules:
+  - apiGroups: ["fission.io"]
+    resources:
+      - functions
+      - httptriggers
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fission-router-multins
+subjects:
+  - kind: ServiceAccount
+    name: fission-router
+    namespace: fission
+roleRef:
+  kind: ClusterRole
+  name: fission-router-multins
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# ============================================================
+# 3. OPTIONAL: BUILDER — Required only if using builder envs
+# ============================================================
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fission-builder-multins
+rules:
+  - apiGroups: ["fission.io"]
+    resources:
+      - functions
+      - environments
+    verbs: ["get", "list", "watch"]
+
+  - apiGroups: [""]
+    resources:
+      - pods
+      - pods/log
+      - configmaps
+      - secrets
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fission-builder-multins
+subjects:
+  - kind: ServiceAccount
+    name: fission-builder
+    namespace: fission
+roleRef:
+  kind: ClusterRole
+  name: fission-builder-multins
+  apiGroup: rbac.authorization.k8s.io
