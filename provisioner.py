@@ -113,13 +113,16 @@ async def install_product(tenant: str, product: str, plan: str):
         else:
             # By default, delete anything related to Fission, helm, crd all kubectl resources then for new installation
             print("Installing Fission via Helm")
+            """
             await exec_shell("helm repo add fission-charts https://fission.github.io/fission-charts/")
             await exec_shell("helm repo update")
             await exec_shell(f"kubectl create namespace fission")
             await exec_shell("kubectl create -k 'github.com/fission/fission/crds/v1?ref=v1.21.0'")
             print("Created necessary crds")
-            await exec_shell(f"helm install fission fission-charts/fission-all --set persistence.enabled=false --set storagesvc.enabled=false --namespace fission")
-            await exec_shell(f"kubectl create clusterrolebinding fission-executor-admin --clusterrole=cluster-admin --serviceaccount=fission:fission-executor")
+            await exec_shell(
+                f"helm install fission fission-charts/fission-all --set persistence.enabled=false --set storagesvc.enabled=false --namespace fission")
+            await exec_shell(
+                f"kubectl create clusterrolebinding fission-executor-admin --clusterrole=cluster-admin --serviceaccount=fission:fission-executor")
             await exec_shell(f"kubectl rollout restart deployment executor -n fission")
             print("Installed Fission")
             # Add code for applying yaml
@@ -131,9 +134,12 @@ async def install_product(tenant: str, product: str, plan: str):
             if tenant != 'default':
                 await create_fission_namespace(tenant)
                 print("Namespace Created::", tenant)
+            """
+            print("Start Prometheus")
+            integrate_prometheus_and_fission()
+            print("End prometheus integration")
 
         return await exec_shell("fission check")
-
 
     # ---- Kafka (Strimzi) ----
     if product == "kafka":
@@ -181,6 +187,95 @@ data:
   product: "{product}"
 """
     return await kubectl_apply(cm)
+
+
+def integrate_prometheus_and_fission():
+
+    label_executor = exec_shell_non_async("kubectl label svc executor -n fission app=fission-executor")
+    print("post label executor")
+    #Collect all yaml data for router, executor, storage, builder
+
+    router_yaml = f"""
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fission-router
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      app: fission-router
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+    """
+
+    executor_yaml = f"""
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fission-executor
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      app: fission-executor
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+"""
+    storage_yaml = f"""
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fission-storage
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      app: fission-storage
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+"""
+    builder_yaml = f"""
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: fission-buildermgr
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      app: buildermgr
+  podMetricsEndpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+"""
+    router_apply = kubectl_apply(router_yaml)
+    executor_apply = kubectl_apply(executor_yaml)
+    storage_apply = kubectl_apply(storage_yaml)
+    builder_apply = kubectl_apply(builder_yaml)
+    print("post Yaml apply ")
+    # "kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorNamespaceSelector && echo 'True' || echo 'False'"
+    # "kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorSelector && echo 'True' || echo 'False'"
+
 
 
 def fission_precheck(tenant: str):
