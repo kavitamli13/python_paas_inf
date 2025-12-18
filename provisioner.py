@@ -275,7 +275,29 @@ spec:
     executor_apply = await kubectl_apply(executor_yaml)
     storage_apply = await kubectl_apply(storage_yaml)
     builder_apply = await kubectl_apply(builder_yaml)
-    print("post Yaml apply ")
+    
+    print("Post Yaml apply")
+    await exec_shell("""kubectl patch svc router -n fission --type='json' -p='[{"op": "add", "path": "/spec/ports/0/name", "value": "http"}]'""")
+    await exec_shell("""kubectl patch svc router -n fission --type='json' -p='[
+      {"op": "add", "path": "/spec/ports/-", "value": {
+        "name": "metrics",
+        "protocol": "TCP",
+        "port": 8080,
+        "targetPort": 8080
+      }}
+    ]'""")
+
+    await exec_shell("""kubectl patch svc executor -n fission --type='json' -p='[{"op": "add", "path": "/spec/ports/0/name", "value": "http"}]'""")
+    await exec_shell("""kubectl patch svc executor -n fission --type='json' -p='[
+      {"op": "add", "path": "/spec/ports/-", "value": {
+        "name": "metrics",
+        "protocol": "TCP",
+        "port": 8080,
+        "targetPort": 8080
+      }}
+    ]'""")
+    
+    print("post Router & Executor patch update")
     # "kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorNamespaceSelector && echo 'True' || echo 'False'"
     # "kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorSelector && echo 'True' || echo 'False'"
 
