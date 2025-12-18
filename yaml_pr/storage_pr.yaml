@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fission-storage
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      app: fission-storage
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
