@@ -70,8 +70,7 @@ fission_function_overhead_seconds_count{code="500",function_name="hellopy",funct
 
 ###############################################################Fission-Prometheus Configuration############################################################################
 
-Verify Fission services have labels
-
+Verify Fission services have labels:: 
 Check router service:
 
 kubectl get svc -n fission router -o yaml
@@ -101,12 +100,30 @@ spec:
 
 
 Do the same for:
-
 executor
-
 buildermgr
-
 storagesvc
+
+Note the application= Name in all the services/ Pods ensure the same name is provided in the yaml files 
+{{{
+  672  kubectl get svc -n fission router -o yaml
+  674  kubectl label svc executor -n fission app=fission-executor
+nano router_pr.yaml
+  675  kubectl get svc -n fission executor -o yaml
+  676  nano executor_pr.yaml
+  678  kubectl get svc -n fission storagesvc -o yaml
+  679  nano storage_pr.yaml
+  680  nano builder_pr.yaml  // this is only for pod, since there is no service for buildermgr
+  681  kubectl get deployments -n fission
+  682  kubectl describe deployment/buildermgr -n fission
+  684  kubectl apply -f router_pr.yaml
+  686  kubectl apply -f executor_pr.yaml
+  687  kubectl apply -f storage_pr.yaml
+  688  kubectl apply -f builder_pr.yaml
+
+}}}
+
+
 
 3️⃣ Allow cross-namespace scraping
 
