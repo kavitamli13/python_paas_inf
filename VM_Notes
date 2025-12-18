@@ -25,3 +25,112 @@ Get your grafana admin user password by running:
 
 
 Visit https://github.com/prometheus-operator/kube-prometheus for instructions on how to create & configure Alertmanager and Prometheus instances using the Operator.
+
+
+
+
+
+##########################################Prometheus Results#####################################################
+kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+# HELP fission_function_calls_total Count of Fission function calls
+# TYPE fission_function_calls_total counter
+fission_function_calls_total{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path=""} 1
+fission_function_calls_total{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="/hellopy"} 2
+fission_function_calls_total{code="200",function_name="hellopy",function_namespace="default",method="GET",path=""} 1
+fission_function_calls_total{code="500",function_name="hellopy",function_namespace="admin-paas",method="GET",path=""} 1
+# HELP fission_function_errors_total Count of Fission function errors
+# TYPE fission_function_errors_total counter
+fission_function_errors_total{code="500",function_name="hellopy",function_namespace="admin-paas",method="GET",path=""} 1
+# HELP fission_function_overhead_seconds The function call delay caused by fission.
+# TYPE fission_function_overhead_seconds summary
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="",quantile="0.5"} NaN
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="",quantile="0.9"} NaN
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="",quantile="0.99"} NaN
+fission_function_overhead_seconds_sum{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path=""} 0.099163039
+fission_function_overhead_seconds_count{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path=""} 1
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="/hellopy",quantile="0.5"} 0.006097636
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="/hellopy",quantile="0.9"} 0.103352356
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="/hellopy",quantile="0.99"} 0.103352356
+fission_function_overhead_seconds_sum{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="/hellopy"} 0.10944999200000001
+fission_function_overhead_seconds_count{code="200",function_name="hellopy",function_namespace="admin-paas",method="GET",path="/hellopy"} 2
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="default",method="GET",path="",quantile="0.5"} NaN
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="default",method="GET",path="",quantile="0.9"} NaN
+fission_function_overhead_seconds{code="200",function_name="hellopy",function_namespace="default",method="GET",path="",quantile="0.99"} NaN
+fission_function_overhead_seconds_sum{code="200",function_name="hellopy",function_namespace="default",method="GET",path=""} 0.109952727
+fission_function_overhead_seconds_count{code="200",function_name="hellopy",function_namespace="default",method="GET",path=""} 1
+fission_function_overhead_seconds{code="500",function_name="hellopy",function_namespace="admin-paas",method="GET",path="",quantile="0.5"} NaN
+fission_function_overhead_seconds{code="500",function_name="hellopy",function_namespace="admin-paas",method="GET",path="",quantile="0.9"} NaN
+fission_function_overhead_seconds{code="500",function_name="hellopy",function_namespace="admin-paas",method="GET",path="",quantile="0.99"} NaN
+fission_function_overhead_seconds_sum{code="500",function_name="hellopy",function_namespace="admin-paas",method="GET",path=""} 60.005622502
+fission_function_overhead_seconds_count{code="500",function_name="hellopy",function_namespace="admin-paas",method="GET",path=""} 1
+
+
+
+
+
+###############################################################Fission-Prometheus Configuration############################################################################
+
+Verify Fission services have labels
+
+Check router service:
+
+kubectl get svc -n fission router -o yaml
+
+
+If labels are missing, patch them (example):
+
+kubectl label svc router -n fission app=fission-router
+
+2️⃣ Create ServiceMonitor for Fission
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fission-router
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      app: fission-router
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+
+
+Do the same for:
+
+executor
+
+buildermgr
+
+storagesvc
+
+3️⃣ Allow cross-namespace scraping
+
+Ensure your Prometheus has:
+kubectl edit prometheus monitoring-kube-prometheus-prometheus -n monitoring
+
+
+serviceMonitorNamespaceSelector: {}
+serviceMonitorSelector: {}
+
+
+
+
+
+Verify metrics manually (sanity check)
+
+From Prometheus pod:
+
+kubectl exec -n monitoring deploy/prometheus -- \
+  wget -qO- http://router.fission.svc.cluster.local:8080/metrics | fission_function
+
+
+You should see metrics like:
+
+fission_function_calls_total
+fission_function_errors_total
+fission_function_overhead_seconds
