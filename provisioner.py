@@ -108,8 +108,11 @@ async def install_product(tenant: str, product: str, plan: str):
         if precheck_res['helm_status'] == 'True' or precheck_res['crd_status'] == 'True':
             print("Fission already exists in the cluster. Proceed for Namespace creation")
             if tenant != 'default':
-                await create_fission_namespace(tenant)
-                print("Namespace Created::", tenant)
+                #await create_fission_namespace(tenant)
+                #print("Namespace Created::", tenant)
+                print("Start Prometheus")
+                integrate_prometheus_and_fission()
+                print("End prometheus integration")
         else:
             # By default, delete anything related to Fission, helm, crd all kubectl resources then for new installation
             print("Installing Fission via Helm")
