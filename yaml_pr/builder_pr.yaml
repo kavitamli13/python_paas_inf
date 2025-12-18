@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: fission-buildermgr
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      app: buildermgr
+  podMetricsEndpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
