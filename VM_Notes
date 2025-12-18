@@ -134,6 +134,10 @@ kubectl edit prometheus monitoring-kube-prometheus-prometheus -n monitoring
 serviceMonitorNamespaceSelector: {}
 serviceMonitorSelector: {}
 
+kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorNamespaceSelector && echo 'True' || echo 'False'
+True
+admusr@abg-demo-1:~$ kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorSelector && echo 'True' || echo 'False'
+True
 
 
 
