@@ -49,7 +49,8 @@ async def kubectl_apply(yaml_str: str):
 
     if proc.returncode != 0:
         raise Exception(stderr.decode())
-
+    print(f"kubectl apply - stdout::{stdout.decode()}")
+    print(f"kubectl apply - stderr::{stderr.decode()}")
     return {"stdout": stdout.decode(), "stderr": stderr.decode()}
 
 
@@ -110,10 +111,12 @@ async def install_product(tenant: str, product: str, plan: str):
             if tenant != 'default':
                 await create_fission_namespace(tenant)
                 print("Namespace Created::", tenant)
+                #print("Start Prometheus")
+                #integrate_prometheus_and_fission()
+                #print("End prometheus integration")
         else:
             # By default, delete anything related to Fission, helm, crd all kubectl resources then for new installation
             print("Installing Fission via Helm")
-            """
             await exec_shell("helm repo add fission-charts https://fission.github.io/fission-charts/")
             await exec_shell("helm repo update")
             await exec_shell(f"kubectl create namespace fission")
@@ -134,12 +137,12 @@ async def install_product(tenant: str, product: str, plan: str):
             if tenant != 'default':
                 await create_fission_namespace(tenant)
                 print("Namespace Created::", tenant)
-            """
             print("Start Prometheus")
-            integrate_prometheus_and_fission()
+            await integrate_prometheus_and_fission()
             print("End prometheus integration")
 
         return await exec_shell("fission check")
+
 
     # ---- Kafka (Strimzi) ----
     if product == "kafka":
@@ -189,7 +192,7 @@ data:
     return await kubectl_apply(cm)
 
 
-def integrate_prometheus_and_fission():
+async def integrate_prometheus_and_fission():
 
     label_executor = exec_shell_non_async("kubectl label svc executor -n fission app=fission-executor")
     print("post label executor")
