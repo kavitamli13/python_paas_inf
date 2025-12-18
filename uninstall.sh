@@ -1,9 +1,9 @@
 helm repo list
-  712  helm repo remove fission-charts
-  713  helm uninstall fission -n fission
-  715  kubectl delete ns fission admin-paas
-  717  kubectl delete crds canaryconfigs.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io environments.fission.io
-  722  kubectl delete clusterrolebinding fission-builder-multins fission-executor-admin fission-executor-multins  fission-router-multins
+helm repo remove fission-charts
+helm uninstall fission -n fission
+kubectl delete ns fission admin-paas
+kubectl delete crds canaryconfigs.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io environments.fission.io
+kubectl delete clusterrolebinding fission-builder-multins fission-executor-admin fission-executor-multins  fission-router-multins
 kubectl delete servicemonitor fission-executor -n monitoring
 kubectl delete servicemonitor fission-router -n monitoring
 kubectl delete servicemonitor fission-storage -n monitoring
