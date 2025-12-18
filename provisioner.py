@@ -271,10 +271,10 @@ spec:
       path: /metrics
       interval: 30s
 """
-    router_apply = kubectl_apply(router_yaml)
-    executor_apply = kubectl_apply(executor_yaml)
-    storage_apply = kubectl_apply(storage_yaml)
-    builder_apply = kubectl_apply(builder_yaml)
+    router_apply = await kubectl_apply(router_yaml)
+    executor_apply = await kubectl_apply(executor_yaml)
+    storage_apply = await kubectl_apply(storage_yaml)
+    builder_apply = await kubectl_apply(builder_yaml)
     print("post Yaml apply ")
     # "kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorNamespaceSelector && echo 'True' || echo 'False'"
     # "kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorSelector && echo 'True' || echo 'False'"
