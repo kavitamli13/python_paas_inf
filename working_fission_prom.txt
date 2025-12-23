@@ -1,0 +1,1160 @@
+ 1195  kubectl logs pod/my-cluster-controllers-5 -n kafka
+ 1196  kubectl describe pod my-cluster-controllers-5 -n kafka
+ 1197  kubectl apply -f kafka-nodepool-v3.yaml 
+ 1198  kubectl apply -f kafka-cluster-v2.yaml 
+ 1199  kubectl get pods -n kafka
+ 1200  clear
+ 1201  kubectl delete kafka my-cluster -n kafka --ignore-not-found
+ 1202  kubectl delete kafkanodepool --all -n kafka --ignore-not-found
+ 1203  kubectl delete kafkatopic --all -n kafka --ignore-not-found
+ 1204  kubectl delete kafkauser --all -n kafka --ignore-not-found
+ 1205  kubectl delete pvc --all -n kafka --ignore-not-found
+ 1206  kubectl delete pod --all -n kafka --ignore-not-found
+ 1207  kubectl delete -f https://strimzi.io/install/latest?namespace=kafka -n kafka
+ 1208  kubectl get pods -n kafka
+ 1209  clear
+ 1210  kubectl delete namespace kafka
+ 1211  kubectl get clusterroles | grep kafka
+ 1212  clear
+ 1213  kubectl create namespace kafka
+ 1214  kubectl apply -f https://strimzi.io/install/latest?namespace=kafka -n kafka
+ 1215  kubectl get pods -n kafka
+ 1216  nano kafka-nodepool-eph-v2.yaml
+ 1217  kubectl apply -f kafka-nodepool-eph-v2.yaml
+ 1218  nano kafka-cluster-v2.yaml
+ 1219  nano kafka-cluster-v3.yaml
+ 1220  kubectl get pods -n kafka -w
+ 1221  kubectl get pods -n kafka
+ 1222  kubectl get pods
+ 1223  kubectl apply -f kafka-cluster-v3.yaml
+ 1224  kubectl apply -f kafka-nodepool-eph-v2.yaml
+ 1225  kubectl get pods -n kafka
+ 1226  kubectl describe pod/my-cluster-brokers-2  -n kafka
+ 1227  kubectl get pods -n kafka
+ 1228  history > kafka_install_history_22_12_25.txt
+ 1229  kubectl get kafka -n kafka
+ 1230  kubectl get kafkanodepool -n kafka
+ 1231  kubectl get pods -n kafka
+ 1232  kubectl run kafka-client -n kafka --restart=Never   --image=quay.io/strimzi/kafka:latest-kafka-4.1.1   --command -- sleep infinity
+ 1233  kubectl get pods kafka-client -n kafka
+ 1234  kubectl exec -it kafka-client -n kafka -- bash
+ 1235  clear
+ 1236  kubectl delete pod kafka-client -n kafka
+ 1237  bin/kafka-topics.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --delete --topic test-topic
+ 1238  kubectl get pods -n kafka
+ 1239  kubectl create namespace tenant-a
+ 1240  kubectl create namespace tenant-b
+ 1241  nano tenant-a-user.yaml
+ 1242  nano tenant-a-v1.yaml
+ 1243  kubectl apply -f tenant-a-v1.yaml 
+ 1244  nano tenant-b-v2.yaml
+ 1245  nano tenant-b-v1.yaml
+ 1246  kubectl apply -f tenant-b-v1.yaml 
+ 1247  kubectl get secrets -n kafka
+ 1248  nano tenant-a-topic-v1.yaml
+ 1249  nano tenant-b-topic-v1.yaml
+ 1250  kubectl apply -f tenant-a-topic-v1.yaml 
+ 1251  kubectl apply -f tenant-b-topic-v1.yaml 
+ 1252  nano tenant-a-acl-v1.yaml
+ 1253  nano tenant-b-acl-v1.yaml
+ 1254  kubectl apply -f tenant-a-acl-v1.yaml 
+ 1255  kubectl apply -f tenant-b-acl-v1.yaml 
+ 1256  nano kafka-cluster-v3.yaml 
+ 1257  kubectl apply -f kafka-cluster-v3.yaml 
+ 1258  kubectl run kafka-client -n kafka --restart=Never   --image=quay.io/strimzi/kafka:latest-kafka-4.1.1   --command -- sleep infinity
+ 1259  kubectl exec -it kafka-client -n kafka -- bash
+ 1260  clear
+ 1261  nano kafka-cluster-v3.yaml 
+ 1262  nano kafka-cluster-v4.yaml
+ 1263  kubectl apply -f kafka-cluster-v4.yaml 
+ 1264  kubectl get pods -n kafka
+ 1265  kubectl get pods -n kafka -w
+ 1266  kubectl get pods -n kafka
+ 1267  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1268  clear
+ 1269  kubectl exec -it kafka-client -n kafka -- bash
+ 1270  clear
+ 1271  cat <<EOF | kubectl apply -f -
+ 1272  apiVersion: kafka.strimzi.io/v1beta2
+ 1273  kind: KafkaTopic
+ 1274  metadata:
+ 1275    name: tenant-a-orders
+ 1276    namespace: kafka
+ 1277    labels:
+ 1278      strimzi.io/cluster: my-cluster
+ 1279  spec:
+ 1280    topicName: tenant-a.orders
+ 1281    partitions: 3
+ 1282    replicas: 3
+ 1283  EOF
+ 1284  kubectl get kafkatopic -n kafka
+ 1285  kubectl exec -it kafka-client -n kafka -- bash
+ 1286  clear
+ 1287  kubectl get kafkatopic -n kafka
+ 1288  kubectl delete kafkatopic tenant-a.orders tenant-b.orders tenant-a-orders -n kafka
+ 1289  kubectl get ns
+ 1290  kubectl get pods
+ 1291  kubectl get pods -n kafka
+ 1292  cat <<EOF | kubectl apply -f -
+ 1293  apiVersion: kafka.strimzi.io/v1beta2
+ 1294  kind: KafkaTopic
+ 1295  metadata:
+ 1296    name: tenant-a-orders
+ 1297    namespace: kafka
+ 1298    labels:
+ 1299      strimzi.io/cluster: my-cluster
+ 1300  spec:
+ 1301    topicName: tenant-a.orders
+ 1302    partitions: 3
+ 1303    replicas: 3
+ 1304  EOF
+ 1305  kubectl get kafkatopic -n kafka
+ 1306  cat <<EOF | kubectl apply -f -
+ 1307  apiVersion: kafka.strimzi.io/v1beta2
+ 1308  kind: KafkaUser
+ 1309  metadata:
+ 1310    name: tenant-a-user
+ 1311    namespace: kafka
+ 1312    labels:
+ 1313      strimzi.io/cluster: my-cluster
+ 1314  spec:
+ 1315    authentication:
+ 1316      type: scram-sha-512
+ 1317    authorization:
+ 1318      type: simple
+ 1319      acls:
+ 1320        - resource:
+ 1321            type: topic
+ 1322            name: tenant-a.
+ 1323            patternType: prefix
+ 1324          operations:
+ 1325            - Read
+ 1326            - Write
+ 1327            - Describe
+ 1328        - resource:
+ 1329            type: group
+ 1330            name: tenant-a-
+ 1331            patternType: prefix
+ 1332          operations:
+ 1333            - Read
+ 1334  EOF
+ 1335  kubectl get kafkauser -n kafka
+ 1336  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.username}' | base64 -d
+ 1337  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1338  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.username}' | base64 -d
+ 1339  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1340  kubectl exec -it kafka-client -n kafka -- bash
+ 1341  clear
+ 1342  cat <<EOF | kubectl apply -f -
+ 1343  apiVersion: kafka.strimzi.io/v1beta2
+ 1344  kind: KafkaUser
+ 1345  metadata:
+ 1346    name: tenant-b-user
+ 1347    namespace: kafka
+ 1348    labels:
+ 1349      strimzi.io/cluster: my-cluster
+ 1350  spec:
+ 1351    authentication:
+ 1352      type: scram-sha-512
+ 1353    authorization:
+ 1354      type: simple
+ 1355      acls:
+ 1356        - resource:
+ 1357            type: topic
+ 1358            name: tenant-b.
+ 1359            patternType: prefix
+ 1360          operations:
+ 1361            - Read
+ 1362            - Write
+ 1363            - Describe
+ 1364        - resource:
+ 1365            type: group
+ 1366            name: tenant-b-
+ 1367            patternType: prefix
+ 1368          operations:
+ 1369            - Read
+ 1370  EOF
+ 1371  cat <<EOF | kubectl apply -f -
+ 1372  apiVersion: kafka.strimzi.io/v1beta2
+ 1373  kind: KafkaTopic
+ 1374  metadata:
+ 1375    name: tenant-b-orders
+ 1376    namespace: kafka
+ 1377    labels:
+ 1378      strimzi.io/cluster: my-cluster
+ 1379  spec:
+ 1380    topicName: tenant-b.orders
+ 1381    partitions: 3
+ 1382    replicas: 3
+ 1383  EOF
+ 1384  clear
+ 1385  kubectl exec -it kafka-client -n kafka -- bash
+ 1386  nano kafka-cluster-v4.yaml
+ 1387  kubectl apply -f kafka-cluster-v4.yaml
+ 1388  kubectl get pods -n kafka
+ 1389  kubectl get nodes -o wide
+ 1390  kubectl get secret tenant-a-user -n kafka
+ 1391  kubectl get secret tenant-a-user -n kafka -o wide
+ 1392  USERNAME=$(kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.username}' | base64 -d)
+ 1393  echo $USERNAME
+ 1394  USERNAME=tenant-a-user
+ 1395  PASSWORD=$(kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d)
+ 1396  echo $PASSWORD
+ 1397  cat <<EOF > tenant-a-producer.properties
+ 1398  security.protocol=SASL_PLAINTEXT
+ 1399  sasl.mechanism=SCRAM-SHA-512
+ 1400  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="$USERNAME" password="$PASSWORD";
+ 1401  EOF
+ 1402  bin/kafka-console-producer.sh   --bootstrap-server 192.168.1.100:31090   --topic tenant-a.orders   --producer.config tenant-a-producer.properties
+ 1403  LS
+ 1404  ls
+ 1405  cd kafka_2.13-4.1.1
+ 1406  ls
+ 1407  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.196:31090   --topic tenant-a.orders   --producer.config tenant-a-producer.properties
+ 1408  ls /home/admusr/
+ 1409  mv  /home/admusr/tenant-a-producer.properties 
+ 1410  mv  /home/admusr/tenant-a-producer.properties tenant-a-producer.properties
+ 1411  ls
+ 1412  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.196:31090   --topic tenant-a.orders   --producer.config tenant-a-producer.properties
+ 1413  kubectl get pods -n kafka
+ 1414  cd ..
+ 1415  nano kafka-cluster-v4.yaml
+ 1416  kubectl apply -f kafka-cluster-v4.yaml 
+ 1417  kubectl get svc my-cluster-kafka-external -n kafka
+ 1418  kubectl get svc  -n kafka
+ 1419  nano kafka-cluster-v4.yaml
+ 1420  kubectl apply -f kafka-cluster-v4.yaml 
+ 1421  cd kafka_2.13-4.1.1/
+ 1422  cat <<EOF > tenant-a-producer.properties
+ 1423  security.protocol=SASL_PLAINTEXT
+ 1424  sasl.mechanism=SCRAM-SHA-512
+ 1425  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="$USERNAME" password="$PASSWORD";
+ 1426  EOF
+ 1427  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31090   --topic tenant-a.orders   --producer.config tenant-a-producer.properties
+ 1428  nano /home/admusr/kafka-cluster-v4.yaml
+ 1429  kubectl apply -f /home/admusr/kafka-cluster-v4.yaml 
+ 1430  kubectl get svc -n kafka
+ 1431  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:9094   --topic tenant-a.orders   --producer.config tenant-a-producer.properties
+ 1432  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:9031356 --topic tenant-a.orders   --producer.config tenant-a-producer.properties
+ 1433  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356 --topic tenant-a.orders   --producer.config tenant-a-producer.properties
+ 1434  exit
+ 1435  cat <<EOF > /tmp/tenant-a-consumer.properties
+ 1436  security.protocol=SASL_PLAINTEXT
+ 1437  sasl.mechanism=SCRAM-SHA-512
+ 1438  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="tenant-a-user" password=$PASSWORD;
+ 1439  group.id=tenant-a-group
+ 1440  EOF
+ 1441  bin/kafka-console-consumer.sh   --bootstrap-server 10.10.252.244:31305   --topic tenant-a.orders   --from-beginning   --consumer.config /tmp/tenant-a-consumer.properties
+ 1442  cd kafka_2.13-4.1.1/
+ 1443  bin/kafka-console-consumer.sh   --bootstrap-server 10.10.252.244:31305   --topic tenant-a.orders   --from-beginning   --consumer.config /tmp/tenant-a-consumer.properties
+ 1444  echo $PASSWORD
+ 1445  PASSWORD=$(kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d)
+ 1446  bin/kafka-console-consumer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a.orders   --from-beginning   --consumer.config /tmp/tenant-a-consumer.properties
+ 1447  echo $PASSWORD
+ 1448  clear
+ 1449  cat <<EOF > tenant-a-consumer.properties
+ 1450  security.protocol=SASL_PLAINTEXT
+ 1451  sasl.mechanism=SCRAM-SHA-512
+ 1452  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="tenant-a-user" password="$PASSWORD";
+ 1453  group.id=tenant-a-group
+ 1454  EOF
+ 1455  bin/kafka-console-consumer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a.orders   --from-beginning   --consumer.config /tmp/tenant-a-consumer.properties
+ 1456  ls
+ 1457  vi tenant-a-consumer.properties 
+ 1458  vi tenant-a-producer.properties 
+ 1459  vi tenant-a-consumer.properties 
+ 1460  bin/kafka-console-consumer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a.orders   --from-beginning   --consumer.config /tmp/tenant-a-consumer.properties
+ 1461  clear
+ 1462  security.protocol=SASL_PLAINTEXT
+ 1463  sasl.mechanism=SCRAM-SHA-512
+ 1464  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="tenant-a-user" password="XcDr73RInjtIjBVuOKimKrpv8tgL23BC";
+ 1465  group.id=tenant-a-group
+ 1466  clear
+ 1467  nano tenant-a-consumer.properties 
+ 1468  bin/kafka-console-consumer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a.orders   --from-beginning   --consumer.config /tmp/tenant-a-consumer.properties
+ 1469  bin/kafka-console-consumer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a.orders   --from-beginning   --consumer.config tenant-a-consumer.properties
+ 1470  exit
+ 1471  clear
+ 1472  kubectl get namespace
+ 1473  kubectl get kafkatopic -n kafka
+ 1474  nano kafka_2.13-4.1.1/tenant-a-producer.properties 
+ 1475  cd kafka_2.13-4.1.1/
+ 1476  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356 --topic tenant-a.orders
+ 1477  clear
+ 1478  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356 --topic tenant-a.orders
+ 1479  nano tenant-a-producer.properties 
+ 1480  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356 --topic tenant-a.orders --producer.config tenant-a-producer.properties 
+ 1481  nano tenant-a-producer.properties 
+ 1482  nano tenant-a-prod.properties
+ 1483  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356 --topic tenant-a.orders --producer.config tenant-a-prod.properties 
+ 1484  clear
+ 1485  history | grep secret
+ 1486  kubectl get secret tenant-b-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1487  cat <<EOF | kubectl apply -f -
+ 1488  apiVersion: v1
+ 1489  kind: ConfigMap
+ 1490  metadata:
+ 1491    name: kafka-ui-config
+ 1492    namespace: kafka
+ 1493  data:
+ 1494    application.yml: |
+ 1495      kafka:
+ 1496        clusters:
+ 1497          - name: tenant-a
+ 1498            bootstrapServers: "my-cluster-kafka-external-bootstrap.kafka.svc:31090"
+ 1499            properties:
+ 1500              security.protocol: SASL_PLAINTEXT
+ 1501              sasl.mechanism: SCRAM-SHA-512
+ 1502              sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="tenant-a-user" password="XcDr73RInjtIjBVuOKimKrpv8tgL23BC";
+ 1503          - name: tenant-b
+ 1504            bootstrapServers: "my-cluster-kafka-external-bootstrap.kafka.svc:31090"
+ 1505            properties:
+ 1506              security.protocol: SASL_PLAINTEXT
+ 1507              sasl.mechanism: SCRAM-SHA-512
+ 1508              sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="tenant-b-user" password="lVyx1iUkdRhyMo3JxSnEH5wd6eHrc8pdadmusr";
+ 1509  EOF
+ 1510  kubectl apply -f - <<EOF
+ 1511  apiVersion: apps/v1
+ 1512  kind: Deployment
+ 1513  metadata:
+ 1514    name: kafka-ui
+ 1515    namespace: kafka
+ 1516  spec:
+ 1517    replicas: 1
+ 1518    selector:
+ 1519      matchLabels:
+ 1520        app: kafka-ui
+ 1521    template:
+ 1522      metadata:
+ 1523        labels:
+ 1524          app: kafka-ui
+ 1525      spec:
+ 1526        containers:
+ 1527          - name: kafka-ui
+ 1528            image: ghcr.io/kafbat/kafka-ui:latest
+ 1529            ports:
+ 1530              - containerPort: 8080
+ 1531            volumeMounts:
+ 1532              - name: config
+ 1533                mountPath: /app/config
+ 1534                readOnly: true
+ 1535        volumes:
+ 1536          - name: config
+ 1537            configMap:
+ 1538              name: kafka-ui-config
+ 1539  EOF
+ 1540  kubectl expose deployment kafka-ui --type=NodePort --name=kafka-ui --port=8080 -n kafka
+ 1541  kubectl get svc kafka-ui -n kafka
+ 1542  kubectl port-forward svc/kafka-ui 8080:8080 -n kafka
+ 1543  clear
+ 1544  curl localhost:8080
+ 1545  exit
+ 1546  ls
+ 1547  kubectl edit configmap kafka-ui-config -n kafka
+ 1548  kubectl rollout restart deployment kafka-ui -n kafka
+ 1549  kubectl get pods -n kafka -w
+ 1550  kubectl get pods -n kafka
+ 1551  clear
+ 1552  kubectl get pods -n kafka | grep kafka-ui
+ 1553  kubectl exec -it kafka-ui-6ffbfbc8b5-99gw4 -n kafka -- sh
+ 1554  kubectl get svc -n kafka
+ 1555  kubectl edit configmap kafka-ui-config -n kafka
+ 1556  kubectl rollout restart deployment kafka-ui -n kafka
+ 1557  kubectl get pods -n kafka | grep kafka-ui
+ 1558  kubectl logs deploy/kafka-ui -n kafka | tail -30
+ 1559  kubectl logs deploy/kafka-ui -n kafka | tail -50
+ 1560  kubectl edit deployment kafka-ui -n kafka
+ 1561  kubectl rollout restart deployment kafka-ui -n kafka
+ 1562  kubectl get pods -n kafka | grep kafka-ui
+ 1563  kubectl logs deploy/kafka-ui -n kafka | grep -i kafka
+ 1564  kubectl get kafka my-cluster -n kafka -o yaml | grep -A5 listeners
+ 1565  kubectl get kafka my-cluster -n kafka -o yaml
+ 1566  kubectl get svc -n kafka
+ 1567  kubectl get secret tenant-a -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1568  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1569  kubectl edit deployment kafka-ui -n kafka
+ 1570  kubectl rollout restart deployment kafka-ui -n kafka
+ 1571  kubectl get pods -n kafka | grep kafka-ui
+ 1572  kubectl logs deploy/kafka-ui -n kafka | grep -i "Initializing Kafka cluster"
+ 1573  kubectl logs deploy/kafka-ui -n kafka
+ 1574  kubectl exec -it my-cluster-brokers-0 -n kafka -- bash
+ 1575  clear
+ 1576  ls
+ 1577  nano tenant-a-v1.yaml 
+ 1578  nano tenant-a-user.yaml 
+ 1579  nano tenant-a-v1.yaml 
+ 1580  nano tenant-a-v2.yaml
+ 1581  kubectl apply -f tenant-a-v2.yaml
+ 1582  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1583  kubectl rollout restart deploy kafka-ui -n kafka
+ 1584  kubectl get pods -n kafka | grep kafka-ui
+ 1585  kubectl logs deploy/kafka-ui -n kafka
+ 1586  nano tenant-a-v2.yaml
+ 1587  nano tenant-a-v3.yaml
+ 1588  kubectl apply -f tenant-a-v3.yaml
+ 1589  kubcetl get kafkausers -n kafka
+ 1590  kubectl get kafkausers -n kafka
+ 1591  kubectl rollout restart deploy kafka-ui -n kafka
+ 1592  kubectl get pods -n kafka
+ 1593  kubectl logs deploy/kafka-ui -n kafka
+ 1594  nano tenant-a-v3.yaml
+ 1595  kubectl apply -f tenant-a-v3.yaml
+ 1596  kubectl rollout restart deploy kafka-ui -n kafka
+ 1597  clear
+ 1598  kubectl logs deploy/kafka-ui -n kafka
+ 1599  nano tenant-a-v3.yaml
+ 1600  kubectl apply -f tenant-a-v3.yaml
+ 1601  kubectl rollout restart deploy kafka-ui -n kafka
+ 1602  kubectl get pods -n kafka
+ 1603  kubectl logs deploy/kafka-ui -n kafka
+ 1604  clear
+ 1605  nano tenant-a-v3.yaml
+ 1606  kubectl apply -f tenant-a-v3.yaml
+ 1607  kubectl rollout restart deploy/kafka-ui -n kafka
+ 1608  kubectl get pods -n kafka | grep kafka-ui
+ 1609  kubectl logs deploy/kafka-ui -n kafka
+ 1610  clear
+ 1611  kubectl get kafkatopics -n kafka
+ 1612  bin/kafka-consumer-groups.sh   --bootstrap-server localhost:9092   --command-config /tmp/tenant-a.properties   --list
+ 1613  cd kafka_2.13-4.1.1/
+ 1614  bin/kafka-consumer-groups.sh   --bootstrap-server localhost:9092   --command-config /tmp/tenant-a.properties   --list
+ 1615  ls
+ 1616  cp tenant-a-consumer.properties tenant-a-kafka-ui.properties
+ 1617  nano tenant-a-kafka-ui.properties 
+ 1618  bin/kafka-consumer-groups.sh   --bootstrap-server localhost:9092   --command-config tenant-a-kafka-ui.properties   --list
+ 1619  history | grep bootstrap
+ 1620  bin/kafka-acls.sh   --bootstrap-server localhost:9092   --command-config admin.properties   --add   --allow-principal User:tenant-a   --operation Read   --topic __consumer_offsets
+ 1621  kubectl get kafkausers -n kafka
+ 1622  cd ..
+ 1623  ls
+ 1624  nano tenant-a-v3.yaml
+ 1625  nano tenant-a-topic-v1.yaml
+ 1626  cd kafka_2.13-4.1.1/
+ 1627  la
+ 1628  cd ..
+ 1629  mkdir kafka_files
+ 1630  mv kafka-cluster* kafka_files/
+ 1631  ls
+ 1632  mv kafka-* kafka_files/
+ 1633  ls
+ 1634  mv tenant-* kafka_files/
+ 1635  ls
+ 1636  clear
+ 1637  ls
+ 1638  kubectl get configmap
+ 1639  kubectl get configmap -n kafka
+ 1640  kubectl edit configmap kafka-ui-config -n kafka
+ 1641  clear
+ 1642  kubectl get pods -n kafka
+ 1643  kubectl exec -it kafka-ui-597ddcf446-mj7zc -n kafka -- sh
+ 1644  clear
+ 1645  kubectl logs deploy/kafka-ui -n kafka
+ 1646  clear
+ 1647  kubectl logs deploy/kafka-ui -n kafka
+ 1648  clear
+ 1649  nano kafka_files/tenant-a-v3.yaml
+ 1650  kubectl apply -f kafka_files/tenant-a-v3.yaml 
+ 1651  nano kafka_files/tenant-a-v3.yaml
+ 1652  kubectl apply -f kafka_files/tenant-a-v3.yaml 
+ 1653  kubectl rollout restart deployment kafka-ui -n kafka
+ 1654  kubectl get pods -n kafka
+ 1655  kubectl logs deploy/kafka-ui -n kafka
+ 1656  kubectl get kafkatopics -n kafka
+ 1657  kubectl get kafkatopics
+ 1658  kubectl logs deploy/kafka-ui -n kafka
+ 1659  nano kafka_files/tenant-a-v3.yaml
+ 1660  nano kafka_files/tenant-a-v4.yaml
+ 1661  kubectl apply -f kafka_files/tenant-a-v4.yaml
+ 1662  kubectl rollout restart deployment kafka-ui -n kafka
+ 1663  kubectl get pods -n kafka
+ 1664  kubectl logs deploy/kafka-ui -n kafka
+ 1665  nano kafka_files/tenant-a-v4.yaml
+ 1666  kubectl port-forward svc/kafka-ui 8080:8080 -n kafka
+ 1667  clear
+ 1668  kubectl port-forward svc/kafka-ui 8080:8080 -n kafka
+ 1669  clear
+ 1670  kubectl port-forward svc/kafka-ui 8080:8080 -n kafka
+ 1671  ls
+ 1672  cd Python_codebase/
+ 1673  ls
+ 1674  mv provisioner.py provisioner_bkp.py
+ 1675  nano provisioner.py
+ 1676  nano provisioner_bkp.py
+ 1677  curl http://127.0.0.1:9080/apisix/admin/routes | jq .
+ 1678  curl http://127.0.0.1:9080/apisix/admin/routes -H 'Authorization: edd1c9f034335f136f87ad84b625c8f1' | jq .
+ 1679  kubectl get apisixroutes -A
+ 1680  clear
+ 1681  kubectl get pods -n apisix-ic
+ 1682  kubectl logs -n apisix-ic apisix-ic-apisix-ingress-controller-6859cd6c8d-wx6p9
+ 1683  clear
+ 1684  kubectl exec -n apisix-ic <apisix-ic-pod-name> -- curl -v http://apisix:9180/apisix/admin/routes
+ 1685  clear
+ 1686  kubectl exec -n apisix-ic apisix-ic-apisix-ingress-controller-6859cd6c8d-wx6p9 -- curl -v http://apisix:9180/apisix/admin/routes
+ 1687  kubectl exec -n apisix-ic apisix-ic-apisix-ingress-controller-6859cd6c8d-wx6p9 -- sh
+ 1688  kubectl exec -n apisix-ic apisix-ic-apisix-ingress-controller-6859cd6c8d-wx6p9 --sh
+ 1689  vi apisix-ic-multi-tenant-rbac.yaml
+ 1690  kubectl apply -f apisix-ic-multi-tenant-rbac.yaml
+ 1691  kubectl rollout restart deployment apisix-ic-apisix-ingress-controller -n apisix-ic
+ 1692  kubectl get pods -n apisix-ic
+ 1693  kubectl logs -n apisix-ic -f apisix-ic-apisix-ingress-controller-86f544f559-j4njr
+ 1694  clear
+ 1695  kubectl logs -n apisix-ic -f apisix-ic-apisix-ingress-controller-86f544f559-j4njr > file
+ 1696  vi file
+ 1697  clear
+ 1698  cat file
+ 1699  clea
+ 1700  clear
+ 1701  kubectl get pods -n apisix
+ 1702  kubectl get namespaces
+ 1703  kubectl get apisixroute -n apisix-tenant-a
+ 1704  kubectl get apisixroute --all-namespaces
+ 1705  clear
+ 1706  sudo vi /etc/hosts
+ 1707  curl http://127.0.0.1:9080/apisix/admin/routes -H 'Authorization: edd1c9f034335f136f87ad84b625c8f1' | jq .
+ 1708  curl http://<apisix-admin-url>:9180/apisix/admin/routes
+ 1709  kubectl get cm -n apisix apisix-config -o yaml
+ 1710  kubectl get pods -n apisix-ic
+ 1711  kubectl get svc -n apisix-ic
+ 1712  kubectl describe pod <apisix-pod-name> -n apisix-ic | grep -i admin
+ 1713  kubectl describe pod apisix-ic-apisix-ingress-controller -n apisix-ic | grep -i admin
+ 1714  kubectl describe pod apisix-ic-apisix-ingress-controller-webhook-svc -n apisix-ic | grep -i admin
+ 1715  kubectl exec -n apisix -it apisix-cffffb8c5-4s8bb -- sh
+ 1716  clear
+ 1717  kubectl get svc -n apisix
+ 1718  http://10.10.252.196:31877
+ 1719  curl http://10.10.252.196:31877
+ 1720  curl -H "Host: tenant-b.example.com"      http://10.10.252.196:31877
+ 1721  curl -H "Host: tenant-a.example.com"      http://10.10.252.196:31877
+ 1722  kubectl get ns
+ 1723  clear
+ 1724  ls
+ 1725  nano Python_codebase/fission_script.sh
+ 1726  ls
+ 1727  ls Python_codebase/
+ 1728  nano Python_codebase/fission_script.sh 
+ 1729  source fission.sh
+ 1730  install_fission tenant-a v1.21.0
+ 1731  source Python_codebase/fission_script.sh
+ 1732  install_fission tenant-a v1.21.0
+ 1733  ls
+ 1734  kubectl get ns
+ 1735  clear
+ 1736  source Python_codebase/fission_script.sh
+ 1737  install_fission tenant-a v1.21.0
+ 1738  clear
+ 1739  cd apisix_yamls/
+ 1740  ls
+ 1741  cd *mul*
+ 1742  ls
+ 1743  clear
+ 1744  ls
+ 1745  rm *
+ 1746  clear
+ 1747  kubectl get ns | egrep "apisix|tenant"
+ 1748  kubectl get crds | grep apisix
+ 1749  helm list -A | grep apisix
+ 1750  clear
+ 1751  helm list -A | grep -i apisix
+ 1752  kubectl get crds | grep apisix
+ 1753  kubectl get ns | grep apisix
+ 1754  # APISIX data plane
+ 1755  helm uninstall apisix -n apisix || true
+ 1756  # Ingress controller
+ 1757  helm uninstall apisix-ingress-controller -n apisix-ingress-system || true
+ 1758  kubectl delete namespace apisix --wait=false || true
+ 1759  kubectl delete namespace apisix-ingress-system --wait=false || true
+ 1760  kubectl delete crd   apisixroutes.apisix.apache.org   apisixupstreams.apisix.apache.org   apisixtls.apisix.apache.org   apisixconsumers.apisix.apache.org   apisixpluginconfigs.apisix.apache.org   apisixglobalrules.apisix.apache.org   apisixstreamroutes.apisix.apache.org   apisixclusterconfigs.apisix.apache.org   --ignore-not-found
+ 1761  kubectl delete clusterrole apisix-ingress-controller --ignore-not-found
+ 1762  kubectl delete clusterrolebinding apisix-ingress-controller --ignore-not-found
+ 1763  helm list -A | grep apisix     # nothing
+ 1764  kubectl get crds | grep apisix # nothing
+ 1765  kubectl get pods -A | grep apisix # nothing
+ 1766  kubectl delete pod -n apisix --all
+ 1767  kubectl delete pvc -n apisix --all
+ 1768  kubectl delete namespace apisix
+ 1769  clear
+ 1770  # List all Helm releases related to APISIX
+ 1771  helm list -A | grep -i apisix
+ 1772  # Uninstall if present
+ 1773  helm uninstall apisix -n apisix || true
+ 1774  helm uninstall apisix-ingress-controller -n apisix-system || true
+ 1775  helm uninstall apisix-ingress -n apisix-system || true
+ 1776  helm uninstall etcd -n etcd || true
+ 1777  # List all Helm releases related to APISIX
+ 1778  helm list -A | grep -i apisix
+ 1779  # Uninstall if present
+ 1780  helm uninstall apisix -n apisix || true
+ 1781  helm uninstall apisix-ingress-controller -n apisix-system || true
+ 1782  helm uninstall apisix-ingress -n apisix-system || true
+ 1783  helm uninstall etcd -n etcd || true
+ 1784  kubectl delete ns apisix apisix-system etcd --ignore-not-found
+ 1785  for ns in apisix apisix-system etcd; do   kubectl get ns $ns >/dev/null 2>&1 || continue;   kubectl get ns $ns -o json     | jq '.spec.finalizers=[]'     | kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -; done
+ 1786  # List all Helm releases related to APISIX
+ 1787  helm list -A | grep -i apisix
+ 1788  # Uninstall if present
+ 1789  helm uninstall apisix -n apisix || true
+ 1790  helm uninstall apisix-ingress-controller -n apisix-system || true
+ 1791  helm uninstall apisix-ingress -n apisix-system || true
+ 1792  helm uninstall etcd -n etcd || true
+ 1793  helm uninstall apisix-ic -n apisix-ic
+ 1794  helm list -A | grep -i apisix
+ 1795  kubectl delete ns apisix apisix-system apisix-ic etcd --ignore-not-found
+ 1796  for ns in apisix apisix-system apisix-ic etcd; do   kubectl get ns $ns >/dev/null 2>&1 || continue;   kubectl get ns $ns -o json     | jq '.spec.finalizers=[]'     | kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -; done
+ 1797  clear
+ 1798  kubectl get crds | grep apisix
+ 1799  apisixtlses.apisix.apache.org
+ 1800  backendtrafficpolicies.apisix.apache.org
+ 1801  consumers.apisix.apache.org
+ 1802  gatewayproxies.apisix.apache.org
+ 1803  httproutepolicies.apisix.apache.org
+ 1804  pluginconfigs.apisix.apache.org
+ 1805  kubectl delete crd   apisixtlses.apisix.apache.org   backendtrafficpolicies.apisix.apache.org   consumers.apisix.apache.org   gatewayproxies.apisix.apache.org   httproutepolicies.apisix.apache.org   pluginconfigs.apisix.apache.org   apisixroutes.apisix.apache.org   apisixupstreams.apisix.apache.org   apisixconsumers.apisix.apache.org   apisixclusterconfigs.apisix.apache.org   apisixpluginsconfigs.apisix.apache.org   apisixglobalrules.apisix.apache.org   --ignore-not-found
+ 1806  kubectl delete crd   apisixtlses.apisix.apache.org   backendtrafficpolicies.apisix.apache.org   consumers.apisix.apache.org   gatewayproxies.apisix.apache.org   httproutepolicies.apisix.apache.org   pluginconfigs.apisix.apache.org   apisixroutes.apisix.apache.org   apisixupstreams.apisix.apache.org   apisixconsumers.apisix.apache.org   apisixclusterconfigs.apisix.apache.org   apisixpluginsconfigs.apisix.apache.org   apisixglobalrules.apisix.apache.org   --ignore-not-found
+ 1807  kubectl get crds | grep apisix || echo "✔ All APISIX CRDs removed"
+ 1808  kubectl get pods -A | grep -i apisix || echo "✔ No APISIX pods"
+ 1809  kubectl delete ns apisix-tenant-a apisix-tenant-b --ignore-not-found
+ 1810  for ns in apisix-tenant-a apisix-tenant-b; do   kubectl get ns $ns >/dev/null 2>&1 || continue;   kubectl get ns $ns -o json     | jq '.spec.finalizers=[]'     | kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -; done
+ 1811  kubectl get pods -A | grep -i apisix || echo "✔ No APISIX-related pods"
+ 1812  clear
+ 1813  helm list -A | grep -i apisix || echo "✔ No APISIX Helm releases"
+ 1814  kubectl get crds | grep apisix || echo "✔ No APISIX CRDs"
+ 1815  kubectl get ns | grep -E 'apisix|etcd|tenant' || echo "✔ No APISIX or tenant namespaces"
+ 1816  kubectl get clusterrole | grep -i apisix || echo "✔ No APISIX ClusterRoles"
+ 1817  kubectl get pv | grep Released || echo "✔ No dangling PVs"
+ 1818  kubectl delete ns apisix-ingress-controller-multi-tenant
+ 1819  clear
+ 1820  helm list -A | grep -i apisix || echo "✔ No APISIX Helm releases"
+ 1821  kubectl get crds | grep apisix || echo "✔ No APISIX CRDs"
+ 1822  kubectl get ns | grep -E 'apisix|etcd|tenant' || echo "✔ No APISIX or tenant namespaces"
+ 1823  kubectl get clusterrole | grep -i apisix || echo "✔ No APISIX ClusterRoles"
+ 1824  kubectl get pv | grep Released || echo "✔ No dangling PVs"
+ 1825  kubectl get clusterrole | grep -i apisix || echo "✔ No APISIX ClusterRoles"
+ 1826  k
+ 1827  kubectl get clusterrole | grep -i apisix || echo "✔ No APISIX ClusterRoles"
+ 1828  kubectl delete clusterrole apisix-ingress-controller-multi-tenant
+ 1829  clear
+ 1830  kubectl get clusterrolebinding | grep -i apisix
+ 1831  kubectl delete clusterrolebin
+ 1832  kubectl delete clusterrole apisix-ingress-controller-multi-tenant-binding
+ 1833  kubectl delete clusterrolebinding apisix-ingress-controller-multi-tenant-binding
+ 1834  kubectl get clusterrole | grep -i apisix || echo "✔ No APISIX ClusterRoles"
+ 1835  kubectl get clusterrolebinding | grep -i apisix || echo "✔ No APISIX ClusterRoleBindings"
+ 1836  helm list -A | grep -i apisix || echo "✔ No APISIX Helm releases"
+ 1837  kubectl get crds | grep apisix || echo "✔ No APISIX CRDs"
+ 1838  kubectl get ns | grep -E 'apisix|etcd|tenant' || echo "✔ No APISIX or tenant namespaces"
+ 1839  kubectl get clusterrole | grep -i apisix || echo "✔ No APISIX ClusterRoles"
+ 1840  kubectl get clusterrolebinding | grep -i apisix || echo "✔ No APISIX ClusterRoleBindings"
+ 1841  kubectl get pv | grep Released || echo "✔ No dangling PVs"
+ 1842  pwd
+ 1843  clear
+ 1844  vi 01-namespaces.yaml
+ 1845  echo "----------------------------------starting reinstall-------------------"
+ 1846  vi 01-namespaces.yaml
+ 1847  kubectl apply -f 01-namespaces.yaml
+ 1848  helm repo add bitnami https://charts.bitnami.com/bitnami
+ 1849  helm repo update
+ 1850  vi 02-etcd-values.yaml
+ 1851  helm install etcd bitnami/etcd   -n etcd   -f 02-etcd-values.yaml
+ 1852  clear
+ 1853  kubectl get pods -n etcd -o wide
+ 1854  kubectl get pvc -n etcd
+ 1855  kubectl get svc -n etcd
+ 1856  kubectl exec -n etcd etcd-0 -- etcdctl endpoint health
+ 1857  helm uninstall etcd -n etcd
+ 1858  kubectl get pods -n etcd
+ 1859  kubectl delete pvc -n etcd --all
+ 1860  kubectl get pvc -n etcd
+ 1861  vi 03-etcd-service.yaml
+ 1862  vi 04-etcd-pdb.yaml
+ 1863  cat 04-etcd-pdb.yaml
+ 1864  vi 05-etcd-statefulset.yaml
+ 1865  clear
+ 1866  ls -ltr
+ 1867  clear
+ 1868  cat *statefu*
+ 1869  clear
+ 1870  ls -ltr
+ 1871  clear
+ 1872  kubectl apply -f 03-etcd-service.yaml
+ 1873  kubectl apply -f 04-etcd-pdb.yaml
+ 1874  kubectl apply -f 05-etcd-statefulset.yaml
+ 1875  kubectl get pods -n etcd -o wide
+ 1876  docker pull quay.io/etcd-io/etcd:v3.5.12
+ 1877  nano Python_codebase/fission_script.sh 
+ 1878  source Python_codebase/fission_script.sh
+ 1879  install_fission tenant-a v1.21.0
+ 1880  nano Python_codebase/fission_script.sh 
+ 1881  source Python_codebase/fission_script.sh
+ 1882  install_fission tenant-a v1.21.0
+ 1883  nano Python_codebase/fission_script.sh 
+ 1884  nano Python_codebase/fission_script_v2.sh
+ 1885  source Python_codebase/fission_script_v2.sh 
+ 1886  uninstall_fission tenant-a
+ 1887  install_fission tenant-a v1.21.0
+ 1888  kubectl get ns
+ 1889  kubectl get pods -n fission
+ 1890  ls
+ 1891  curl -Lo fission https://github.com/fission/fission/releases/download/v1.22.0/fission-v1.22.0-linux-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+ 1892  fission check
+ 1893  clear
+ 1894  kubectl get nodes
+ 1895  fission
+ 1896  rm /usr/local/bin/fission 
+ 1897  sudo rm -rf /usr/local/bin/fission
+ 1898  clear
+ 1899  kubectl create namespace monitoring
+ 1900  nano Python_codebase/fission_script_v2.sh 
+ 1901  nano Python_codebase/fission_script_v3.sh 
+ 1902  nano Python_codebase/fission_script_v2.sh 
+ 1903  nano Python_codebase/fission_script_v3.sh 
+ 1904  nano Python_codebase/fission_script_v2.sh 
+ 1905  nano Python_codebase/fission_script_v3.sh 
+ 1906  nano Python_codebase/fission_script_v2.sh 
+ 1907  nano Python_codebase/fission_script_v3.sh 
+ 1908  nano Python_codebase/fission_script_v2.sh 
+ 1909  nano Python_codebase/fission_script_v2.sh 
+ 1910  vi Python_codebase/fission_script_v2.sh 
+ 1911  uninstall_fission()
+ 1912  uninstall_fission tenant-a
+ 1913  source Python_codebase/fission_script.sh
+ 1914  source Python_codebase/fission_script_v2.sh
+ 1915  vi Python_codebase/fission_script_v2.sh 
+ 1916  source Python_codebase/fission_script_v2.sh
+ 1917  uninstall_fission tenant-a
+ 1918  vi Python_codebase/fission_script_v2.sh 
+ 1919  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+ 1920  helm repo update
+ 1921  helm install monitoring prometheus-community/kube-prometheus-stack   --namespace monitoring
+ 1922  kubectl get pods -n monitoring
+ 1923  source Python_codebase/fission_script_v2.sh
+ 1924  install_fission tenant-fission-a v1.21.0
+ 1925  fission check
+ 1926  kuebctl get pods -n fission
+ 1927  kubectl get pods -n fission
+ 1928  kubectl exec -n monitoring deploy/prometheus -- wget -qO- http://router.fission.svc.cluster.local:8080/metrics | head -n 50
+ 1929  kubectl get deployments -n monitoring
+ 1930  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+ 1931  kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep -q serviceMonitorNamespaceSelector && echo 'True' || echo 'False'
+ 1932  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+ 1933  kubectl get svc router -n fission -o yaml
+ 1934  kubectl patch svc router -n fission --type='json' -p='[
+ 1935    {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+ 1936  ]'
+ 1937  kubectl patch svc router -n fission --type='json' -p='[
+ 1938    {"op": "add", "path": "/spec/ports/-", "value": {
+ 1939      "name": "metrics",
+ 1940      "protocol": "TCP",
+ 1941      "port": 8080,
+ 1942      "targetPort": 8080
+ 1943    }}
+ 1944  ]'
+ 1945  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+ 1946  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | grep fission_function
+ 1947  kubectl get svc router -n fission -o yaml
+ 1948  kubectl get pods -n fission
+ 1949  kubectl get deploy router -n fission -o yaml | grep -A5 args:
+ 1950  kubectl get ns
+ 1951  uninstall_fission tenant-fission-a
+ 1952  clear
+ 1953  source Python_codebase/fission_script_v3.sh 
+ 1954  ls
+ 1955  ls Python_codebase/
+ 1956  source Python_codebase/fission_script_v3.sh 
+ 1957  nano Python_codebase/fission_script_v3.sh 
+ 1958  source Python_codebase/fission_script_v3.sh 
+ 1959  install_fission tenant-fission-a v1.21.0
+ 1960  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | grep fission_function
+ 1961  kubectl patch svc router -n fission --type='json' -p='[
+ 1962    {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+ 1963  ]'
+ 1964  kubectl patch svc router -n fission --type='json' -p='[
+ 1965    {"op": "add", "path": "/spec/ports/-", "value": {
+ 1966      "name": "metrics",
+ 1967      "protocol": "TCP",
+ 1968      "port": 8080,
+ 1969      "targetPort": 8080
+ 1970    }}
+ 1971  ]'
+ 1972  kubectl get pods -n fission
+ 1973  kubectl exec -n fission router-697cb8cd65-jqlhj --   wget -qO- http://127.0.0.1:8888/metrics
+ 1974  kubectl get deploy router -n fission -o yaml | grep -A10 args:
+ 1975  kubectl patch deploy router -n fission --type='json' -p='[
+ 1976    {
+ 1977      "op": "add",
+ 1978      "path": "/spec/template/spec/containers/0/args/-",
+ 1979      "value": "--enable-prometheus"
+ 1980    }
+ 1981  ]'
+ 1982  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | grep fission_function
+ 1983  kubectl rollout status deploy/router -n fission
+ 1984  kubectl get deployments -n fission
+ 1985  history > prom_his_23_12.txt
+ 1986  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | grep fission_function
+ 1987  kubectl patch deploy router -n fission --type='json' -p='[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/args/-",
+    "value": "--enable-prometheus"
+  }
+]'
+ 1988  kubectl port-forward -n fission deploy/router 8888:8888
+ 1989  fission env create --name nodejs --image fission/node-env -n tenant-fission-a
+ 1990  nano hello.js
+ 1991  fission fn create --name hello   --env nodejs   --code hello.js -n tenant-fission-a
+ 1992  fission fn test --name hello -n tenant-fission-a
+ 1993  kubectl port-forward -n fission deploy/router 8888:8888
+ 1994  fission route create   --name hello-route   --function hello   --url /hello   --method GET   -n tenant-fission-a
+ 1995  fission fn test --name hello -n tenant-fission-a
+ 1996  curl http://127.0.0.1:8888/hello
+ 1997  kubectl get svc -n fission
+ 1998  curl http://10.10.252.196:8888/hello
+ 1999  curl http://10.10.252.196:8080/hello
+ 2000  curl http://10.10.252.196:32063/hello
+ 2001  kubectl -n fission patch svc router --type='json' -p='[
+  {
+    "op": "add",
+    "path": "/spec/ports/-",
+    "value": {
+      "name": "metrics",
+      "port": 8888,
+      "targetPort": 8888,
+      "protocol": "TCP"
+    }
+  }
+]'
+ 2002  kubectl get servicemonitor -n monitoring
+ 2003  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | grep fission_function
+ 2004  kubectl get svc router -n fission -o yaml
+ 2005  kubectl -n fission patch svc router --type='json' -p='[
+  {
+    "op": "replace",
+    "path": "/spec/ports/1",
+    "value": {
+      "name": "metrics",
+      "port": 8888,
+      "targetPort": 8888,
+      "protocol": "TCP"
+    }
+  }
+]'
+ 2006  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | grep fission_function
+ 2007  fission fn list -n tenant-fission-a
+ 2008  curl http://10.10.252.196:32063/hello
+ 2009  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | grep fission_function
+ 2010  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | head
+ 2011  nano prometheus.yam;
+ 2012  mv prometheus.yam; prometheus.yaml
+ 2013  mv prometheus.yam prometheus.yaml
+ 2014  kubectl apply -f prometheus.yaml 
+ 2015  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | head
+ 2016  kubectl get svc -n monitoring
+ 2017  kubectl delete -f prometheus.yaml 
+ 2018  nano fission-router-servicemonitor.yam;
+ 2019  nano fission-router-servicemonitor.yaml
+ 2020  kubectl apply -f fission-router-servicemonitor.yaml 
+ 2021  kubectl get pods -n monitoring
+ 2022  kubectl exec -n monitoring -it deploy/monitoring-kube-prometheus-operator -- sh
+ 2023  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | head -n 20
+ 2024  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8888/metrics | head -n 20
+ 2025  kubectl get svc router -n fission -o yaml
+ 2026  curl http://router.fission.svc.cluster.local:8888/metrics | grep fission_function
+ 2027  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   curl http://router.fission.svc.cluster.local:8888/hello
+ 2028  curl http://10.10.252.196:8888/metrics | grep fission_function
+ 2029  curl http://10.10.252.196:30294/metrics | grep fission_function
+ 2030  curl http://10.10.252.196:32063/hello
+ 2031  curl http://10.10.252.196:30294/metrics | grep fission_function
+ 2032  curl http://10.10.252.196:30294/metrics
+ 2033  kubectl get deploy router -n fission -o yaml | grep -A10 args
+ 2034  clear
+ 2035  source Python_codebase/fission_script_v3.sh 
+ 2036  uninstall_fission tenant-fission-a
+ 2037  kubectl get namespace
+ 2038  kubectl delete ns monitoring
+ 2039  kubect get configmap
+ 2040  kubectl get configmap
+ 2041  kubectl get pods
+ 2042  kubectl get svc
+ 2043  kubectl get servicemonitor
+ 2044  kubectl get all --all-namespaces | grep fission
+ 2045  kubectl get clusterrolebinding
+ 2046  kubectl get clusterrolebinding | grep fission
+ 2047  kubectl delete clusterrolebinding fission-builder-multins fission-executor-multins fission-router-multins
+ 2048  kubectl delete clusterrole
+ 2049  kubectl get validatingwebhookconfiguration
+ 2050  kubectl delete  validatingwebhookconfiguration monitoring-kube-prometheus-admission
+ 2051  kubectl get clusterrolebinding | grep monitoring
+ 2052  clear
+ 2053  kubectl get mutatingwebhookconfiguration
+ 2054  kubectl delete mutatingwebhookconfiguration monitoring-kube-prometheus-admission
+ 2055  kubectl get all
+ 2056  clar
+ 2057  clear
+ 2058  nano Python_codebase/fission_script_v4.sh
+ 2059  source Python_codebase/fission_script_v4.sh 
+ 2060  install_fission tenant-fission-a v1.21.0
+ 2061  fission check
+ 2062  clear
+ 2063  kubectl create namespace monitoring
+ 2064  cat <<EOF | kubectl apply -n monitoring -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets: ['localhost:9090']
+EOF
+
+ 2065  cat <<EOF | kubectl apply -n monitoring -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.48.0
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--web.enable-lifecycle"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus
+            - name: data
+              mountPath: /prometheus
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus-config
+        - name: data
+          emptyDir: {}
+EOF
+
+ 2066  cat <<EOF | kubectl apply -n monitoring -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  type: NodePort
+  selector:
+    app: prometheus
+  ports:
+    - port: 9090
+      targetPort: 9090
+      nodePort: 30090
+EOF
+
+ 2067  kubectl get pods -n monitoring
+ 2068  kubectl get svc -n monitoring
+ 2069  curl http://10.10.252.196:30090
+ 2070  kubectl get svc -n fission
+ 2071  kubectl exec -n fission deploy/router --   wget -qO- http://localhost:8888/metrics | head
+ 2072  kubectl exec -n fission deploy/executor --   wget -qO- http://localhost:8888/metrics | head
+ 2073  kubectl port-forward -n fission deploy/router 8888:8888
+ 2074  kubectl get deploy router -n fission -o yaml | grep -A20 args:
+ 2075  kubectl port-forward -n fission deploy/router 8888:8888
+ 2076  history | grep fission
+ 2077  fission env create --name nodejs --image fission/node-env -n tenant-fission-a
+ 2078  fission fn create --name hello   --env nodejs   --code hello.js -n tenant-fission-a
+ 2079  fission route create   --name hello-route   --function hello   --url /hello   --method GET   -n tenant-fission-a
+ 2080  kubectl get svc -n fission
+ 2081  curl 10.10.252.196:32629/hello
+ 2082  fission fn test --name hello
+ 2083  fission fn test --name hello -n tenant-fission-a
+ 2084  curl 10.10.252.196:32629/hello
+ 2085  kubectl get svc -n fission
+ 2086  curl 10.104.62.216:32629/hello
+ 2087  curl 10.10.252.196:32629/hello
+ 2088  curl localhost:80/hello
+ 2089  kubectl patch svc router -n ${FISSION_NS} --type='json' -p='[
+      {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+    ]' || true
+ 2090  kubectl patch svc router -n fission --type='json' -p='[
+      {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+    ]' || true
+ 2091  kubectl patch svc router -n fission --type='json' -p='[
+      {
+        "op": "add",
+        "path": "/spec/ports/-",
+        "value": {
+          "name": "metrics",
+          "protocol": "TCP",
+          "port": 8080,
+          "targetPort": 8080
+        }
+      }
+    ]' || true
+ 2092  kubectl get svc -n fission
+ 2093  curl 10.10.252.196:32701/hello
+ 2094  kubectl patch svc executor -n fission --type='json' -p='[
+      {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+    ]' || true
+ 2095  kubectl patch svc executor -n fission --type='json' -p='[
+      {
+        "op": "add",
+        "path": "/spec/ports/-",
+        "value": {
+          "name": "metrics",
+          "protocol": "TCP",
+          "port": 8080,
+          "targetPort": 8080
+        }
+      }
+    ]' || true
+ 2096  kubectl get svc -n fission
+ 2097  curl 10.10.252.196:32701/hello
+ 2098  kubectl port-forward -n fission deploy/router 8888:8888
+ 2099  kubectl get deploy router -n fission -o yaml | sed -n '/args:/,/env:/p'
+ 2100  kubectl get deployment -n fission
+ 2101  kubectl rollout restart executor -n fission
+ 2102  kubectl rollout restart deploy/executor -n fission
+ 2103  kubectl rollout restart deploy/router -n fission
+ 2104  curl 10.10.252.196:32701/hello
+ 2105  kubectl get svc
+ 2106  kubectl get pods -n fission
+ 2107  kubectl get svc -n fission
+ 2108  curl 10.10.252.196:32629/hello
+ 2109  curl 10.10.252.196:32701/hello
+ 2110  kubectl edit deploy router -n fission
+ 2111  kubectl rollout restart deploy/router -n fission
+ 2112  kubectl get pods -n fission
+ 2113  kubectl describe pods router-78d7ccd49f-xgtxz -n fission
+ 2114  kubectl get pods -n fission
+ 2115  kubectl describe pods router-78d7ccd49f-xgtxz -n fission
+ 2116  kubectl logs -n fission deploy/router
+ 2117  cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fission-router-global
+rules:
+  - apiGroups: ["fission.io"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+EOF
+
+ 2118  kubectl create clusterrolebinding fission-router-global   --clusterrole=fission-router-global   --serviceaccount=fission:fission-router
+ 2119  kubectl logs -n fission deploy/router | tail
+ 2120  kubectl get sa -n fission
+ 2121  cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: fission-router-role
+  namespace: tenant-fission-a
+rules:
+  - apiGroups: ["fission.io"]
+    resources:
+      - functions
+      - httptriggers
+    verbs: ["get", "list", "watch"]
+EOF
+
+ 2122  cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fission-router-binding
+  namespace: tenant-fission-a
+subjects:
+  - kind: ServiceAccount
+    name: fission-router
+    namespace: fission
+roleRef:
+  kind: Role
+  name: fission-router-role
+  apiGroup: rbac.authorization.k8s.io
+EOF
+
+ 2123  kubectl get rolebinding fission-router-binding -n tenant-fission-a -o yaml
+ 2124  kubectl rollout restart deploy/router -n fission
+ 2125  kubectl get pods -n fission
+ 2126  kubectl get deploy/router -n fission
+ 2127  kubectl rollout status deploy/router -n fission
+ 2128  kubectl delete pod router-d8bb4bfcc-sxspx -n fission --force --grace-period=0
+ 2129  kubectl rollout status deploy/router -n fission
+ 2130  kubectl get pods -n fission
+ 2131  kubectl rollout status deploy/router -n fission
+ 2132  kubectl scale deploy/router -n fission --replicas=0
+ 2133  kubectl get pods -n fission
+ 2134  kubectl edit deploy/router -n fission
+ 2135  kubectl scale deploy/router -n fission --replicas=1
+ 2136  kubectl get pods -n fission
+ 2137  kubectl logs -n fission deploy/router | grep forbidden
+ 2138  kubectl get svc router -n fission -o yaml
+ 2139  fission fn logs
+ 2140  fission fn logs --name hello -n tenant-fission-a
+ 2141  kubectl get pods -n fission
+ 2142  kubectl logs pod/executor-79dc966b85-w9xcr -n fission
+ 2143  kubectl logs pod/router-6f5d8d765f-t9rjn -n fission
+ 2144  curl 10.10.252.196/hello
+ 2145  kubectl get svc -n fission
+ 2146  curl 10.10.252.196:32701/hello
+ 2147  fission route list -n tenant-fission-a
+ 2148  clear
+ 2149  fission environment create --name python --image ghcr.io/fission/python-env
+ 2150  nano pytest.py
+ 2151  fission function create --name hellopy --env python --code pytest.py
+ 2152  fission route create --method GET --url /hellopy --function hellopy
+ 2153  fission fn test --name=hellopy
+ 2154  kubectl logs pod/router-6f5d8d765f-t9rjn -n fission
+ 2155  kubectl logs pod/executor-79dc966b85-w9xcr -n fission
+ 2156  clear
+ 2157  fission route list
+ 2158  fission route delete --name d61c2401-b830-49fc-9454-58567ec91a5e
+ 2159  fission dn delete --name hellopy
+ 2160  fission fn delete --name hellopy
+ 2161  fission env delete python
+ 2162  fission env delete --name python
+ 2163  fission env create --name python --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3
+ 2164  fission function create --name hellopy --env python --code pytest.py
+ 2165  fission route create --method GET --url /hellopy --function hellopy
+ 2166  fission fn test --name=hellopy
+ 2167  curl 10.10.252.196:32701/hello
+ 2168  curl 10.10.252.196:32701/hellopy
+ 2169  clear
+ 2170  fission fn 
+ 2171  fission fn pods
+ 2172  kubectl get pods -n tenant-fission-a
+ 2173  kubectl logs pod/poolmgr-nodejs-tenant-fission-a-877849-7dbb4d7474-67sws -n tenant-fission-a
+ 2174  kubectl logs pod/poolmgr-nodejs-tenant-fission-a-877849-7dbb4d7474-fgp26 -n tenant-fission-a
+ 2175  kubectl logs pod/poolmgr-nodejs-tenant-fission-a-877849-7dbb4d7474-txn7s -n tenant-fission-a
+ 2176  kubectl get pods
+ 2177  kubectl logs pod/python-883504-569df888c7-jgmhk
+ 2178  kubectl logs pod/poolmgr-python-default-883504-5c4f787d45-qnhdz
+ 2179  fission fn test --name hellopy
+ 2180  clear
+ 2181  fisison fn list
+ 2182  fission fn list
+ 2183  fission route list
+ 2184  kubectl get httptriggers
+ 2185  kubectl get svc -n fission
+ 2186  curl http://10.10.252.196:32701/hellopy
+ 2187  curl http://10.10.252.196:32629/hellopy
+ 2188  curl http://10.10.252.196:32629/hello
+ 2189  fission fn test --name hellopy
+ 2190  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+ 2191  kubectl get pods -n monitoring
+ 2192  kubectl get deployments -n monitoring
+ 2193  kubectl exec -n monitoring deploy/prometheus --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+ 2194  history > working_fission_prom.txt
