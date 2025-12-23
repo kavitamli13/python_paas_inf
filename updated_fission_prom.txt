@@ -1,0 +1,267 @@
+source Python_codebase/fission_script_v4.sh 
+ 2060  install_fission tenant-fission-a v1.21.0
+ 2061  fission check
+ 2062  clear
+ 2063  kubectl create namespace monitoring
+ 2064  cat <<EOF | kubectl apply -n monitoring -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets: ['localhost:9090']
+EOF
+
+ 2065  cat <<EOF | kubectl apply -n monitoring -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.48.0
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--web.enable-lifecycle"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus
+            - name: data
+              mountPath: /prometheus
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus-config
+        - name: data
+          emptyDir: {}
+EOF
+
+ 2066  cat <<EOF | kubectl apply -n monitoring -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  type: NodePort
+  selector:
+    app: prometheus
+  ports:
+    - port: 9090
+      targetPort: 9090
+      nodePort: 30090
+EOF
+
+ 2067  kubectl get pods -n monitoring
+ 2068  kubectl get svc -n monitoring
+ 2069  curl http://10.10.252.196:30090
+ 2070  kubectl get svc -n fission
+ 2071  kubectl exec -n fission deploy/router --   wget -qO- http://localhost:8888/metrics | head
+ 2072  kubectl exec -n fission deploy/executor --   wget -qO- http://localhost:8888/metrics | head
+ 2073  kubectl port-forward -n fission deploy/router 8888:8888
+ 2074  kubectl get deploy router -n fission -o yaml | grep -A20 args:
+ 2075  kubectl port-forward -n fission deploy/router 8888:8888
+ 2076  history | grep fission
+ 2077  fission env create --name nodejs --image fission/node-env -n tenant-fission-a
+ 2078  fission fn create --name hello   --env nodejs   --code hello.js -n tenant-fission-a
+ 2079  fission route create   --name hello-route   --function hello   --url /hello   --method GET   -n tenant-fission-a
+ 2080  kubectl get svc -n fission
+ 2081  curl 10.10.252.196:32629/hello
+ 2082  fission fn test --name hello
+ 2083  fission fn test --name hello -n tenant-fission-a
+ 2084  curl 10.10.252.196:32629/hello
+ 2085  kubectl get svc -n fission
+ 2086  curl 10.104.62.216:32629/hello
+ 2087  curl 10.10.252.196:32629/hello
+ 2088  curl localhost:80/hello
+ 2089  kubectl patch svc router -n ${FISSION_NS} --type='json' -p='[
+      {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+    ]' || true
+ 2090  kubectl patch svc router -n fission --type='json' -p='[
+      {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+    ]' || true
+ 2091  kubectl patch svc router -n fission --type='json' -p='[
+      {
+        "op": "add",
+        "path": "/spec/ports/-",
+        "value": {
+          "name": "metrics",
+          "protocol": "TCP",
+          "port": 8080,
+          "targetPort": 8080
+        }
+      }
+    ]' || true
+ 2092  kubectl get svc -n fission
+ 2093  curl 10.10.252.196:32701/hello
+ 2094  kubectl patch svc executor -n fission --type='json' -p='[
+      {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+    ]' || true
+ 2095  kubectl patch svc executor -n fission --type='json' -p='[
+      {
+        "op": "add",
+        "path": "/spec/ports/-",
+        "value": {
+          "name": "metrics",
+          "protocol": "TCP",
+          "port": 8080,
+          "targetPort": 8080
+        }
+      }
+    ]' || true
+ 2096  kubectl get svc -n fission
+ 2097  curl 10.10.252.196:32701/hello
+ 2098  kubectl port-forward -n fission deploy/router 8888:8888
+ 2099  kubectl get deploy router -n fission -o yaml | sed -n '/args:/,/env:/p'
+ 2100  kubectl get deployment -n fission
+ 2101  kubectl rollout restart executor -n fission
+ 2102  kubectl rollout restart deploy/executor -n fission
+ 2103  kubectl rollout restart deploy/router -n fission
+ 2104  curl 10.10.252.196:32701/hello
+ 2105  kubectl get svc
+ 2106  kubectl get pods -n fission
+ 2107  kubectl get svc -n fission
+ 2108  curl 10.10.252.196:32629/hello
+ 2109  curl 10.10.252.196:32701/hello
+ 2110  kubectl edit deploy router -n fission
+ 2111  kubectl rollout restart deploy/router -n fission
+ 2112  kubectl get pods -n fission
+ 2113  kubectl describe pods router-78d7ccd49f-xgtxz -n fission
+ 2114  kubectl get pods -n fission
+ 2115  kubectl describe pods router-78d7ccd49f-xgtxz -n fission
+ 2116  kubectl logs -n fission deploy/router
+ 2117  cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fission-router-global
+rules:
+  - apiGroups: ["fission.io"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+EOF
+
+ 2118  kubectl create clusterrolebinding fission-router-global   --clusterrole=fission-router-global   --serviceaccount=fission:fission-router
+ 2119  kubectl logs -n fission deploy/router | tail
+ 2120  kubectl get sa -n fission
+ 2121  cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: fission-router-role
+  namespace: tenant-fission-a
+rules:
+  - apiGroups: ["fission.io"]
+    resources:
+      - functions
+      - httptriggers
+    verbs: ["get", "list", "watch"]
+EOF
+
+ 2122  cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fission-router-binding
+  namespace: tenant-fission-a
+subjects:
+  - kind: ServiceAccount
+    name: fission-router
+    namespace: fission
+roleRef:
+  kind: Role
+  name: fission-router-role
+  apiGroup: rbac.authorization.k8s.io
+EOF
+
+ 2123  kubectl get rolebinding fission-router-binding -n tenant-fission-a -o yaml
+ 2124  kubectl rollout restart deploy/router -n fission
+ 2125  kubectl get pods -n fission
+ 2126  kubectl get deploy/router -n fission
+ 2127  kubectl rollout status deploy/router -n fission
+ 2128  kubectl delete pod router-d8bb4bfcc-sxspx -n fission --force --grace-period=0
+ 2129  kubectl rollout status deploy/router -n fission
+ 2130  kubectl get pods -n fission
+ 2131  kubectl rollout status deploy/router -n fission
+ 2132  kubectl scale deploy/router -n fission --replicas=0
+ 2133  kubectl get pods -n fission
+ 2134  kubectl edit deploy/router -n fission
+ 2135  kubectl scale deploy/router -n fission --replicas=1
+ 2136  kubectl get pods -n fission
+ 2137  kubectl logs -n fission deploy/router | grep forbidden
+ 2138  kubectl get svc router -n fission -o yaml
+ 2139  fission fn logs
+ 2140  fission fn logs --name hello -n tenant-fission-a
+ 2141  kubectl get pods -n fission
+ 2142  kubectl logs pod/executor-79dc966b85-w9xcr -n fission
+ 2143  kubectl logs pod/router-6f5d8d765f-t9rjn -n fission
+ 2144  curl 10.10.252.196/hello
+ 2145  kubectl get svc -n fission
+ 2146  curl 10.10.252.196:32701/hello
+ 2147  fission route list -n tenant-fission-a
+ 2148  clear
+ 2149  fission environment create --name python --image ghcr.io/fission/python-env
+ 2150  nano pytest.py
+ 2151  fission function create --name hellopy --env python --code pytest.py
+ 2152  fission route create --method GET --url /hellopy --function hellopy
+ 2153  fission fn test --name=hellopy
+ 2154  kubectl logs pod/router-6f5d8d765f-t9rjn -n fission
+ 2155  kubectl logs pod/executor-79dc966b85-w9xcr -n fission
+ 2156  clear
+ 2157  fission route list
+ 2158  fission route delete --name d61c2401-b830-49fc-9454-58567ec91a5e
+ 2159  fission dn delete --name hellopy
+ 2160  fission fn delete --name hellopy
+ 2161  fission env delete python
+ 2162  fission env delete --name python
+ 2163  fission env create --name python --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3
+ 2164  fission function create --name hellopy --env python --code pytest.py
+ 2165  fission route create --method GET --url /hellopy --function hellopy
+ 2166  fission fn test --name=hellopy
+ 2167  curl 10.10.252.196:32701/hello
+ 2168  curl 10.10.252.196:32701/hellopy
+ 2169  clear
+ 2170  fission fn 
+ 2171  fission fn pods
+ 2172  kubectl get pods -n tenant-fission-a
+ 2173  kubectl logs pod/poolmgr-nodejs-tenant-fission-a-877849-7dbb4d7474-67sws -n tenant-fission-a
+ 2174  kubectl logs pod/poolmgr-nodejs-tenant-fission-a-877849-7dbb4d7474-fgp26 -n tenant-fission-a
+ 2175  kubectl logs pod/poolmgr-nodejs-tenant-fission-a-877849-7dbb4d7474-txn7s -n tenant-fission-a
+ 2176  kubectl get pods
+ 2177  kubectl logs pod/python-883504-569df888c7-jgmhk
+ 2178  kubectl logs pod/poolmgr-python-default-883504-5c4f787d45-qnhdz
+ 2179  fission fn test --name hellopy
+ 2180  clear
+ 2181  fisison fn list
+ 2182  fission fn list
+ 2183  fission route list
+ 2184  kubectl get httptriggers
+ 2185  kubectl get svc -n fission
+ 2186  curl http://10.10.252.196:32701/hellopy
+ 2187  curl http://10.10.252.196:32629/hellopy
+ 2188  curl http://10.10.252.196:32629/hello
+ 2189  fission fn test --name hellopy
+ 2190  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+ 2191  kubectl get pods -n monitoring
+ 2192  kubectl get deployments -n monitoring
+ 2193  kubectl exec -n monitoring deploy/prometheus --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
