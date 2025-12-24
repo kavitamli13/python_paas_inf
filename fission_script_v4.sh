@@ -228,6 +228,8 @@ uninstall_fission() {
     --ignore-not-found
 
   kubectl delete clusterrolebinding fission-executor-admin --ignore-not-found
+  kubectl delete clusterrole fission-router-global --ignore-not-found
+  
 
   if [[ -n "$TENANT" && "$TENANT" != "default" ]]; then
     kubectl delete ns "$TENANT" --ignore-not-found
