@@ -1,0 +1,29 @@
+# tenant-a-user.yaml
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaUser
+metadata:
+  name: tenant-a-user
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: shared-kafka
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: tenant-a-
+          patternType: prefix
+        operations:
+          - Create
+          - Read
+          - Write
+          - Describe
+      - resource:
+          type: group
+          name: tenant-a-
+          patternType: prefix
+        operations:
+          - Read

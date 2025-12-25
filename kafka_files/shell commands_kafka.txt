@@ -1,0 +1,8 @@
+chmod +x kafka-tenant.sh
+./kafka-tenant.sh install-kafka
+
+./kafka-tenant.sh create-tenant tenant-a
+./kafka-tenant.sh test-tenant tenant-a
+
+./kafka-tenant.sh delete-tenant tenant-a
+./kafka-tenant.sh uninstall-kafka

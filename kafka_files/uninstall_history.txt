@@ -1,0 +1,756 @@
+    1  kubectl get pods
+    2  kubectl get deployment
+    3  kubectl describe deploy sample-java-app
+    4  kubectl get nodes
+    5  kubectl get sa jenkins -n default -o jsonpath='{.secrets[0].name}'
+    6  kubectl get clusterrrolebinding
+    7  kubectl get sa
+    8  kubectl create clusterrolebinding jenkins-admin   --clusterrole=cluster-admin   --serviceaccount=default:jenkins
+    9  kubectl get clusterrolebinding
+   10  kubectl get clusterrolebinding | grep jenkins
+   11  kubectl get secret <SECRET_NAME> -n default -o jsonpath='{.data.token}' | base64 -d
+   12  kubectl get sa jenkins -n default -o jsonpath='{.secrets[0].name}'
+   13  history 
+   14  kubectl create token jenkins
+   15  kubectl get deploy
+   16  kubectl describe deploy sample-java-app
+   17  kubectl get pods 
+   18  kubectl describe pod sample-java-app-55f88d69c-7d9rg
+   19  kubectl get deploy -o wide
+   20  kubectl get svc
+   21  curl 10.10.252.244:30080/
+   22  kubectl get svc
+   23  curl 10.10.252.244:30082/call_google
+   24  curl 10.10.252.244:30082
+   25  kubectl get pods
+   26  kubectl describe pod spring-cloud-application-fd89cd7b4-4scqf
+   27  sudo vi /etc/hosts
+   28  curl 10.10.252.20:30082/call_google
+   29  curl google.com
+   30  curl https://www.google.com
+   31  clear
+   32  curl 10.10.252.20:30082/call_google
+   33  curl http://spring-cloud-gateway/external/google/search?q=test
+   34  curl http://10.10.252.20:30082/external/google/search?q=test
+   35  curl http://10.10.252.20:30081/external/google/search?q=test
+   36  kubectl get pods
+   37  kubectl describe pod spring-cloud-gateway-6b8c6bd564-mfqsr
+   38  curl http://10.10.252.20:30081
+   39  curl http://10.10.252.20:30081/external/google/search?q=test
+   40  curl http://10.10.252.20:30082/external/google/search?q=test
+   41  curl http://10.10.252.20:30082/call_google
+   42  kubectl logs pod spring-cloud-gateway-6b8c6bd564-mfqsr
+   43  kubectl logs pod/spring-cloud-gateway-6b8c6bd564-mfqsr
+   44  kubectl get pods
+   45  kubectl logs pod/sample-java-app-55f88d69c-bzlh7 
+   46  curl 10.10.252.44:30080/
+   47  cat /etc/hosts
+   48  curl http://10.10.252.220:30082/call_google
+   49  curl http://10.10.252.220:30081/external/google/search?q=test
+   50  clear
+   51  kubectl get pods
+   52  kubectl logs pod/spring-cloud-application-fd89cd7b4-lxrfb
+   53  kubectl get pods
+   54  kubectl logs pod/spring-cloud-application-fd89cd7b4-lxrfb
+   55  kubectl get pods
+   56  kubectl get deployments
+   57  kubectl rollout restart deployment spring-cloud-gateway
+   58  kubectl get pods
+   59  kubectl rollout restart deployment spring-cloud-application
+   60  kubectl get pods
+   61  kubectl describe pods spring-cloud-gateway-84d974d9d8-dqn7d
+   62  kubectl get pods
+   63  kubectl describe pods spring-cloud-application-679685f94c-72t56 
+   64  kubectl logs pods/spring-cloud-application-679685f94c-72t56 
+   65  curl http://10.10.252.220:30082/call_google
+   66  history | grep token
+   67  kubectl create token jenkins
+   68  kubectl get pods
+   69  kubectl describe pods sample-java-app-56cbf95c8-xshdl
+   70  curl http://10.10.252.220:30080/
+   71  sudo kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+   72  kubectl get nodes
+   73  vi deploy.yaml
+   74  sudo kubectl apply -f deploy.yaml 
+   75  sudo kubectl apply --validate=false -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+   76  sudo kubectl apply --validate=false -f deploy.yaml 
+   77  sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
+   78  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   79  kubectl get noes
+   80  kubectl get nodes
+   81  sudo kubectl get nodes
+   82  sudo mkdir -p /root/.kube
+   83  sudo cp /etc/kubernetes/admin.conf /root/.kube/config
+   84  sudo kubectl get nodes
+   85  sudo kubectl apply --validate=false -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+   86  kubectl get pods -n ingress-nginx
+   87  kubectl get svc -n ingress-nginx
+   88  vi sample_java_service.yaml
+   89  kubectl apply -f sample_java_service.yaml
+   90  kubectl get svc sample-java-app
+   91  kubectl get svc
+   92  vi sample_java_ingress.yaml
+   93  kubectl apply -f sample_java_ingress.yaml 
+   94  kubectl get ingress
+   95  kubectl get svc -n ingress-nginx
+   96  sudo vi /etc/hosts
+   97  curl http://apps.mycompany.com/sample-java-app
+   98  curl http://apps.mycompany.com:32645/sample-java-app 
+   99  curl http://apps.mycompany.com:32645/sample-java-app/ 
+  100  vi sample_java_ingress.yaml
+  101  kubectl apply -f sample_java_ingress.yaml 
+  102  kubectl get svc -n ingress-nginx
+  103  curl http://apps.mycompany.com/
+  104  curl http://apps.mycompany.com:32645/
+  105  vi sample_java_ingress.yaml
+  106  kubectl apply -f sample_java_ingress.yaml 
+  107  vi sample_java_ingress.yaml
+  108  kubectl apply -f sample_java_ingress.yaml 
+  109  vi sample_java_ingress.yaml
+  110  kubectl apply -f sample_java_ingress.yaml 
+  111  kubectl get pods
+  112  kubectl get pods -n ingress
+  113  kubectl get ns
+  114  kubectl get pods -n ingress-nginx
+  115  curl http://apps.mycompany.com:32645/
+  116  curl http://apps.mycompany.com:32645/sample-java-app
+  117  cat /etc/hosts
+  118  kubectl get ingress
+  119  vi sample_java_ingress.yaml
+  120  kubectl apply -f sample_java_ingress.yaml
+  121  kubectl get ingress
+  122  curl http://apps.mycompany.com:32645/
+  123  curl http://apps.mycompany.com:32645/sample-java-app
+  124  sudo firewall-cmd --add-port=30000-32767/tcp --permanent
+  125  sudo firewall-cmd --reload
+  126  sudo ufw allow 30000:32767/tcp
+  127  kubectl create token jenkins
+  128  vi sample_java_ingress.yaml
+  129  kubectl apply -f sample_java_ingress.yaml 
+  130  kubectl get ingress
+  131  ls
+  132  vi deploy.yaml 
+  133  curl http://apps.mycompany.com:32645/hello
+  134  kubectl get nods -o wide
+  135  kubectl get nodes -o wide
+  136  sufo vi /etc/hosts
+  137  sudo vi /etc/hosts
+  138  curl http://apps.mycompany.com:32645/hello
+  139  clear
+  140  ls
+  141  vi sample_java_service.yaml
+  142  vi sample_java_ingress.yaml 
+  143  kubectl apply -f sample_java_ingress.yaml 
+  144  vi sample_java_service.yaml
+  145  vi sample_java_ingress.yaml 
+  146  kubectl create token jenkins
+  147  kubectl get pods
+  148  kubectl rollout restart deploy/spring-cloud-application
+  149  kubectl get pods
+  150  kubectl get ingress
+  151  kubectl create token jenkins
+  152  history
+  153  cd .kube/
+  154  ls -al
+  155  more config 
+  156  cd
+  157  kubectl get pods -o wide
+  158  kubectl get svcs
+  159  kubectl get svc
+  160  docker images
+  161  sudo docker images
+  162  sudo docker pull 10.10.252.251/demo-project/nginx:v1
+  163  sudo vi /etc/docker/daemon.json 
+  164  sudo systemctl restart docker
+  165  sudo systemctl status docker
+  166  sudo systemctl start docker
+  167  journalctl -xeu docker.service
+  168  journalctl -f -u docker.service
+  169  sudo journalctl -f -u docker.service
+  170  sudo docker pull 10.10.252.251/demo-project/nginx:v1
+  171  sudo vi /etc/docker/daemon.json 
+  172  sudo systemctl start docker
+  173  sudo docker pull 10.10.252.251/demo-project/nginx:v1
+  174  sudo docker images
+  175  sudo docker rmi 10.10.252.251/demo-project/nginx:v1
+  176  clear
+  177  pwd
+  178  ls
+  179  vi nginx_deploy.yml
+  180  kubectl apply -f nginx_deploy.yml 
+  181  kubectl get pods
+  182  kubectl logs nginx-deployment-6c87596684-g44xj
+  183  kubectl get pods
+  184  more nginx_deploy.yml 
+  185  docker images
+  186  sudo docker images
+  187  sudo docker pull 10.10.252.251/demo-project/nginx:v1
+  188  vi nginx_deploy.yml 
+  189  more  nginx_deploy.yml 
+  190  kubectl get pods
+  191  kubectl delete pods nginx-deployment-6c87596684-g44xj
+  192  kubectl delete pods nginx-deployment-6c87596684-nj8vz
+  193  kubectl get pods
+  194  kubectl describe pod nginx-deployment-6c87596684-f9cfk
+  195  openssl s_client -connect 10.10.252.251:443 -showcerts
+  196  cd /etc/ssl/certs/
+  197  ls
+  198  vi harbor.crt
+  199  sudo vi harbor.crt
+  200  sudo cp harbor.crt /usr/local/share/ca-certificates/harbor.crt
+  201  sudo update-ca-certificates
+  202  sudo systemctl restart docker
+  203  cd
+  204  kubectl get pods
+  205  kubectl delete pods nginx-deployment-6c87596684-f9cfk 
+  206  kubectl delete pods nginx-deployment-6c87596684-qfzw8
+  207  kubectl get pods
+  208  kubectl show ds
+  209  kubectl show deployments
+  210  kubectl get deployments
+  211  kubectl delete nginx-deployment
+  212  kubectl delete deployment nginx-deployment
+  213  clear
+  214  ls
+  215  kubectl get pods
+  216  ls
+  217  more nginx_deploy.yml 
+  218  clear
+  219  kubectl apply -f nginx_deploy.yml 
+  220  kubectl get pods -o wide
+  221  kubectl describe nginx-deployment-6c87596684-r4cx2
+  222  kubectl describe pod nginx-deployment-6c87596684-r4cx2
+  223  openssl s_client -connect 10.10.252.251:443 -showcerts
+  224  ip r
+  225  cd /etc/containerd/
+  226  sudo su -l
+  227  cd
+  228  kubectl describe pod nginx-deployment-6c87596684-r4cx2
+  229  docker info | grep -i "insecure"
+  230  sudo docker info | more
+  231  kubectl get nodes
+  232  kubectl describe node abg-demo-1 | grep "container-runtime"
+  233  sudo journalctl -u docker.service | grep -i "10.10.252.251"
+  234  cd /tmp/
+  235  ls -lrt
+  236  locate harbor.crt
+  237  cd /usr/local/share/ca-certificates
+  238  ls -lrt
+  239  more harbor.crt 
+  240  sudo vi  harbor.crt 
+  241  sudo update-ca-certificates
+  242  sudo more /etc/docker/daemon.json 
+  243  cd
+  244  clear
+  245  sudo docker images
+  246  sudo docker rmi 10.10.252.251/demo-project/nginx
+  247  sudo docker rmi 10.10.252.251/demo-project/nginx:v1
+  248  sudo docker images
+  249  clear
+  250  sudo su
+  251  kubectl get nodes
+  252  kubectl create token jenkins
+  253  kubectl get pods
+  254  kubectl get pods -n monitoring
+  255  clear
+  256  kubectl get pods -o wide
+  257  kubectl get svc
+  258  sudo apt update
+  259  sudo apt install python3
+  260  python3 --version
+  261  mkdir Python_codebase
+  262  nano server.py
+  263  nano provisioner.py
+  264  nano test_code.py
+  265  python3 server.py
+  266  pip install FastAPI
+  267  pip3 install FastAPI
+  268  sudo apt install python3-pip
+  269  clear
+  270  pip install FastAPI
+  271  pip install uvicorn
+  272  python3 server.py
+  273  pip install numpy
+  274  python3 server.py
+  275  vi provisioner.py 
+  276  vi server.py 
+  277  python3 server.py
+  278  rm server.py 
+  279  nano server.py
+  280  python3 server.py
+  281  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+  282  chmod 700 get_helm.sh
+  283  ./get_helm.sh 
+  284  helm
+  285  clear
+  286  helm repo add fission-charts https://fission.github.io/fission-charts/
+  287  helm repo update
+  288  python3 server.py
+  289  nano server.py
+  290  vi provisioner.py
+  291  rm provisioner.py 
+  292  nano provisioner.py
+  293  helm list -A
+  294  helm list
+  295  helm charts
+  296  helm
+  297  helm repo list
+  298  helm repo delete 
+  299  helm repo remove fission-charts
+  300  clear
+  301  python3 server.py 
+  302  nano provisioner.py
+  303  python3 server.py 
+  304  pwd
+  305  ls
+  306  mv server.py provisioner.py ./Python_codebase/
+  307  ls
+  308  ls Python_codebase/
+  309  mk dir ./Python_codebase/template
+  310  mkdir ./Python_codebase/template
+  311  nano Python_codebase/template/fission-multins-rbac.yaml
+  312  nano Python_codebase/provisioner.py 
+  313  helm repo remove fission-charts
+  314  helm uninstall fission
+  315  helm uninstall fission -fission
+  316  helm uninstall fission -n fission
+  317  helm repo update
+  318  kubectl delete ns fission
+  319  kubectl get crds | grep fission
+  320  kubectl delete crds canaryconfigs.fission.io environments.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io packages.fission.io timetriggers.fission.io
+  321  kubectl get sa
+  322  kubectl get clusterroles
+  323  kubectl get clusterroles | grep fission
+  324  kubectl get mutatingwebhookconfiguration
+  325  kubectl get validatingwebhookconfiguration
+  326  kubectl get ns
+  327  clear
+  328  cd Python_codebase/
+  329  python3 server.py 
+  330  curl -Lo fission https://github.com/fission/fission/releases/download/v1.21.0/fission-v1.21.0-linux-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+  331  fission check
+  332  kubectl get deployments -n fission
+  333  kubectl describe deployments storagesvc -n fission
+  334  kubectl get pods -n fission
+  335  kubectl describe pods storagesvc-547ddf68b7-fdfwd -n fission
+  336  kubectl logs  pods/storagesvc-547ddf68b7-fdfwd -n fission
+  337  fission check
+  338  kubectl get pvc -n fission
+  339  kubectl get storageclass
+  340  sudo mkdir -p /mnt/fission-storage
+  341  sudo chmod 777 /mnt/fission-storage
+  342  nano fission-pvc.yaml
+  343  sudo vi /etc/hosts
+  344  kubectl apply -f fission-pvc.yaml 
+  345  nano localstorage.yaml
+  346  kubectl apply -f localstorage.yaml 
+  347  kubectl delete pod -n fission -l application=fission-storage
+  348  kubectl get pods -n fission
+  349  kubectl rollout restart deploy/storagesvc -n fission
+  350  kubectl get pods -n fission
+  351  kubectl get pvc -n fission
+  352  kubectl get storageclass
+  353  kubectl delete storageclass local-storage
+  354  helm upgrade fission fission-charts/fission-all   -n fission   --set persistence.enabled=false
+  355  nano provisioner.py 
+  356  clear
+  357  python3 server.py 
+  358  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  359      "tenant": "admin-paas",
+  360      "product": "fission",
+  361      "plan": "test"
+  362  }'
+  363  kubectl get ns
+  364  kubectl delete ns admin-paas
+  365  clear
+  366  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  367      "tenant": "admin-paas",
+  368      "product": "fission",
+  369      "plan": "test"
+  370  }'
+  371  kubectl delete ns admin-paas
+  372  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  373      "tenant": "admin-paas",
+  374      "product": "fission",
+  375      "plan": "test"
+  376  }'
+  377  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  378      "tenant": "admin-paas",
+  379      "product": "fission",
+  380      "plan": "test"
+  381  }'
+  382  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  383      "tenant": "admin-paas",
+  384      "product": "fission",
+  385      "plan": "test"
+  386  }'
+  387  fission check
+  388  fission
+  389  kubectl get ns
+  390  helm repo remove fission-charts
+  391  helm uninstall fission -n fisison
+  392  helm uninstall fission -n fission
+  393  kubectl delete ns fission
+  394  kubectl delete ns admin-paas
+  395  kubectl get crds | grep fission
+  396  kubectl delete crds canaryconfigs.fission.io environments.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io packages.fission.io timetriggers.fission.io
+  397  kubectl get clusterroles
+  398  kubectl get clusterroles | grep fission
+  399  kubectl delete clusterroles fission-builder-multins fission-executor-multins fission-preupgrade fission-router-multins 
+  400  kubectl get sa
+  401  kubectl get sa -n fission
+  402  kubectl get mutatingwebhookconfigurations
+  403  kubectl get mutatingwebhookconfiguration
+  404  kuebctl get validatingwebhookconfiguration
+  405  kuebctl get validatingwebhookconfigurations
+  406  kubectl get validatingwebhookconfigurations
+  407  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  408      "tenant": "admin-paas",
+  409      "product": "fission",
+  410      "plan": "test"
+  411  }'
+  412  fission check
+  413  fission environment create --name python --image ghcr.io/fission/python-env --namespace admin-paas
+  414  nano hellopy.py
+  415  fission fn create --name hellopy --env python --code hellopy.py -n admin-paas
+  416  fission route create --method GET --url /hellopy --function hellopy --n admin-paas
+  417  fission route create --method GET --url /hellopy --function hellopy -n admin-paas
+  418  fission fn test --name hellopy -n admin-paas
+  419  fission fn test --name=hellopy --namespace admin-paas
+  420  fission get pods -n admin-paas
+  421  kubectl get pods -n admin-paas
+  422  curl 10.10.252.244/hellopy
+  423  kubectl get nodes -n fission
+  424  kubectl get svc -n fission
+  425  curl 10.10.252.244:32087/hellopy
+  426  fission fn delete --name=hellopy
+  427  fission fn delete --name=hellopy -n admin-paas
+  428  fission route delete --name=hellopy -n admin-paas
+  429  fission route list -n admin-paaas
+  430  fission route list -n admin-paas
+  431  fission route delete 90e6bc91-58f3-4aa7-912b-e7f71be9648b -n admin-paas
+  432  fission route delete 90e6bc91-58f3-4aa7-912b-e7f71be9648b --name=hellopy -n admin-paas
+  433  fission route delete
+  434  fission route delete --function=hellopy -n admin-paas
+  435  rm hellopy.py 
+  436  nano hellopy.py
+  437  fission fn create --name hellopy --env python --code hellopy.py -n admin-paas
+  438  fission route create --method GET --url /hellopy --function hellopy -n admin-paas
+  439  curl 10.10.252.244:32087/hellopy
+  440  fission fn logs
+  441  fission fn log --name=hellopy
+  442  fission fn log --name=hellopy -n admin-paas
+  443  fission 
+  444  fission pod
+  445  fission function
+  446  fission function pods
+  447  fission function pods --name=hellopy
+  448  fission function pods --name=hellopy -n admin-paas
+  449  kubectl get pods -n admin-paas
+  450  kubectl desc pods poolmgr-python-admin-paas-288104-c4b468bd6-sl9vk -n admin-paas
+  451  kubectl describe pods poolmgr-python-admin-paas-288104-c4b468bd6-sl9vk -n admin-paas
+  452  curl 10.10.252.220/hellopy
+  453  kubectl get svc -n fission
+  454  curl 10.10.252.220:32087/hellopy
+  455  clear
+  456  fission fn test --name=hellopy -n admin-paas
+  457  kubectl get svc -n fission
+  458  curl 10.10.252.244:32087/hellopy
+  459  curl 10.10.252.244:32087/admin-paas/hellopy
+  460  curl 10.10.252.220:32087/admin-paas/hellopy
+  461  kubectl get pods -n fission-function
+  462  kubectl get pods -n admin-paas
+  463  fission env list -n admin-paas
+  464  fission fn list -n admin-paas
+  465  fission route list -n admin-paas
+  466  fission fn test --name-hellopy -n admin-paas
+  467  fission fn test --name=hellopy -n admin-paas
+  468  sudo su
+  469  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  470      "tenant": "admin-paas",
+  471      "product": "fission",
+  472      "plan": "test"
+  473  }'
+  474  helm list -A
+  475  helm uninstall fission -n fission
+  476  helm repo delete fission-charts
+  477  helm repo remove fission-charts
+  478  kubectl delete ns fission admin-paas
+  479  kubectl delete crds canaryconfigs.fission.io environments.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io packages.fission.io timetriggers.fission.io
+  480  kubectl get sa
+  481  kubectl get clusterrolebinding
+  482  kubectl get clusterrolebinding | grep
+  483  kubectl get clusterrolebinding | grep fission
+  484  kubectl delete clusterrolebinding fission-builder-multins fission-executor-multins fission-router-multins
+  485  kubectl get mutatingwebhookconfiguration
+  486  kubectl get validatingwebhookconfiguration
+  487  clear
+  488  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  489      "tenant": "admin-paas",
+  490      "product": "fission",
+  491      "plan": "test"
+  492  }'
+  493  fission check
+  494  fission env create --name python --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3 -n admin-paas
+  495  fission function create --name hellopy --env python --code hellopy.py --namespace admin-paas
+  496  fission route create --method GET --url /hellopy --function hellopy --namespace admin-paas
+  497  kubectl get pods -n fission
+  498  kubectl logs pod/executor-557d96f8c6-cbjld -n fission
+  499  fission fn test --name=hellopy -n admin-paas
+  500  kubectl create clusterrolebinding fission-executor-admin   --clusterrole=cluster-admin   --serviceaccount=fission:fission-executor
+  501  kubectl rollout restart deployment executor -n fission
+  502  kubectl get pods -n fission
+  503  fission fn test --name=hellopy -n admin-paas
+  504  nano Python_codebase/provisioner.py 
+  505  rm Python_codebase/provisioner.py 
+  506  nano Python_codebase/provisioner.py
+  507  nano Python_codebase/server.py 
+  508  kubectl get ns
+  509  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  510      "tenant": None,
+  511      "product": "fission",
+  512      "plan": "test"
+  513  }'
+  514  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+  515      "tenant": "default",
+  516      "product": "fission",
+  517      "plan": "test"
+  518  }'
+  519  fission env list
+  520  fission env create --name python --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3
+  521  nano hellopyv2.py
+  522  fission function create --name hellopy --env python --code hellopyv2.py
+  523  fission route create --method GET --url /hellopy --function hellopy
+  524  kubectl get httptriggers
+  525  kubectl get httptrigger
+  526  kubectl get httptrigger -n admin-paas
+  527  fission route create --method GET --url /default/hellopy --function hellopy
+  528  fission fn test --name=hellopy
+  529  fission env list
+  530  fission env list -n admin-paas
+  531  fission route list -n admin-paas
+  532  fission route delete --name=a5bf4c8b-f5b8-419e-99cb-160575836530 -n admin-paas
+  533  kubectl get httptriggers
+  534  kubectl get httptriggers -n fission
+  535  kubectl get httptriggers -n admin-paas
+  536  fission fn delete --name=hellopy -n admin-paas
+  537  fission env delete --name=python -n admin-paas
+  538  fission env create   --name python   --image ghcr.io/fission/python-env   --builder ghcr.io/fission/python-builder   --poolsize 3   -n admin-paas
+  539  kubectl get pods -n admin-paas
+  540  fission fn create --name=hellopy --env=python --code=hellopy.py -n admin-paas
+  541  fission route create --function hellopy --method GET --url /hellopy -n admin-paas
+  542  fission fn test --name=hellopy -n admin-paas
+  543  curl 10.10.252.244:32087/hellopy
+  544  kubectl get pods -n fission
+  545  kubectl logs pods/executor-7c7f9b5989 -n fission
+  546  kubectl logs pods/executor-7c7f9b5989-nvqz6 -n fission
+  547  clear
+  548  kubectl logs -n admin-paas   pod/poolmgr-python-admin-paas-305459-9bfbc6ff6-jqhxg   -c fetcher
+  549  kubectl get pods -n admin-paas
+  550  kubectl logs -n admin-paas pod/poolmgr-python-admin-paas-305459-9bfbc6ff6-fw9vp -c fetcher
+  551  helm uninstall fission -n fission
+  552  kubectl delete ns admin-paas
+  553  kubectl delete ns fission
+  554  kubectl get crds | grep fission
+  555  kubectl create ns fission 
+  556  helm install fission fission-charts/fission-all   -n fission   --create-namespace   --set persistence.enabled=false   --set storagesvc.enabled=false
+  557  kubectl create ns admin-paas
+  558  kubectl delete ns fission admin-paas
+  559  helm uninstall fission -n fission
+  560  helm list -A
+  561  kubectl get crds | grep fission
+  562  kubectl delete crds canaryconfigs.fission.io environments.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io packages.fission.io  timetriggers.fission.io
+  563  kubectl get sa
+  564  kubectl delete sa fission-builder fission-fetcher
+  565  kubectl get clusterrolebinding
+  566  kubectl get clusterrolebinding | grep fission
+  567  kubectl delete clusterrolebinding fission-builder-multins fission-executor-multins fission-preupgrade fission-router-multins 
+  568  kubectl get mutatingwebhookconfiguration
+  569  kubectl get validatingwebhookconfiguration
+  570  kubectl delete mutatingwebhookconfiguration fission-mutating-webhooks
+  571  kubectl delete validatingwebhookconfiguration fission-validating-webhooks
+  572  helm repo list
+  573  helm repo remove fission-charts
+  574  clear
+  575  cd Python_codebase/
+  576  python3 server.py 
+  577  nano provisioner.py
+  578  clear
+  579  python3 server.py 
+  580  sudo su
+  581  ls
+  582  nano prometheus.yaml
+  583  kubectl create namespace monitoring
+  584  kubectl get ns
+  585  kubectl apply -f prometheus.yaml 
+  586  kubectl get pods -n monitoring
+  587  kubectl get pods -n fission
+  588  kubectl logs deploy/router -n fission | grep metrics
+  589  kubectl logs deploy/executor -n fission | grep metrics
+  590  kubectl logs deploy/router -n fission | grep metrics
+  591  clear
+  592  kubectl expose deploy/router -n fission   --port=8888 --target-port=8888 --name=router --type=ClusterIP
+  593  kubectl exec -n monitoring deploy/prometheus -- nslookup router.fission.svc.cluster.local
+  594  kubectl logs -n fission deploy/router --tail=40
+  595  kubectl get svc router -n fission -o yaml | grep "port:"
+  596  kubectl get svc executor -n fission -o yaml | grep "port:"
+  597  clear
+  598  kubectl get svc executor -n fission -o yaml | grep "port:"
+  599  kubectl patch svc router -n fission --type='json' -p='[
+  600    {"op": "add", "path": "/spec/ports/-", "value": {
+  601      "name": "metrics",
+  602      "protocol": "TCP",
+  603      "port": 8080,
+  604      "targetPort": 8080
+  605    }}
+  606  ]'
+  607  kubectl patch svc router -n fission --type='json' -p='[
+  608    {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+  609  ]'
+  610  kubectl patch svc router -n fission --type='json' -p='[
+  611    {"op": "add", "path": "/spec/ports/-", "value": {
+  612      "name": "metrics",
+  613      "protocol": "TCP",
+  614      "port": 8080,
+  615      "targetPort": 8080
+  616    }}
+  617  ]'
+  618  kubectl get pods -n fission
+  619  kubectl patch svc executor -n fission --type='json' -p='[
+  620    {"op": "add", "path": "/spec/ports/0/name", "value": "http"}
+  621  ]'
+  622  kubectl patch svc executor -n fission --type='json' -p='[
+  623    {"op": "add", "path": "/spec/ports/-", "value": {
+  624      "name": "metrics",
+  625      "protocol": "TCP",
+  626      "port": 8080,
+  627      "targetPort": 8080
+  628    }}
+  629  ]'
+  630  kubectl exec -n monitoring deploy/prometheus -- curl -I http://router.fission.svc.cluster.local:8080/metrics
+  631  kuebctl get pods -n monitoring
+  632  kubectl get pods -n monitoring
+  633  kubectl get svc -n fission router -o yaml
+  634  kubectl delete ns monitoring
+  635  clear
+  636  kubectl create namespace monitoring
+  637  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  638  helm repo update
+  639  helm install monitoring prometheus-community/kube-prometheus-stack   --namespace monitoring
+  640  kubectl get pods -n monitoring
+  641  kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090
+  642  kubectl edit svc monitoring-kube-prometheus-prometheus -n monitoring
+  643  kubectl get svc monitoring-kube-prometheus-prometheus -n monitoring
+  644  kubectl get svc monitoring-kube-prometheus-prometheus -n monitoring -o wide
+  645  kubectl get pods -n monitoring | grep prometheus
+  646  kubectl logs -n monitoring prometheus-monitoring-kube-prometheus-prometheus -c prometheus --tail=50
+  647  kubectl logs -n monitoring prometheus-monitoring-kube-prometheus-prometheus-0 -c prometheus --tail=50
+  648  kubectl run curltest --rm -it --image=curlimages/curl -- sh
+  649  clear
+  650  kubectl get svc monitoring-kube-prometheus-prometheus -n monitoring
+  651  curl localhost:9090
+  652  curl localhost:30765
+  653  sudo iptables -L -n | grep 30765
+  654  kubectl get pods -n kube-system | grep kube-proxy
+  655  kubectl get pods -n monitoring -o wide
+  656  kubectl get svc monitoring-kube-prometheus-prometheus -n monitoring -o yaml
+  657  kubectl get nodes -o wide
+  658  clear
+  659  ssh admusr@10.10.252.244
+  660  curl http://127.0.0.1:30765
+  661  sudo iptables -I INPUT -p tcp --dport 30765 -j ACCEPT
+  662  clear
+  663  kubectl get svc -n monitoring
+  664  kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 8080:9090
+  665  kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9000:9090
+  666  clear
+  667  kubectl get svc -n fission router -o yaml
+  668  kubectl edit prometheus monitoring-kube-prometheus-prometheus -n monitoring
+  669  nano router_pr.yaml
+  670  nano executor_pr.yaml
+  671  kubectl get svc -n fission executor -o yaml
+  672  kubectl get svc -n fission router -o yaml
+  673  kubectl get svc -n fission executor -o yaml
+  674  kubectl label svc executor -n fission app=fission-executor
+  675  kubectl get svc -n fission executor -o yaml
+  676  nano executor_pr.yaml
+  677  kubectl get svc -n fission
+  678  kubectl get svc -n fission storagesvc -o yaml
+  679  nano storage_pr.yaml
+  680  nano builder_pr.yaml
+  681  kubectl get deployments -n fission
+  682  kubectl describe deployment/buildermgr -n fission
+  683  clear
+  684  kubectl apply -f router_pr.yaml 
+  685  kuebctl apply -f executor_pr.yaml 
+  686  kubectl apply -f executor_pr.yaml 
+  687  kubectl apply -f storage_pr.yaml 
+  688  kubectl apply -f builder_pr.yaml 
+  689  kubectl get pods -n fission
+  690  kubectl get svc -n fission
+  691  kubectl exec -n monitoring deploy/prometheus --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | head
+  692  kubectl get deployments -n monitoring
+  693  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | head
+  694  kubectl get svc -n fission
+  695  curl 10.10.252.244:31657/hellopy
+  696  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | head
+  697  curl 10.10.252.244:31657/hellopy
+  698  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | head
+  699  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://executor.fission.svc.cluster.local:8080/metrics | head
+  700  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function_calls_total
+  701  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+  702  history
+  703  nano router_pr.yaml 
+  704  nano executor_pr.yaml
+  705  nano storage_pr.yaml
+  706  nano builder_pr.yaml 
+  707  kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml
+  708  kubectl get prometheus monitoring-kube-prometheus-prometheus -n monitoring -o yaml | grep serviceMonitorNamespaceSelector
+  709  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+    "tenant": "user-paas",
+    "product": "fission",
+    "plan": "test"
+}'
+  710  fission check
+  711  helm repo list
+  712  helm repo remove fission-charts
+  713  helm uninstall fission -n fission
+  714  kubectl get ns
+  715  kubectl delete ns fission admin-paas
+  716  kubectl get crds | grep fission
+  717  kubectl delete crds canaryconfigs.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io packages.fission.io timetriggers.fission.io
+  718  kubectl get crds | grep fission
+  719  kubectl delete crds environments.fission.io
+  720  kubectl get sa
+  721  kubectl get clusterrolebinding | grep fission
+  722  kubectl delete clusterrolebinding fission-builder-multins fission-executor-admin fission-executor-multins  fission-router-multins
+  723  kubectl get mutatingwebhookconfiguration
+  724  kubectl get validatingwebhookconfiguration | grep fission
+  725  kubectl get validatingwebhookconfiguration
+  726  clear
+  727  curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: application/json' --data '{
+    "tenant": "admin-paas",
+    "product": "fission",
+    "plan": "test"
+}'
+  728  fission check
+  729  kubectl get pods -n fission
+  730  kubectl get svc -n fission
+  731  kubectl get svc executor -n fission -o yaml
+  732  kubectl get servicemonitor
+  733  kubectl get servicemonitor -n fission
+  734  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+  735  kubectl get deploy/monitoring-kube-prometheus-operator -o yaml
+  736  kubectl get deploy/monitoring-kube-prometheus-operator -n monitoring -o yaml
+  737  kubectl get deploy/monitoring-kube-prometheus-operator -n monitoring -o yaml | grep router
+  738  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+  739  kubectl get svc -n fission router -o yaml
+  740  kubectl get svc -n fission
+  741  kubectl get servicemonitor -n monitoring
+  742  kubectl get servicemonitor fission-executor -n monitoring
+  743  kubectl get servicemonitor fission-executor -n monitoring -o yaml
+  744  clear
+  745  kubectl get pods -n monitoring
+  746  kubectl edit prometheus monitoring-kube-prometheus-prometheus -n monitoring
+  747  history
+  748  history > uninstall_history.txt

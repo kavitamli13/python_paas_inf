@@ -1,0 +1,42 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: tenant-a-user
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: cluster
+        operations:
+          - Create
+          - Describe
+      - resource:
+          type: topic
+          name: tenant-a.
+          patternType: prefix
+        operations:
+          - Create
+          - Alter
+          - Describe
+          - Read
+          - DescribeConfigs
+      - resource:
+          type: group
+          name: tenant-a.
+          patternType: prefix
+        operations:
+          - Describe
+          - Read
+      - resource:
+          type: topic
+          name: __consumer_offsets
+          patternType: literal
+        operations:
+          - Describe
+          - Read

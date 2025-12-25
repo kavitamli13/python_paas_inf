@@ -1,0 +1,30 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaUser
+metadata:
+  name: tenant-a-user
+  namespace: tenant-a
+  labels:
+    strimzi.io/cluster: shared-kafka
+spec:
+  authentication:
+    type: scram-sha-512
+
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: tenant-a.
+          patternType: prefix
+        operations: [Read, Write, Create, Describe]
+
+      - resource:
+          type: group
+          name: tenant-a.
+          patternType: prefix
+        operations: [Read]
+
+  quotas:
+    producerByteRate: 5242880     # 5 MB/s (can be tuned later)
+    consumerByteRate: 5242880
+    requestPercentage: 50

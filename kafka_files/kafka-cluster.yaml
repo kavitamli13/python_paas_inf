@@ -1,0 +1,35 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: my-cluster
+  namespace: kafka
+spec:
+  kafka:
+    version: 4.1.1
+    nodePools:
+      - name: kafka-nodepool-0
+        replicas: 3
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+        storage:
+          type: persistent-claim
+          size: 5Gi
+          class: standard
+        listeners:
+          - name: plain
+            port: 9092
+            type: internal
+            tls: false
+          - name: external-scram
+            port: 9094
+            type: nodeport
+            tls: true
+            authentication:
+              type: scram-sha-512
+    authorization:
+      type: simple
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

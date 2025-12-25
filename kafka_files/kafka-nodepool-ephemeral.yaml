@@ -1,0 +1,15 @@
+# kafka-nodepool-ephemeral.yaml
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  name: shared-kafka-pool
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: shared-kafka
+spec:
+  replicas: 3
+  roles:
+    - controller
+    - broker
+  storage:
+    type: ephemeral

@@ -1,0 +1,1000 @@
+ 1063  ls
+ 1064  ls -lt
+ 1065  ls -ltr
+ 1066  kubectl create secret generic openstack-cloud-config   --from-file=clouds.yaml=./apisix-clouds.yaml   -n kube-system
+ 1067  helm install cinder-csi cpo/openstack-cinder-csi   --namespace kube-system   --set secret.name=openstack-cloud-config   --set secret.create=false   --set storageClass.enabled=true   --set storageClass.defaultClass=true   --set storageClass.name=cinder-standard   --set storageClass.allowVolumeExpansion=true
+ 1068  kubectl get pods -n kube-system | grep cinder
+ 1069  clear
+ 1070  kubectl get pods -n kube-system | grep cinder
+ 1071  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-zxnjn -n kube-system
+ 1072  kubectl get pods -n kube-system | grep cinder
+ 1073  clear
+ 1074  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-zxnjn -n kube-system
+ 1075  kubectl get secret openstack-cloud-config -n kube-system
+ 1076  kubectl get secret openstack-cloud-config -n kube-system -o yaml
+ 1077  kubectl delete secret openstack-cloud-config -n kube-system
+ 1078  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./clouds.yaml   -n kube-system
+ 1079  ls
+ 1080  mv apisix-clouds.yaml clouds.yaml
+ 1081  kubectl delete secret openstack-cloud-config -n kube-system
+ 1082  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./clouds.yaml   -n kube-system
+ 1083  clear
+ 1084  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1085  kubectl get pods -n kube-system | grep cinder
+ 1086  kubectl get pvc -n apisix
+ 1087  kubectl get pods -n apisix -w
+ 1088  clear
+ 1089  kubectl get pods -n kube-system | grep cinder
+ 1090  clear
+ 1091  kubectl get pods -n kube-system | grep cinder
+ 1092  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-9kn2v -n kube-system
+ 1093  clear
+ 1094  kubectl get pods -n kube-system | grep cinder
+ 1095  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-9kn2v -n kube-system
+ 1096  clear
+ 1097  cat <<EOF > clouds.yaml
+ 1098  clouds:
+ 1099    mycloud:
+ 1100      auth:
+ 1101        auth_url: "http://10.10.98.22/horizon/"
+ 1102        username: "sscm_admin"
+ 1103        password: "!qaz@ws#edc"
+ 1104        project_name: "IAC"
+ 1105        user_domain_name: "SSC Marketplace"
+ 1106        project_domain_name: "SSC Marketplace"
+ 1107      region_name: "default"
+ 1108      interface: "public"
+ 1109      identity_api_version: 3
+ 1110  EOF
+ 1111  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./clouds.yaml   -n kube-system
+ 1112  kubectl delete secret openstack-cloud-config -n kube-system
+ 1113  cat <<EOF > clouds.yaml
+ 1114  clouds:
+ 1115    mycloud:
+ 1116      auth:
+ 1117        auth_url: "http://10.10.98.22/horizon/"
+ 1118        username: "sscm_admin"
+ 1119        password: "!qaz@ws#edc"
+ 1120        project_name: "IAC"
+ 1121        user_domain_name: "SSC Marketplace"
+ 1122        project_domain_name: "SSC Marketplace"
+ 1123      region_name: "default"
+ 1124      interface: "public"
+ 1125      identity_api_version: 3
+ 1126  EOF
+ 1127  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./clouds.yaml   -n kube-system
+ 1128  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1129  kubectl get pods -n kube-system | grep cinder
+ 1130  kubectl describe pod <controller-pod-name> -n kube-system
+ 1131  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-xphnz -n kube-system
+ 1132  clear
+ 1133  kubectl get pods -n kube-system | grep cinder
+ 1134  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-xphnz -n kube-system
+ 1135  clear
+ 1136  ls
+ 1137  vi clouds.yaml 
+ 1138  clear
+ 1139  openstack --os-cloud openstack token issue
+ 1140  sudo apt  install python3-openstackclient
+ 1141  clear
+ 1142  openstack --os-cloud openstack token issue
+ 1143  vi clouds.yaml 
+ 1144  clear
+ 1145  openstack --os-cloud openstack token issue
+ 1146  kubectl delete secret openstack-cloud-config -n kube-system
+ 1147  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./clouds.yaml   -n kube-system
+ 1148  kubectl delete pod -l app=openstack-cinder-csi,component=controllerplugin -n kube-system
+ 1149  kubectl get pods -n kube-system | grep cinder
+ 1150  clear
+ 1151  kubectl get pods -n kube-system | grep cinder
+ 1152  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-sbdd4 -n kube-system
+ 1153  clear
+ 1154  vi cloud.yaml
+ 1155  kubectl delete secret openstack-cloud-config -n kube-system
+ 1156  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./cloud.conf   -n kube-system
+ 1157  vi cloud.yaml
+ 1158  mv cloud.yaml cloud.conf
+ 1159  kubectl delete secret openstack-cloud-config -n kube-system
+ 1160  kubectl create secret generic openstack-cloud-config --from-file=cloud.conf=./cloud.conf -n kube-system
+ 1161  kubectl delete pod -l app=openstack-cinder-csi,component=controllerplugin -n kube-system
+ 1162  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1163  kubectl logs -f openstack-cinder-csi-controllerplugin-7c5474b6c8-x585f -n kube-system -c cinder-csi-plugin
+ 1164  kubectl delete secret openstack-cloud-config -n kube-system
+ 1165  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./cloud.conf   -n kube-system
+ 1166  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1167  ls /etc/config/cloud.conf
+ 1168  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1169  clear
+ 1170  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1171  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-7hj8r -n kube-system
+ 1172  clear
+ 1173  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-7hj8r -n kube-system ? file
+ 1174  clear
+ 1175  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-7hj8r -n kube-system > file
+ 1176  vi file
+ 1177  vi a-values.yaml 
+ 1178  cp cloud.conf /etc/config
+ 1179  sudo cp cloud.conf /etc/config
+ 1180  sudo cp clouds.yaml /etc/config
+ 1181  ls c*
+ 1182  vi cloud.conf
+ 1183  vi clouds.yaml 
+ 1184  vi cloud.conf
+ 1185  clear
+ 1186  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1187  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1188  clear
+ 1189  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1190  kube describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-cvkpr -n kube-system
+ 1191  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-cvkpr -n kube-system
+ 1192  clear
+ 1193  kube describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-cvkpr -n kube-system
+ 1194  clear
+ 1195  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1196  clear
+ 1197  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1198  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-cvkpr -n kube-system
+ 1199  clear
+ 1200  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1201  sudo cp ~/apisix_yamls/cloud.conf /etc/config/clouds.yaml
+ 1202  clear
+ 1203  ls
+ 1204  clea
+ 1205  clear
+ 1206  clea
+ 1207  clear
+ 1208  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1209  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1210  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-r2rmf -n kube-system
+ 1211  kubectl exec -n kube-system -it openstack-cinder-csi-controllerplugin-7c5474b6c8-r2rmf -- ls -l /etc/config
+ 1212  clear
+ 1213  kubectl exec -n kube-system -it openstack-cinder-csi-controllerplugin-7c5474b6c8-r2rmf -c cinder-csi-plugin -- ls -l /etc/config
+ 1214  clear
+ 1215  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1216  kubectl exec -n kube-system -it openstack-cinder-csi-controllerplugin-7c5474b6c8-r2rmf -c cinder-csi-plugin -- ls -l /etc/config
+ 1217  kubectl logs -n kube-system openstack-cinder-csi-controllerplugin-7c5474b6c8-r2rmf -c cinder-csi-plugin --previous
+ 1218  clear
+ 1219  ls
+ 1220  vi cloud.conf 
+ 1221  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1222  clear
+ 1223  vi cloud.conf 
+ 1224  ls
+ 1225  ls -l /etc/config/cloud.conf 
+ 1226  chmod 777 /etc/config/cloud.conf
+ 1227  sudo chmod 777 /etc/config/cloud.conf
+ 1228  clear
+ 1229  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1230  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1231  kubectl describe pod openstack-cinder-csi-controllerplugin-7c5474b6c8-757t8 -n kube-system
+ 1232  kubectl logs -n kube-system openstack-cinder-csi-controllerplugin-7c5474b6c8-757t8 -c cinder-csi-plugin --previous
+ 1233  vi cloud.conf 
+ 1234  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1235  vi cloud.conf 
+ 1236  clear
+ 1237  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1238  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1239  kubectl logs -n kube-system openstack-cinder-csi-controllerplugin-7c5474b6c8-d8hm4 -c cinder-csi-plugin --previous
+ 1240  kubectl logs -n kube-system  -c openstack-cinder-csi-controllerplugin-7c5474b6c8-d8hm4 -c cinder-csi-plugin --previous
+ 1241  kubectl logs -f openstack-cinder-csi-controllerplugin-7c5474b6c8-d8hm4 -n kube-system -c cinder-csi-plugin
+ 1242  clear
+ 1243  vi cloud.conf 
+ 1244  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1245  clear
+ 1246  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1247  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1248  kubectl logs -f openstack-cinder-csi-controllerplugin-7c5474b6c8-pnvgj -n kube-system -c cinder-csi-plugin
+ 1249  clear
+ 1250  kubectl describe deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1251  kubectl describe deployment openstack-cinder-csi-controllerplugin -n kube-system > file
+ 1252  vi file
+ 1253  clear
+ 1254  env:
+ 1255  - name: CSI_ENDPOINT
+ 1256  - name: CLOUD_CONFIG
+ 1257  - name: CLUSTER_NAME
+ 1258  - name: CLOUD
+ 1259  clear
+ 1260  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1261  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1262  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1263  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1264  kubectl logs -f openstack-cinder-csi-controllerplugin-6f87cfbb54-qvr2c -n kube-system -c cinder-csi-plugin
+ 1265  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1266  clear
+ 1267  vi cloud.conf 
+ 1268  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1269  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1270  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1271  kubectl logs -f openstack-cinder-csi-controllerplugin-6f87cfbb54-qvr2c -n kube-system -c cinder-csi-plugin
+ 1272  kubectl logs -f openstack-cinder-csi-controllerplugin-6f87cfbb54-krhvt -n kube-system -c cinder-csi-plugin
+ 1273  clear
+ 1274  sudo cat -A /etc/config/cloud.conf
+ 1275  clear
+ 1276  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1277  kubectl rollout restart deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1278  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1279  kubectl logs -f openstack-cinder-csi-controllerplugin-557b75b84f-hrbgr -n kube-system -c cinder-csi-plugin
+ 1280  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1281  /rollo
+ 1282  kubectl rollout restart deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1283  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1284  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1285  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1286  kubectl logs -f openstack-cinder-csi-controllerplugin-6b67dd969f-r729z -n kube-system -c cinder-csi-plugin
+ 1287  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1288  clear
+ 1289  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1290  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1291  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1292  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1293  kubectl logs -f openstack-cinder-csi-controllerplugin-6c775f5bf8-zjg5k -n kube-system -c cinder-csi-plugin
+ 1294  clear
+ 1295  cd apisix_yamls/
+ 1296  vi cloud.conf 
+ 1297  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1298  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1299  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1300  kubectl logs -f openstack-cinder-csi-controllerplugin-6c775f5bf8-dttks -n kube-system -c cinder-csi-plugin
+ 1301  vi cloud.conf 
+ 1302  clear
+ 1303  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1304  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1305  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1306  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-5md7j -n kube-system -c cinder-csi-plugin
+ 1307  vi cloud.conf 
+ 1308  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1309  clea
+ 1310  clear
+ 1311  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1312  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1313  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-5zz92 -n kube-system -c cinder-csi-plugin
+ 1314  clear
+ 1315  export OS_AUTH_URL=https://10.10.98.205:5000/v3
+ 1316  export OS_USERNAME=sscm_admin
+ 1317  export OS_PASSWORD='!qaz@wsx#edc'
+ 1318  export OS_PROJECT_NAME=IAC
+ 1319  export OS_USER_DOMAIN_NAME='SSC Marketplace'
+ 1320  export OS_PROJECT_DOMAIN_NAME='SSC Marketplace'
+ 1321  export OS_IDENTITY_API_VERSION=3
+ 1322  export OS_INTERFACE=public
+ 1323  export OS_INSECURE=1
+ 1324  openstack token issue
+ 1325  openstack --insecure token issue
+ 1326  vi cloud.conf 
+ 1327  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1328  vi cloud.conf 
+ 1329  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1330  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1331  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-kxqpt -n kube-system -c cinder-csi-plugin
+ 1332  clear
+ 1333  cp cloud.conf bak
+ 1334  vi cloud.conf 
+ 1335  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1336  sudo cat -A /etc/config/cloud.conf
+ 1337  vi cloud.conf 
+ 1338  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1339  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1340  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1341  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1342  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1343  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1344  kubectl logs -f openstack-cinder-csi-controllerplugin-77f575b68b-wgxd9 -n kube-system -c cinder-csi-plugin
+ 1345  vi cloud.conf 
+ 1346  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1347  kubectl delete secret openstack-cloud-config -n kube-system
+ 1348  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./cloud.conf   -n kube-system
+ 1349  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1350  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1351  kubectl logs -f openstack-cinder-csi-controllerplugin-77f575b68b-452n4 -n kube-system -c cinder-csi-plugin
+ 1352  vi cloud.conf 
+ 1353  kubectl delete secret openstack-cloud-config -n kube-system
+ 1354  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./cloud.conf   -n kube-system
+ 1355  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1356  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1357  kubectl logs -f openstack-cinder-csi-controllerplugin-77f575b68b-97x54 -n kube-system -c cinder-csi-plugin
+ 1358  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1359  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1360  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1361  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-mn28x -n kube-system -c cinder-csi-plugin
+ 1362  vi cloud.conf 
+ 1363  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1364  kubectl delete secret openstack-cloud-config -n kube-system
+ 1365  kubectl create secret generic openstack-cloud-config   --from-file=cloud.conf=./cloud.conf   -n kube-system
+ 1366  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1367  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1368  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-hvbxr -n kube-system -c cinder-csi-plugin
+ 1369  clear
+ 1370  openstack volume type list --insecure
+ 1371  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1372  clea
+ 1373  clear
+ 1374  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1375  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-hvbxr -n kube-system -c cinder-csi-plugin
+ 1376  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1377  kubectl logs -f openstack-cinder-csi-controllerplugin-5785bdbc9c-mtpxd -n kube-system -c cinder-csi-plugin
+ 1378  kubectl edit deployment openstack-cinder-csi-controllerplugin -n kube-system
+ 1379  clear
+ 1380  kubectl -n kube-system get deploy -l app=openstack-cinder-csi
+ 1381  kubectl edit deploy -n kube-system openstack-cinder-csi-controllerplugin
+ 1382  kubect apply -f cinder-csi-deployment.yamlloy -n kube-system openstack-cinder-csi-controllerplugin
+ 1383  kubec apply -f cinder-csi-deployment.yamlly -f cinder-csi-deployment.yamlloy -n kube-system openstack-cinder-csi-controllerplugin
+ 1384  ear
+ 1385  clear
+ 1386  kubectl apply -f cinder-csi-deployment.yaml
+ 1387  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1388  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1389  kubectl logs -f openstack-cinder-csi-controllerplugin-5785bdbc9c-26sng -n kube-system -c cinder-csi-plugin
+ 1390  kubectl logs -f openstack-cinder-csi-controllerplugin-5785bdbc9c-26sng -n kube-system -c cinder-csi-plugin > file
+ 1391  vi file
+ 1392  vi cloud.conf 
+ 1393  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1394  clear
+ 1395  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1396  vi cloud.conf 
+ 1397  clear
+ 1398  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1399  kubectl logs -f openstack-cinder-csi-controllerplugin-5785bdbc9c-26sng -n kube-system -c cinder-csi-plugin > file
+ 1400  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1401  kubectl logs -f openstack-cinder-csi-controllerplugin-5785bdbc9c-4pqfx -n kube-system -c cinder-csi-plugin > file
+ 1402  #kubectl logs -f openstack-cinder-csi-controllerplugin-5785bdbc9c-4pqfx -n kube-system -c cinder-csi-plugin > file
+ 1403  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1404  kubectl logs -f openstack-cinder-csi-controllerplugin-5785bdbc9c-4pqfx -n kube-system -c cinder-csi-plugin
+ 1405  clear
+ 1406  kubectl logs -f openstack-cinder-csi-controllerplugin-5785bdbc9c-4pqfx -n kube-system -c cinder-csi-plugin
+ 1407  vi cloud.conf 
+ 1408  kubectl edit deploy -n kube-system openstack-cinder-csi-controllerplugin
+ 1409  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1410  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1411  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-g5hb8 -n kube-system -c cinder-csi-plugin
+ 1412  clear
+ 1413  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-g5hb8 -n kube-system -c cinder-csi-plugin
+ 1414  clear
+ 1415  kubectl edit deploy -n kube-system openstack-cinder-csi-controllerplugin
+ 1416  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1417  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1418  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1419  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1420  kubectl logs -f openstack-cinder-csi-controllerplugin-76586cf945-jl2d5 -n kube-system -c cinder-csi-plugin
+ 1421  clear
+ 1422  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1423  kubectl logs -f openstack-cinder-csi-controllerplugin-76586cf945-jl2d5 -n kube-system -c cinder-csi-plugin
+ 1424  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-6m426 -n kube-system -c cinder-csi-plugin
+ 1425  clea
+ 1426  clear
+ 1427  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-6m426 -n kube-system -c cinder-csi-plugin
+ 1428  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1429  kubectl edit deploy -n kube-system openstack-cinder-csi-controllerplugin
+ 1430  cat <<EOF | kubectl apply -f -
+ 1431  apiVersion: storage.k8s.io/v1
+ 1432  kind: StorageClass
+ 1433  metadata:
+ 1434    name: cinder-default
+ 1435  provisioner: cinder.csi.openstack.org
+ 1436  parameters:
+ 1437    type: __DEFAULT__
+ 1438  reclaimPolicy: Delete
+ 1439  volumeBindingMode: Immediate
+ 1440  EOF
+ 1441  kubectl get sc
+ 1442  kubectl -n kube-system edit deployment openstack-cinder-csi-controllerplugin
+ 1443  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1444  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1445  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-zppst -n kube-system -c cinder-csi-plugin
+ 1446  cat <<EOF | kubectl apply -f -
+ 1447  apiVersion: v1
+ 1448  kind: PersistentVolumeClaim
+ 1449  metadata:
+ 1450    name: etcd-data
+ 1451    namespace: kube-system
+ 1452  spec:
+ 1453    accessModes:
+ 1454      - ReadWriteOnce
+ 1455    storageClassName: cinder-default
+ 1456    resources:
+ 1457      requests:
+ 1458        storage: 10Gi
+ 1459  EOF
+ 1460  kubectl get pvc -n kube-system
+ 1461  openstack volume list
+ 1462  clear
+ 1463  vi cloud.conf 
+ 1464  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1465  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1466  kubectl get pvc -n kube-system
+ 1467  openstack volume list
+ 1468  kubectl delete pod -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1469  c;ear
+ 1470  clear
+ 1471  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1472  kubectl get pvc -n kube-system
+ 1473  openstack volume list
+ 1474  vi cloud.conf 
+ 1475  cp cloud.conf bak
+ 1476  vi cloud.conf 
+ 1477  cp cloud.conf bak
+ 1478  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1479  kubectl -n kube-system create configmap cinder-csi-config --from-file=cloud.conf --dry-run=client -o yaml | kubectl apply -f -
+ 1480  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1481  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1482  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-bjgqf -n kube-system -c cinder-csi-plugin
+ 1483  clear
+ 1484  kubectl -n kube-system get configmap cinder-csi-config -o yaml
+ 1485  :q
+ 1486  vi cloud.conf 
+ 1487  clear
+ 1488  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1489  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1490  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1491  clear
+ 1492  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1493  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-2fr8c -n kube-system -c cinder-csi-plugin
+ 1494  kubectl -n kube-system create configmap cinder-csi-config   --from-file=cloud.conf=/etc/config/cloud.conf   --dry-run=client -o yaml | kubectl apply -f -
+ 1495  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1496  clear
+ 1497  kubectl get pods -n kube-system -l app=openstack-cinder-csi,component=controllerplugin
+ 1498  kubectl logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-mc5g7 -n kube-system -c cinder-csi-plugin
+ 1499  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin
+ 1500  kubectl -n kube-system logs -f <pod-name> -c cinder-csi-plugin
+ 1501  clear
+ 1502  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin
+ 1503  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-mc5g7 -c cinder-csi-plugin
+ 1504  clear
+ 1505  echo | openssl s_client -showcerts -connect 10.10.98.205:5000 2>/dev/null | openssl x509 -outform PEM > keystone-ca.crt
+ 1506  ls
+ 1507  ls -ltr
+ 1508  sudo cp ./keystone-ca.crt /etc/config/
+ 1509  clear
+ 1510  vi cloud.conf 
+ 1511  clear
+ 1512  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1513  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin
+ 1514  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-pdkcw -c cinder-csi-plugin
+ 1515  vi cloud.conf 
+ 1516  sudo cp ./keystone-ca.crt /etc/config/
+ 1517  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1518  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1519  clear
+ 1520  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin
+ 1521  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-w528h -c cinder-csi-plugin
+ 1522  kubectl -n kube-system create configmap cinder-csi-config   --from-file=cloud.conf   --from-file=cinder-ca.crt   --dry-run=client -o yaml | kubectl apply -f -
+ 1523  echo | openssl s_client -showcerts -connect 10.10.98.217:8776 2>/dev/null | openssl x509 -outform PEM > cinder-ca.crt
+ 1524  kubectl -n kube-system create configmap cinder-csi-config   --from-file=cloud.conf   --from-file=cinder-ca.crt   --dry-run=client -o yaml | kubectl apply -f -
+ 1525  vi cloud.conf 
+ 1526  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1527  clear
+ 1528  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1529  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1530  clear
+ 1531  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1532  clea
+ 1533  clear
+ 1534  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1535  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1536  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-x4hr5 -c cinder-csi-plugin
+ 1537  clear
+ 1538  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1539  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1540  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-d2b8f -c cinder-csi-plugin
+ 1541  cp /etc/config/cinder-ca.crt .
+ 1542  ls -ltr
+ 1543  sudo cp ./cinder-ca.crt /etc/config/
+ 1544  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1545  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1546  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-hnq49 -c cinder-csi-plugin
+ 1547  ls
+ 1548  cat keystone-ca.crt cinder-ca.crt > openstack-ca.crt
+ 1549  kubectl -n kube-system create configmap cinder-csi-config   --from-file=cloud.conf   --from-file=openstack-ca.crt   --dry-run=client -o yaml | kubectl apply -f -
+ 1550  cp openstack-ca.crt /etc/config/
+ 1551  sudo cp openstack-ca.crt /etc/config/
+ 1552  clear
+ 1553  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1554  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1555  clear
+ 1556  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1557  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-9r5vn -c cinder-csi-plugin
+ 1558  vi cloud.conf 
+ 1559  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1560  clear
+ 1561  kubectl -n kube-system delete pod -l app=openstack-cinder-csi,component=controllerplugin
+ 1562  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1563  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-zlcjk -c cinder-csi-plugin
+ 1564  openstack volume type create standard
+ 1565  openstack --insecure volume type create standard
+ 1566  clear
+ 1567  openstack --insecure volume type create standard
+ 1568  openstack --insecure volume type list
+ 1569  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1570  kubectl get pvc -A
+ 1571  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1572  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-b2dh4 -c cinder-csi-plugin
+ 1573  vi cloud.conf 
+ 1574  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1575  clear
+ 1576  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1577  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1578  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-jk5kp -c cinder-csi-plugin
+ 1579  vi cinder-sc.yaml
+ 1580  kubectl apply -f cinder-standard-sc.yaml
+ 1581  kubectl apply -f cinder-sc.yaml
+ 1582  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1583  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1584  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-9r54x -c cinder-csi-plugin
+ 1585  kubectl -n apisix delete pvc data-apisix-etcd-0 data-apisix-etcd-1 data-apisix-etcd-2
+ 1586  kubectl -n kube-system delete pvc etcd-data
+ 1587  kubectl get pvc -A -w
+ 1588  openstack --insecure volume list
+ 1589  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1590  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1591  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-zl257 -c cinder-csi-plugin
+ 1592  vi cinder-sc.yaml
+ 1593  vi cloud.conf 
+ 1594  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1595  clear
+ 1596  kubectl -n kube-system edit configmap cloud-config
+ 1597  kubectl -n kube-system get configmaps | grep -i cinder
+ 1598  kubectl -n kube-system get deploy openstack-cinder-csi-controllerplugin -o yaml | grep -A5 -B5 cloud.conf
+ 1599  kubectl -n kube-system get deploy openstack-cinder-csi-controllerplugin -o yaml | grep -A5 -B5 cloud.conf > file
+ 1600  vi file
+ 1601  kubectl -n kube-system get deploy openstack-cinder-csi-controllerplugin -o yaml  > file
+ 1602  vi file
+ 1603  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1604  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1605  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-cbmvp -c cinder-csi-plugin
+ 1606  vi file
+ 1607  vi cloud.conf 
+ 1608  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1609  clear
+ 1610  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1611  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1612  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-jwbbg -c cinder-csi-plugin
+ 1613  vi cloud.conf 
+ 1614  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1615  clea
+ 1616  clear
+ 1617  # ensure file exists on ALL nodes
+ 1618  ls -l /etc/config/cloud.conf
+ 1619  # restart CSI
+ 1620  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1621  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1622  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-2k7n5 -c cinder-csi-plugin
+ 1623  vi cloud.conf 
+ 1624  openstack --insecure domain list
+ 1625  openstack --insecure user show sscm_admin -f value -c domain_id
+ 1626  openstack --insecure domain show 6dd3282ad79e46d3bc9a370602478216
+ 1627  openstack --insecure project show 492af5f378d54b71be3c06a8810913c2 -f value -c domain_id
+ 1628  openstack --insecure domain show 6dd3282ad79e46d3bc9a370602478216
+ 1629  vi cloud.conf 
+ 1630  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1631  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1632  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1633  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-x8t8k -c cinder-csi-plugin
+ 1634  openstack --insecure project show 492af5f378d54b71be3c06a8810913c2 -f value -c name
+ 1635  vi cloud.conf 
+ 1636  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1637  clear
+ 1638  vi cloud.conf 
+ 1639  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1640  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1641  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-c8zxl -c cinder-csi-plugin
+ 1642  vi cloud.conf 
+ 1643  sudo cp ~/apisix_yamls/cloud.conf /etc/config/cloud.conf
+ 1644  clear
+ 1645  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1646  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1647  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-6knb4 -c cinder-csi-plugin
+ 1648  clea
+ 1649  clear
+ 1650  kubectl get pvc -A
+ 1651  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-6knb4 -c cinder-csi-plugin
+ 1652  clear
+ 1653  kubectl get sc
+ 1654  kubectl describe sc cinder-standard
+ 1655  openstack --insecure availability zone list --volume
+ 1656  kubectl get nodes --show-labels | grep -E "topology.kubernetes.io/zone|failure-domain.beta.kubernetes.io/zone"
+ 1657  kubectl edit sc cinder-standard
+ 1658  vi cinder-standard-fixed.yaml
+ 1659  kubectl apply -f cinder-standard-fixed.yaml
+ 1660  kubectl delete sc cinder-standard
+ 1661  kubectl apply -f cinder-standard-fixed.yaml
+ 1662  kubectl -n kube-system delete pod -l app=openstack-cinder-csi
+ 1663  kubectl -n kube-system get pods -l app=openstack-cinder-csi,component=controllerplugin -w
+ 1664  kubectl -n kube-system logs -f openstack-cinder-csi-controllerplugin-64bd9dcbd-vmfrq -c cinder-csi-plugin
+ 1665  kubectl get sc cinder-standard -o yaml
+ 1666  kubectl -n apisix get pvc
+ 1667  kubectl -n apisix delete pvc data-apisix-etcd-0 data-apisix-etcd-1 data-apisix-etcd-2
+ 1668  kubectl -n apisix get pvc -w
+ 1669  kubectl -n apisix delete pod -l app=apisix-etcd
+ 1670  kubectl -n apisix get statefulset
+ 1671  kubectl -n apisix get statefulset apisix-etcd -o yaml | grep -A5 storageClassName
+ 1672  kubectl -n apisix patch statefulset apisix-etcd   --type='json'   -p='[{"op": "add", "path": "/spec/volumeClaimTemplates/0/spec/storageClassName", "value":"cinder-standard"}]'
+ 1673  kubectl -n apisix delete statefulset apisix-etcd --cascade=orphan
+ 1674  kubectl -n apisix get statefulset apisix-etcd -o yaml > apisix-etcd.yaml
+ 1675  vi apisix-etcd.yaml
+ 1676  kubectl -n apisix apply -f apisix-etcd.yaml
+ 1677  kubectl -n apisix get statefulset
+ 1678  kubectl -n apisix get pvc
+ 1679  kubectl -n apisix get statefulset apisix-etcd -o yaml > apisix-etcd.yaml
+ 1680  kubectl -n apisix delete statefulset apisix-etcd --cascade=orphan
+ 1681  vi apisix-etcd.yaml 
+ 1682  kubectl -n apisix delete statefulset apisix-etcd --cascade=orphan
+ 1683  kubectl -n apisix apply -f apisix-etcd.yaml
+ 1684  kubectl -n apisix get pvc
+ 1685  kubectl -n apisix get statefulset
+ 1686  kubectl get sc cinder-standard -o yaml
+ 1687  openstack --insecure availability zone list --volume
+ 1688  kubectl -n apisix delete statefulset apisix-etcd --cascade=orphan
+ 1689  ls
+ 1690  ls -ltr
+ 1691  vi apisix-etcd.yaml 
+ 1692  clear
+ 1693  kubectl -n apisix apply -f apisix-etcd.yaml
+ 1694  kubectl -n apisix get pvc -w
+ 1695  kubectl -n apisix get pods -w
+ 1696  kubectl get nodes --show-labels | grep -E "topology.kubernetes.io/zone|failure-domain.beta.kubernetes.io/zone"
+ 1697  kubectl get nodes
+ 1698  kubectl label node abg-demo-1 topology.kubernetes.io/zone=nova
+ 1699  kubectl label node abg-demo-2 topology.kubernetes.io/zone=nova
+ 1700  kubectl label node abg-demo-3 topology.kubernetes.io/zone=nova
+ 1701  kubectl get nodes --show-labels | grep topology.kubernetes.io/zone
+ 1702  kubectl -n apisix delete pvc data-apisix-etcd-0 data-apisix-etcd-1 data-apisix-etcd-2
+ 1703  kubectl -n apisix delete statefulset apisix-etcd --cascade=orphan
+ 1704  kubectl -n apisix apply -f apisix-etcd.yaml
+ 1705  kubectl -n apisix get pvc -w
+ 1706  clear
+ 1707  kubectl -n apisix get pvc -w
+ 1708  kubectl -n apisix get pods -l app=apisix-etcd
+ 1709  clea
+ 1710  clear
+ 1711  kubectl -n apisix get pods -l app=apisix-etcd
+ 1712  kubectl -n apisix get pvc -w
+ 1713  kubectl -n apisix get pvc
+ 1714  clear
+ 1715  kubectl -n apisix get pvc
+ 1716  kubectl -n apisix describe pvc data-apisix-etcd-1
+ 1717  kubectl -n apisix describe pvc data-apisix-etcd-2
+ 1718  kubectl -n apisix get statefulset apisix-etcd -o yaml | grep -A10 replicas
+ 1719  clear
+ 1720  kubectl -n apisix get statefulset apisix-etcd -o yaml | grep -A10 replicas
+ 1721  clear
+ 1722  kubectl -n apisix get pods -w
+ 1723  kubectl describe pod apisix-etcd-0
+ 1724  kubectl describe pod apisix-etcd-0 -n apisix
+ 1725  clear
+ 1726  kubectl describe pod apisix-etcd-0 -n apisix
+ 1727  clear
+ 1728  kubectl -n apisix delete pod apisix-etcd-0
+ 1729  kubectl -n apisix get pvc -w
+ 1730  kubectl describe pod apisix-etcd-0 -n apisix
+ 1731  kubectl -n apisix get pvc -w
+ 1732  kubectl describe pod data-apisix-etcd-0 -n apisix
+ 1733  kubectl -n apisix get pods -w
+ 1734  kubectl describe pod apisix-6c5ff55979-xq9d9 -n apisix
+ 1735  clear
+ 1736  apisix-6c5ff55979-xq9d9
+ 1737  clear
+ 1738  kubectl describe pod apisix-6c5ff55979-xq9d9 -n apisix
+ 1739  kubectl -n apisix logs apisix-etcd-0 -c etcd
+ 1740  kubectl -n apisix get pods -w
+ 1741  kubectl -n apisix get pvc -w
+ 1742  clear
+ 1743  kubectl -n apisix delete statefulset apisix-etcd --cascade=orphan
+ 1744  kubectl -n apisix delete pvc data-apisix-etcd-0 data-apisix-etcd-1 data-apisix-etcd-2
+ 1745  kubectl -n apisix apply -f apisix-etcd.yaml
+ 1746  kubectl -n apisix get pvc -w
+ 1747  kubectl -n apisix get pods -w
+ 1748  clear
+ 1749  kubectl -n apisix get pvc -w
+ 1750  kubectl -n apisix get pods -w
+ 1751  clear
+ 1752  kubectl -n apisix get pods -w
+ 1753  kubectl describe pod apisix-etcd-0 -n apisix
+ 1754  clear
+ 1755  kubectl describe pod apisix-etcd-1 -n apisix
+ 1756  kubectl -n apisix set image statefulset/apisix-etcd etcd=quay.io/coreos/etcd:v3.5.9
+ 1757  kubectl -n apisix get pvc
+ 1758  kubectl -n apisix describe statefulset apisix-etcd
+ 1759  clear
+ 1760  kubectl -n apisix describe statefulset apisix-etcd
+ 1761  kubectl -n apisix get pvc
+ 1762  kubectl -n apisix describe statefulset apisix-etcd
+ 1763  clear
+ 1764  kubectl -n apisix describe statefulset apisix-etcd
+ 1765  kubectl -n apisix get pods -w
+ 1766  kubectl -n apisix describe pod apisix-etcd-2 -n apisix
+ 1767  clear
+ 1768  kubectl -n apisix describe pod apisix-etcd-2 -n apisix
+ 1769  clear
+ 1770  kubectl -n apisix describe pod apisix-etcd-2 -n apisix
+ 1771  kubectl -n apisix set image statefulset/apisix-etcd etcd=quay.io/coreos/etcd:v3.5.9
+ 1772  kubectl -n apisix get pods -w
+ 1773  clear
+ 1774  kubectl describe pod apisix-etcd-1 -n apisix
+ 1775  clear
+ 1776  kubectl -n apisix get pods -w
+ 1777  clear
+ 1778  kubectl -n apisix set image statefulset/apisix-etcd etcd=quay.io/coreos/etcd:v3.5.9
+ 1779  kubectl -n apisix get pods -w
+ 1780  kubectl describe pod apisix-etcd-1 -n apisix
+ 1781  clear
+ 1782  kubectl -n apisix delete pod apisix-etcd-1 apisix-etcd-2
+ 1783  kubectl -n apisix get pods -w
+ 1784  clear
+ 1785  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1786  clear
+ 1787  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1788  kubectl -n apisix get pods -w
+ 1789  clear
+ 1790  kubectl -n apisix delete pod apisix-etcd-1 apisix-etcd-2
+ 1791  kubectl -n apisix get pods -w
+ 1792  clear
+ 1793  kubectl -n apisix get pods -w
+ 1794  kubectl describe -n apisix pod apisix-etcd-0
+ 1795  kubectl -n apisix get pods -w
+ 1796  kubectl describe -n apisix pod apisix-etcd-1
+ 1797  kubectl describe -n apisix pod apisix-etcd-2
+ 1798  kubectl -n apisix get pods -w
+ 1799  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1800  clear
+ 1801  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1802  clear
+ 1803  kubectl -n apisix get pods -w
+ 1804  clear
+ 1805  kubectl -n apisix set image statefulset/apisix-etcd etcd=quay.io/coreos/etcd:v3.5.9
+ 1806  kubectl -n apisix delete pod apisix-etcd-1 apisix-etcd-2
+ 1807  kubectl -n apisix get pods -w
+ 1808  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1809  kubectl -n apisix get statefulset apisix-etcd -o yaml
+ 1810  clear
+ 1811  kubectl -n apisix describe pod apisix-etcd-0
+ 1812  kubectl -n apisix describe statefulset apisix-etcd
+ 1813  clear
+ 1814  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1815  etcdctl member list
+ 1816  clear
+ 1817  etcdctl member list
+ 1818  sudo apt  install etcd-client
+ 1819  etcdctl member list
+ 1820  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1821  kubectl -n apisix delete statefulset apisix-etcd
+ 1822  kubectl -n apisix delete pvc data-apisix-etcd-0 data-apisix-etcd-1 data-apisix-etcd-2
+ 1823  kubectl -n apisix get pods,pvc
+ 1824  clear
+ 1825  kubectl -n apisix get pods,pvc
+ 1826  helm uninstall apisix -n apisix
+ 1827  helm install apisix apisix/apisix   -n apisix   --create-namespace   --set etcd.replicaCount=3
+ 1828  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1829  clear
+ 1830  kubectl -n apisix get pods -w
+ 1831  kubectl -n apisix describe pod apisix-etcd-0
+ 1832  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1833  clear
+ 1834  kubectl -n apisix get pvc
+ 1835  kubectl -n apisix describe pvc data-apisix-etcd-0
+ 1836  kubectl get storageclass
+ 1837  clear
+ 1838  helm uninstall apisix -n apisix
+ 1839  kubectl -n apisix get pods,pvc
+ 1840  clear
+ 1841  kubectl get pods -n apisix
+ 1842  helm install apisix apisix/apisix   -n apisix   --create-namespace   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.storageClass=cinder-standard   --set etcd.persistence.size=10Gi
+ 1843  kubectl -n apisix get pvc -w
+ 1844  kubectl describe pvc data-apisix-etcd-0 -m apisix
+ 1845  kubectl describe pvc data-apisix-etcd-0 -n apisix
+ 1846  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1847  clear
+ 1848  helm uninstall apisix -n apisix
+ 1849  kubectl delete namespace apisix
+ 1850  helm install apisix apisix/apisix   -n apisix   --create-namespace   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.storageClassName=cinder-standard   --set etcd.persistence.size=10Gi
+ 1851  kubectl -n apisix get pvc
+ 1852  kubectl describe pvc data-apisix-etcd-0 -n apisix
+ 1853  helm uninstall apisix -n apisix
+ 1854  kubectl delete namespace apisix
+ 1855  kubectl get ns | grep apisix
+ 1856  clear
+ 1857  helm install apisix apisix/apisix   -n apisix   --create-namespace   --set global.storageClass=cinder-standard   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.size=10Gi
+ 1858  kubectl -n apisix get pvc
+ 1859  kubectl -n apisix get pods -w
+ 1860  kubectl -n apisix exec -it apisix-etcd-0 -- etcdctl member list
+ 1861  kubectl -n apisix get pvc -o yaml
+ 1862  clear
+ 1863  kubectl -n apisix get pvc -o yaml
+ 1864  kubectl -n apisix logs apisix-6c5ff55979-jxksv -c wait-etcd
+ 1865  clear
+ 1866  kubectl -n apisix logs apisix-6c5ff55979-jxksv -c wait-etcd
+ 1867  kubectl -n apisix get pods -w
+ 1868  kubectl -n apisix get svc
+ 1869  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1870  clear
+ 1871  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1872  clear
+ 1873  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1874  clear
+ 1875  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1876  kubectl -n apisix port-forward svc/apisix-admin 9180:9180
+ 1877  clear
+ 1878  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1879  clear
+ 1880  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1881  kubectl -n apisix port-forward svc/apisix-admin 9180:9180
+ 1882  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1883  clear
+ 1884  kubectl -n apisix port-forward svc/apisix-admin 9180:9180
+ 1885  clear
+ 1886  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1887  curl http://localhost:9080/apisix/admin/health
+ 1888  clear
+ 1889  curl http://localhost:9080/apisix/admin/health
+ 1890  kubectl get nodes -o wide
+ 1891  curl http://10.10.252.196:30646/apisix/health
+ 1892  curl http://10.10.252.196:30646/health
+ 1893  curl http://localhost:9080/status
+ 1894  kubectl -n apisix logs apisix-6c5ff55979-jxksv --tail=100
+ 1895  clear
+ 1896  kubectl -n apisix exec -it apisix-6c5ff55979-jxksv --   cat /usr/local/apisix/conf/config.yaml
+ 1897  clear
+ 1898  helm uninstall apisix -n apisix
+ 1899  kubectl delete ns apisix
+ 1900  helm install apisix apisix/apisix   -n apisix   --create-namespace   --set global.storageClass=cinder-standard   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.size=10Gi   --set apisix.enableControl=true   --set apisix.status.enable=true
+ 1901  helm install apisix apisix/apisix   -n apisix   --create-namespace   --set global.storageClass=cinder-standard   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.size=10Gi   --set apisix.enableControl=true   --set apisix.status.enable=true
+ 1902  kubectl -n apisix get pods -w
+ 1903  clear
+ 1904  kubectl -n apisix get pods -w
+ 1905  kubectl describe pod apisix-6c5ff55979-552pt -n apisix
+ 1906  kubectl describe pod apisix-etcd-0 -n apisix
+ 1907  kubectl -n apisix get pvc
+ 1908  clear
+ 1909  kubectl -n apisix get pods -w
+ 1910  curl http://localhost:9080/status
+ 1911  admusr@abg-demo-1:~$ curl http://localhost:9080/status
+ 1912  {"error_msg":"404 Route Not Found"}
+ 1913  admusr@abg-demo-1:~$
+ 1914  clear
+ 1915  kubectl -n apisix run httpbin   --image=kennethreitz/httpbin   --port=80
+ 1916  kubectl -n apisix expose pod httpbin --port=80
+ 1917  curl -X PUT http://localhost:9180/apisix/admin/routes/1   -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"   -H "Content-Type: application/json"   -d '{
+ 1918      "uri": "/httpbin/*",
+ 1919      "upstream": {
+ 1920        "type": "roundrobin",
+ 1921        "nodes": {
+ 1922          "httpbin.apisix.svc.cluster.local:80": 1
+ 1923        }
+ 1924      }
+ 1925    }'
+ 1926  kubectl -n apisix get svc apisix-admin
+ 1927  curl http://localhost:9180/apisix/admin/routes
+ 1928  helm uninstall apisix -n apisix
+ 1929  clear
+ 1930  helm uninstall apisix -n apisix
+ 1931  helm install apisix apisix/apisix   -n apisix   --create-namespace   --set global.storageClass=cinder-standard   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.size=10Gi   --set admin.enabled=true   --set admin.allow.ipList[0]=0.0.0.0/0
+ 1932  kubectl -n apisix get svc apisix-admin
+ 1933  kubectl -n apisix get pvc
+ 1934  kubectl -n apisix get pods -w
+ 1935  clear
+ 1936  kubectl -n apisix get pods -w
+ 1937  clear
+ 1938  kubectl -n apisix get pods -w
+ 1939  curl http://localhost:9180/apisix/admin/routes
+ 1940  clear
+ 1941  curl http://localhost:9180/apisix/admin/routes
+ 1942  curl http://localhost:9180/apisix/admin/routes   -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"
+ 1943  curl -X PUT http://localhost:9180/apisix/admin/routes/1   -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"   -H "Content-Type: application/json"   -d '{
+ 1944      "uri": "/httpbin/*",
+ 1945      "upstream": {
+ 1946        "type": "roundrobin",
+ 1947        "nodes": {
+ 1948          "httpbin.apisix.svc.cluster.local:80": 1
+ 1949        }
+ 1950      }
+ 1951    }'
+ 1952  kubectl -n apisix port-forward svc/apisix-gateway 9080:80
+ 1953  clear
+ 1954  curl http://localhost:9080/httpbin/get
+ 1955  curl http://localhost:9180/apisix/admin/routes   -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"
+ 1956  curl -v http://localhost:9080/httpbin/get
+ 1957  clear
+ 1958  curl -v http://localhost:9080/httpbin/get
+ 1959  kubectl -n apisix exec -it apisix-6c5ff55979-6fbnf -- sh
+ 1960  clear
+ 1961  curl -X PUT http://localhost:9180/apisix/admin/routes/1   -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"   -H "Content-Type: application/json"   -d '{
+ 1962      "uri": "/httpbin/*",
+ 1963      "plugins": {
+ 1964        "proxy-rewrite": {
+ 1965          "regex_uri": ["^/httpbin/(.*)", "/$1"]
+ 1966        }
+ 1967      },
+ 1968      "upstream": {
+ 1969        "type": "roundrobin",
+ 1970        "nodes": {
+ 1971          "httpbin.apisix.svc.cluster.local:80": 1
+ 1972        }
+ 1973      }
+ 1974    }'
+ 1975  curl -X PUT http://localhost:9180/apisix/admin/routes/1   -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"   -H "Content-Type: application/json"   -d '{
+ 1976      "uri": "/httpbin/*",
+ 1977      "plugins": {
+ 1978        "proxy-rewrite": {
+ 1979          "regex_uri": ["^/httpbin/(.*)", "/$1"]
+ 1980        }
+ 1981      },
+ 1982      "upstream": {
+ 1983        "type": "roundrobin",
+ 1984        "nodes": {
+ 1985          "httpbin.apisix.svc.cluster.local:80": 1
+ 1986        }
+ 1987      }
+ 1988    }'
+ 1989  curl http://localhost:9080/httpbin/get
+ 1990  kubectl get ns
+ 1991  clear
+ 1992  kuebctl get ns
+ 1993  kubectl get ns
+ 1994  kubectl get pods -n kafka
+ 1995  kubectl delete ns kafka
+ 1996  kubectl get pods -n kafka
+ 1997  kubectl get all --all-namespaces | grep kafka
+ 1998  kubectl get all --all-namespaces | grep strimzi
+ 1999  kuebctl get clusterrolebinding
+ 2000  kubectl get clusterrolebinding
+ 2001  kubectl get clusterrolebinding | grep kafka
+ 2002  kubectl delete clusterrolebinding strimzi-cluster-operator-kafka-broker-delegation strimzi-cluster-operator-kafka-client-delegation
+ 2003  kubectl get clusterroles
+ 2004  kubectl get clusterroles | grep kafka
+ 2005  kubectl delete clusterroles strimzi-kafka-broker strimzi-kafka-client
+ 2006  clear
+ 2007  kubectl delete crd kafkabridges.kafka.strimzi.io kafkaconnectors.kafka.strimzi.io kafkaconnects.kafka.strimzi.io kafkamirrormaker2s.kafka.strimzi.io kafkanodepools.kafka.strimzi.io kafkarebalances.kafka.strimzi.io kafkas.kafka.strimzi.io kafkatopics.kafka.strimzi.io kafkausers.kafka.strimzi.io strimzipodsets.core.strimzi.io
+ 2008  kubectl get nodes
+ 2009  kubectl create namespace kafka
+ 2010  kubectl apply -f https://strimzi.io/install/latest?namespace=kafka -n kafka
+ 2011  kubectl get crds | grep strimzi
+ 2012  clear
+ 2013  kubectl get pods -n kafka
+ 2014  nano kafka-v2.yaml
+ 2015  kubectl apply -f kafka-v2.yaml 
+ 2016  kubectl get pods -n kafka
+ 2017  kubectl get pods -n kafka -w
+ 2018  nano kafka-v2.yaml
+ 2019  kubectl apply -f kafka-v2.yaml 
+ 2020  kubectl get pods -n kafka -w
+ 2021  nano kafka-nodepool-v2.yaml
+ 2022  kubectl apply -f kafka-nodepool-v2.yaml 
+ 2023  nano kafka-cluster-v2.yaml
+ 2024  kubectl apply -f kafka-cluster-v2.yaml 
+ 2025  kubectl get pods -n kafka -w
+ 2026  nano kafka-nodepool-v3.yaml
+ 2027  kubectl apply -f kafka-nodepool-v3.yaml 
+ 2028  kubectl get pods -n kafka
+ 2029  kubectl logs pod/my-cluster-controllers-5 -n kafka
+ 2030  kubectl describe pod my-cluster-controllers-5 -n kafka
+ 2031  kubectl apply -f kafka-nodepool-v3.yaml 
+ 2032  kubectl apply -f kafka-cluster-v2.yaml 
+ 2033  kubectl get pods -n kafka
+ 2034  clear
+ 2035  kubectl delete kafka my-cluster -n kafka --ignore-not-found
+ 2036  kubectl delete kafkanodepool --all -n kafka --ignore-not-found
+ 2037  kubectl delete kafkatopic --all -n kafka --ignore-not-found
+ 2038  kubectl delete kafkauser --all -n kafka --ignore-not-found
+ 2039  kubectl delete pvc --all -n kafka --ignore-not-found
+ 2040  kubectl delete pod --all -n kafka --ignore-not-found
+ 2041  kubectl delete -f https://strimzi.io/install/latest?namespace=kafka -n kafka
+ 2042  kubectl get pods -n kafka
+ 2043  clear
+ 2044  kubectl delete namespace kafka
+ 2045  kubectl get clusterroles | grep kafka
+ 2046  clear
+ 2047  kubectl create namespace kafka
+ 2048  kubectl apply -f https://strimzi.io/install/latest?namespace=kafka -n kafka
+ 2049  kubectl get pods -n kafka
+ 2050  nano kafka-nodepool-eph-v2.yaml
+ 2051  kubectl apply -f kafka-nodepool-eph-v2.yaml
+ 2052  nano kafka-cluster-v2.yaml
+ 2053  nano kafka-cluster-v3.yaml
+ 2054  kubectl get pods -n kafka -w
+ 2055  kubectl get pods -n kafka
+ 2056  kubectl get pods
+ 2057  kubectl apply -f kafka-cluster-v3.yaml
+ 2058  kubectl apply -f kafka-nodepool-eph-v2.yaml
+ 2059  kubectl get pods -n kafka
+ 2060  kubectl describe pod/my-cluster-brokers-2  -n kafka
+ 2061  kubectl get pods -n kafka
+ 2062  history > kafka_install_history_22_12_25.txt

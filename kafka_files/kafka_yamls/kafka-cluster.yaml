@@ -1,0 +1,45 @@
+apiVersion: kafka.strimzi.io/v1
+kind: Kafka
+metadata:
+  name: shared-kafka
+  namespace: kafka
+spec:
+  kafka:
+    version: 4.1.1
+
+    metadataVersion: 4.1-IV0
+
+    listeners:
+      - name: internal
+        port: 9092
+        type: internal
+        tls: true
+        authentication:
+          type: scram-sha-512
+
+      - name: external
+        port: 9094
+        type: loadbalancer
+        tls: true
+        authentication:
+          type: scram-sha-512
+
+    authorization:
+      type: simple
+
+    config:
+      auto.create.topics.enable: false
+      default.replication.factor: 3
+      min.insync.replicas: 2
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+
+    logging:
+      type: inline
+      loggers:
+        kafka.authorizer.logger: INFO
+
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

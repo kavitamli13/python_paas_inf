@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fission-router
+  namespace: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - fission
+  selector:
+    matchLabels:
+      app: fission-router
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s

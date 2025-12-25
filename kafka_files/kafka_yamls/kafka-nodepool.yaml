@@ -1,0 +1,26 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  name: shared-kafka-pool
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: shared-kafka
+spec:
+  replicas: 3
+
+  roles:
+    - broker
+    - controller
+
+  storage:
+    type: persistent-claim
+    size: 200Gi
+    deleteClaim: false
+
+  resources:
+    requests:
+      cpu: "2"
+      memory: 4Gi
+    limits:
+      cpu: "4"
+      memory: 8Gi
