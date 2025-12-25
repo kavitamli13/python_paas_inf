@@ -1,0 +1,1000 @@
+ 1044    name: httpbin
+ 1045  spec:
+ 1046    selector:
+ 1047      app: httpbin
+ 1048    ports:
+ 1049    - port: 80
+ 1050      targetPort: 80
+ 1051  EOF
+ 1052  kubectl get pods -n apisix-tenant-a
+ 1053  kubectl get svc  -n apisix-tenant-a
+ 1054  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1055  apiVersion: apisix.apache.org/v2
+ 1056  kind: ApisixRoute
+ 1057  metadata:
+ 1058    name: httpbin-route
+ 1059  spec:
+ 1060    http:
+ 1061    - name: rule1
+ 1062      match:
+ 1063        hosts:
+ 1064          - a.example.com
+ 1065        paths:
+ 1066          - /*
+ 1067      backends:
+ 1068      - serviceName: httpbin
+ 1069        servicePort: 80
+ 1070  EOF
+ 1071  kubectl get apisixroute -n apisix-tenant-a
+ 1072  curl -H "Host: a.example.com" http://10.10.252.196:30087/get
+ 1073  kubectl get apisixroute -n apisix-tenant-a -o wide
+ 1074  kubectl describe apisixroute httpbin-route -n apisix-tenant-a
+ 1075  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1076  apiVersion: apisix.apache.org/v2
+ 1077  kind: ApisixRoute
+ 1078  metadata:
+ 1079    name: httpbin-route
+ 1080  spec:
+ 1081    ingressClassName: apisix-tenant-a
+ 1082    http:
+ 1083    - name: rule1
+ 1084      match:
+ 1085        hosts:
+ 1086          - a.example.com
+ 1087        paths:
+ 1088          - /*
+ 1089      backends:
+ 1090      - serviceName: httpbin
+ 1091        servicePort: 80
+ 1092  EOF
+ 1093  kubectl describe apisixroute httpbin-route -n apisix-tenant-a
+ 1094  curl -s -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"   http://127.0.0.1:9180/apisix/admin/routes | jq
+ 1095  curl -H "Host: a.example.com" http://10.10.252.196:30087/get
+ 1096  helm install apisix-gw-a apisix/apisix -n apisix-tenant-a   --set ingress-controller.enabled=false   --set admin.enabled=true   --set admin.service.type=ClusterIP   --set service.type=NodePort
+ 1097  kubectl get svc -n apisix-tenant-a
+ 1098  kubectl edit deploy apisix-ic-a-apisix-ingress-controller -n apisix-tenant-a
+ 1099  kubectl get deploy apisix-ic-a-apisix-ingress-controller -n apisix-tenant-a > file
+ 1100  clear
+ 1101  cat file
+ 1102  kubectl get deploy apisix-ic-a-apisix-ingress-controller -o yaml -n apisix-tenant-a > file
+ 1103  cat file
+ 1104  clear
+ 1105  cat file
+ 1106  clear
+ 1107  kubectl edit deploy apisix-ic-a-apisix-ingress-controller -n apisix-tenant-a
+ 1108  kubectl rollout restart deploy apisix-ic-a-apisix-ingress-controller -n apisix-tenant-a
+ 1109  kubectl get pods -n apisix-tenant-a
+ 1110  kubectl exec -n apisix-tenant-a deploy/apisix-gw-a --   curl -s http://127.0.0.1:9180/apisix/admin/routes | jq
+ 1111  kubectl describe pod apisix-gw-a-etcd-0 -n apisix-tenant-a
+ 1112  kubectl get pvc -n apisix-tenant-a
+ 1113  helm upgrade apisix-gw-a apisix/apisix   -n apisix-tenant-a   --set etcd.persistence.enabled=true   --set etcd.persistence.storageClass=cinder-standard
+ 1114  kubectl get pvc -n apisix-tenant-a
+ 1115  kubectl describe data-apisix-gw-a-etcd-0  -n apisix-tenant-a
+ 1116  kubectl describe pvc data-apisix-gw-a-etcd-0  -n apisix-tenant-a
+ 1117  kubectl logs data-apisix-gw-a-etcd-0  -n apisix-tenant-a
+ 1118  kubectl get roles
+ 1119  clear
+ 1120  ls
+ 1121  ls Python_codebase/
+ 1122  nano fission_script_v5.sh
+ 1123  source Python_codebase/
+ 1124  mv fission_script_v5.sh Python_codebase/fission_script_v5.sh
+ 1125  ls Python_codebase/
+ 1126  source Python_codebase/fission_script_v5.sh 
+ 1127  uninstall_fission tenant-fission-a
+ 1128  kubectl get clusterrole
+ 1129  kubectl get clusterrole | grep fission
+ 1130  clear
+ 1131  kuebctl get ns
+ 1132  kubectl get ns
+ 1133  install_fission tenant-fission-a v1.21.0
+ 1134  fission check
+ 1135  kubect get pods -n fission
+ 1136  kubectl get pods -n fission
+ 1137  kubectl get pods -n monitoring
+ 1138  kubectl get svc -n monitoring
+ 1139  kubectl get deployments -n monitoring
+ 1140  kubectl get svc router -n fission --show-labels
+ 1141  kubectl get svc executor -n fission --show-labels
+ 1142  helm list -A | grep -i prometheus
+ 1143  helm list -A 
+ 1144  kubectl get crd | grep monitoring.coreos.com
+ 1145  cat <<EOF | kubectl apply -f -
+ 1146  apiVersion: monitoring.coreos.com/v1
+ 1147  kind: ServiceMonitor
+ 1148  metadata:
+ 1149    name: fission-router
+ 1150    namespace: monitoring
+ 1151    labels:
+ 1152      release: monitoring
+ 1153  spec:
+ 1154    selector:
+ 1155      matchLabels:
+ 1156        app: router
+ 1157    namespaceSelector:
+ 1158      matchNames: ["fission"]
+ 1159    endpoints:
+ 1160    - port: metrics
+ 1161      interval: 30s
+ 1162  ---
+ 1163  apiVersion: monitoring.coreos.com/v1
+ 1164  kind: ServiceMonitor
+ 1165  metadata:
+ 1166    name: fission-executor
+ 1167    namespace: monitoring
+ 1168    labels:
+ 1169      release: monitoring
+ 1170  spec:
+ 1171    selector:
+ 1172      matchLabels:
+ 1173        app: executor
+ 1174    namespaceSelector:
+ 1175      matchNames: ["fission"]
+ 1176    endpoints:
+ 1177    - port: metrics
+ 1178      interval: 30s
+ 1179  EOF
+ 1180  kubectl rollout restart deploy/router -n fission
+ 1181  kubectl rollout restart deploy/executor -n fission
+ 1182  kubectl get pods -n fission
+ 1183  kubectl get deployments -n monitoring
+ 1184  kubectl get pods -n fission
+ 1185  kubectl get pods -n monitoring
+ 1186  nano Python_codebase/fission_script_v6.sh
+ 1187  source Python_codebase/fission_script_v6.sh 
+ 1188  uninstall_fission tenant-fission-a
+ 1189  kubectl delete servicemonitor fission-router
+ 1190  kubectl delete servicemonitor fission-executor
+ 1191  clear
+ 1192  install_fission tenant-fs-a v1.21.0
+ 1193  rm Python_codebase/fission_script_v6.sh 
+ 1194  nano Python_codebase/fission_script_v6.sh
+ 1195  source Python_codebase/fission_script_v6.sh 
+ 1196  uninstall_fission tenant-fs-a
+ 1197  install_fission tenant-fs-a v1.21.0
+ 1198  kubectl get deployments -n monitoring
+ 1199  kubectl get pods -n monitoring   -l app.kubernetes.io/component=operator   -o jsonpath='{.items[0].metadata.name}'
+ 1200  kubectl get pods -n monitoring
+ 1201  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+ 1202  helm repo update
+ 1203  kubectl create namespace monitoring || true
+ 1204  helm install monitoring prometheus-community/kube-prometheus-stack   -n monitoring
+ 1205  kubectl get pods -n monitoring
+ 1206  kubectl get deployments -n monitoring
+ 1207  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission_function
+ 1208  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission
+ 1209  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics
+ 1210  fission env create --name python --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3
+ 1211  fission function create --name hellopy --env python --code pytest.py
+ 1212  fission route create --method GET --url /hellopy --function hellopy
+ 1213  fission fn test --name=hellopy
+ 1214  kubectl get svc -n fission
+ 1215  curl 10.10.252.196:32582/hellopy
+ 1216  curl 10.10.252.196:30607/hellopy
+ 1217  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics
+ 1218  kubectl exec -n monitoring deploy/monitoring-kube-prometheus-operator --   wget -qO- http://router.fission.svc.cluster.local:8080/metrics | grep fission
+ 1219  kubectl get pods -n monitoring
+ 1220  uninstall_fission tenant-fs-a
+ 1221  clear
+ 1222  ls
+ 1223  ls kafka_files/
+ 1224  kubectl create namespace tenant-a
+ 1225  cd kafka_files/
+ 1226  kubectl apply -f tenant-a-v4.yaml
+ 1227  kubectl get secret -n kafka | grep tenant-a-user
+ 1228  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1229  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config tenant-a.properties   --list
+ 1230  cd ..
+ 1231  cd kafka_2.13-4.1.1/
+ 1232  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config tenant-a.properties   --list
+ 1233  ls
+ 1234  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config tenant-a-prod.properties   --list
+ 1235  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config tenant-a-producer.properties   --list
+ 1236  nano tenant-a-consumer.properties 
+ 1237  clear
+ 1238  kubectl get job -n apisix-tenant-a
+ 1239  kubectl describe job apisix-gw-a-etcd-pre-upgrade -n apisix-tenant-a
+ 1240  clear
+ 1241  kubectl get job -n apisix-tenant-a
+ 1242  kubectl describe job apisix-gw-a-etcd-pre-upgrade -n apisix-tenant-a
+ 1243  kubectl get pvc -n apisix-tenant-a
+ 1244  kubectl get apisixroute -A
+ 1245  kubectl get apisixroute httpbin-route -n tenant-a -o yaml
+ 1246  kubectl get apisixroute httpbin-route -n apisix-tenant-a -o yaml
+ 1247  clear
+ 1248  kubectl logs -n apisix-tenant-a deploy/apisix-ingress-controller | grep Admin
+ 1249  kubectl logs -n apisix-tenant-a deploy/apisix-ic-a-apisix-ingress-controller | grep Admin
+ 1250  kubectl logs -n apisix-tenant-a deploy/apisix-ic-a-apisix-ingress-controller 
+ 1251  clear
+ 1252  kubectl get deploy -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller -o yaml | grep -A10 env:
+ 1253  kubectl set env deployment/apisix-ic-a-apisix-ingress-controller   -n apisix-tenant-a   APISIX_ADMIN_URL=http://apisix-gateway.apisix-system.svc.cluster.local:9180/apisix/admin   APISIX_ADMIN_KEY=edd1c9f034335f136f87ad84b625c8f1
+ 1254  kubectl rollout restart deploy apisix-ic-a-apisix-ingress-controller -n apisix-tenant-a
+ 1255  curl -H "Host: a.example.com" http://$NODE_IP:$NODE_PORT/get
+ 1256  curl -H "Host: a.example.com" http://10.10.252.196/get
+ 1257  kubectl get nodes
+ 1258  kubectl get nodes -wide
+ 1259  kubectl get nodes -w
+ 1260  kubectl get svc -w
+ 1261  clear
+ 1262  kubectl get svc -n apisix-system
+ 1263  curl -H "Host: a.example.com" http://10.10.252.196:32493/get
+ 1264  curl -s -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"   http://10.10.252.196:31880/apisix/admin/routes | jq
+ 1265  kubectl get deploy -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller -o yaml | grep -A10 env:
+ 1266  curl -s -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"   http://10.10.252.196:31880/apisix/admin/routes | jq
+ 1267  clear
+ 1268  kubectl logs -n apisix-tenant-a deploy/apisix-ingress-controller
+ 1269  kubectl get pods -n apisix-tenant-a
+ 1270  kubectl logs -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller-6944dd869c-6r45z
+ 1271  clear
+ 1272  kubectl get deploy -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller -o jsonpath='{.spec.template.spec.serviceAccountName}'
+ 1273  kubectl get rolebinding,clusterrolebinding -n apisix-tenant-a | grep apisix-ic-a
+ 1274  kubectl get role -n apisix-tenant-a apisix-ic-a-role -o yaml
+ 1275  vi role.yaml
+ 1276  vi rolebinding.yaml
+ 1277  kubectl apply -f role.yaml 
+ 1278  kubectl apply -f rolebinding.yaml 
+ 1279  cat role*
+ 1280  kubectl logs -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller-6944dd869c-6r45z
+ 1281  kubectl exec -n apisix-tenant-a deploy/apisix-ic-a-apisix-ingress-controller --   curl -v http://apisix-gateway.apisix-system.svc.cluster.local:9180/apisix/admin/routes
+ 1282  kubectl exec -n apisix-tenant-a deploy/apisix-ic-a-apisix-ingress-controller -- sh
+ 1283  clea
+ 1284  kubectl run debug --rm -i --tty --image=alpine:3.18 --namespace=apisix-tenant-a -- sh
+ 1285  clear
+ 1286  kubectl run debug --rm -i --tty --image=alpine:3.18 --namespace=apisix-tenant-a -- sh
+ 1287  ls -ltr
+ 1288  cat tenant-admin-service.yaml
+ 1289  vi gpxy.yaml 
+ 1290  kubectl apply -f rolebinding.yaml 
+ 1291  kubectl apply -f gpxy.yaml 
+ 1292  kubectl get gatewayproxy -n apisix-tenant-a
+ 1293  kubectl delete apisix-shared -n apisix-tenant-a
+ 1294  kubectl delete gatewayproxy -n apisix-tenant-a
+ 1295  kubectl delete gatewayproxy apisix-shared -n apisix-tenant-a
+ 1296  kubectl apply -f gpxy.yaml 
+ 1297  kubectl logs -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller-6944dd869c-6r45z
+ 1298  clear
+ 1299  ls
+ 1300  clear
+ 1301  kubectl get pods -n apisix-tenant-a
+ 1302  kubectl logs -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller-78886f6b7f-776l5
+ 1303  clear
+ 1304  kubectl logs -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller-78886f6b7f-776l5 -f
+ 1305  clear
+ 1306  vi gpxy.yaml 
+ 1307  kubectl apply -f gpxy.yaml 
+ 1308  kubectl delete gatewayproxy apisix-shared -n apisix-tenant-a
+ 1309  kubectl delete gatewayproxy apisix-admin -n apisix-tenant-a
+ 1310  kubectl apply -f gpxy.yaml 
+ 1311  clear
+ 1312  kubectl logs -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller-78886f6b7f-776l5 -f
+ 1313  cat gpxy.yaml 
+ 1314  kubectl get svc -n apisix-system apisix-admin
+ 1315  kubectl get endpoints -n apisix-system apisix-admin
+ 1316  c;ear
+ 1317  clear
+ 1318  kubectl run -it --rm debug --image=alpine --namespace=apisix-tenant-a -- sh
+ 1319  ls kafka_files/
+ 1320  cd kafka_files/
+ 1321  kubectl get secret tenant-b-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1322  nano tenant-b.properties
+ 1323  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config tenant-b.properties   --create   --topic tenant-b-test1   --partitions 3   --replication-factor 3
+ 1324  cd ..
+ 1325  cd kafka_2.13-4.1.1/
+ 1326  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config kafka_files/tenant-b.properties   --create   --topic tenant-b-test1   --partitions 3   --replication-factor 3
+ 1327  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config /home/admusr/kafka_files/tenant-b.properties   --create   --topic tenant-b-test1   --partitions 3   --replication-factor 3
+ 1328  nano kafka_files/tenant-b.properties
+ 1329  nano /home/admusr/kafka_files/tenant-b.properties
+ 1330  kubectl get kafkauser tenant-b-user -n kafka -o wide
+ 1331  kubectl get secret tenant-b-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 1332  nano /home/admusr/kafka_files/tenant-b.properties
+ 1333  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config /home/admusr/kafka_files/tenant-b.properties   --create   --topic tenant-b-test1   --partitions 3   --replication-factor 3
+ 1334  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config /home/admusr/kafka_files/tenant-b.properties   --list
+ 1335  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config /home/admusr/kafka_files/tenant-b.properties   --create   --topic tenant-b-test1   --partitions 3   --replication-factor 3
+ 1336  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config /home/admusr/kafka_files/tenant-b.properties   --create   --topic tenant-b-test2   --partitions 3   --replication-factor 3
+ 1337  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config /home/admusr/kafka_files/tenant-b.properties   --create   --topic tenant-b.test2   --partitions 3   --replication-factor 3
+ 1338  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config /home/admusr/kafka_files/tenant-a.properties   --create   --topic tenant-a-test1   --partitions 3   --replication-factor 3
+ 1339  ls
+ 1340  ls /home/admusr/kafka_files
+ 1341  bin/kafka-topics.sh   --bootstrap-server 10.10.252.244:31356   --command-config /home/admusr/kafka_2.13-4.1.1/tenant-a-producer.properties   --create   --topic tenant-a-test1   --partitions 3   --replication-factor 3
+ 1342  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a-test1   --producer.config /home/admusr/kafka_files/tenant-a-producer.properties
+ 1343  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a-test1   --producer.config /home/admusr/kafka_2.13-4.1.1/tenant-a-producer.properties
+ 1344  cd ..
+ 1345  nano kafka_files/tenant-a-v4.yaml
+ 1346  kubectl apply -f kafka_files/tenant-a-v4.yaml
+ 1347  kubectl rollout restart statefulset my-cluster-kafka -n kafka
+ 1348  kubectl get statefulset -n kafka
+ 1349  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a-test1   --producer.config /home/admusr/kafka_2.13-4.1.1/tenant-a-producer.properties
+ 1350  cd kafka_2.13-4.1.1/
+ 1351  bin/kafka-console-producer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a-test1   --producer.config /home/admusr/kafka_2.13-4.1.1/tenant-a-producer.properties
+ 1352  clear
+ 1353  cd ..
+ 1354  cd kafka_files/
+ 1355  nano kafka-tenant.sh
+ 1356  source kafka-tenant.sh 
+ 1357  cd kafka_2.13-4.1.1/
+ 1358  bin/kafka-console-consumer.sh   --bootstrap-server 10.10.252.244:31356   --topic tenant-a-test1   --from-beginning   --group tenant-a-group   --consumer.config /home/admusr/kafka_2.13-4.1.1/tenant-a-consumer.properties
+ 1359  cd ..
+ 1360  cd kafka_files/
+ 1361  ls
+ 1362  source kafka-tenant.sh 
+ 1363  nano kafka_files/kafka-tenant.sh 
+ 1364  source kafka_files/kafka-tenant.sh 
+ 1365  nano kafka_files/kafka-tenant.sh 
+ 1366  chmod +x kafka_files/kafka-tenant.sh
+ 1367  ./kafka-tenant.sh uninstall-kafka
+ 1368  ./kafka_files/kafka-tenant.sh uninstall-kafka
+ 1369  nano kafka_files/kafka_script_v2.sh
+ 1370  ./kafka_files/kafka_script_v2.sh uninstall-kafka
+ 1371  chmod +x kafka_files/kafka_script_v2.sh
+ 1372  ./kafka_files/kafka_script_v2.sh uninstall-kafka
+ 1373  kubectl get ns
+ 1374  kubectl delete kafka
+ 1375  kubectl delete ns kafka
+ 1376  kubectl get ns kafka -o json > /tmp/kafka-ns.json
+ 1377  sed -i 's/"finalizers": \[[^]]*\]/"finalizers": []/g' /tmp/kafka-ns.json
+ 1378  kubectl replace --raw "/api/v1/namespaces/kafka/finalize" -f /tmp/kafka-ns.json
+ 1379  kubectl get ns kafka -o json > /tmp/kafka-ns.json
+ 1380  sed -i 's/"finalizers": \[[^]]*\]/"finalizers": []/g' /tmp/kafka-ns.json
+ 1381  kubectl replace --raw "/api/v1/namespaces/kafka/finalize" -f /tmp/kafka-ns.json
+ 1382  kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get -n kafka
+ 1383  kubectl delete kafkatopics tenant-a-orders tenant-b-orders -n kafka --force --grace-period=0
+ 1384  kubectl get kafkatopic -n kafka
+ 1385  kubectl delete kafkatopic tenant-a-orders -n kafka
+ 1386  kubectl get kafkatopic tenant-a-orders -n kafka -o jsonpath='{.metadata.deletionTimestamp}'
+ 1387  kubectl patch kafkatopic tenant-a-orders -n kafka   --type=json   -p='[{"op":"remove","path":"/metadata/finalizers"}]'
+ 1388  kubectl get kafkatopic -n kafka
+ 1389  kubectl patch kafkatopic tenant-b-orders -n kafka   --type=json   -p='[{"op":"remove","path":"/metadata/finalizers"}]'
+ 1390  kubectl get kafkatopic -n kafka
+ 1391  kubectl delete ns kafka
+ 1392  nano kafka_files/kafka_script_v3.sh 
+ 1393  clear
+ 1394  kubectl get ns
+ 1395  kubectl get all -n kafka
+ 1396  kubectl get pods -n kafka
+ 1397  kubectl get kafkanodepool -n kafka
+ 1398  kubectl get kafkatopics -n kafka
+ 1399  cd apisix_yamls/multi_tenant_setup/
+ 1400  clear
+ 1401  ls
+ 1402  vi values.yaml
+ 1403  clear
+ 1404  vi tenant-admin-service.yaml
+ 1405  cat tenant-admin-service.yaml 
+ 1406  ls gpxy.yaml
+ 1407  ls
+ 1408  clear
+ 1409  vi gpxy.yaml
+ 1410  # 1. Ensure tenant admin service exists
+ 1411  kubectl apply -f tenant-admin-service.yaml
+ 1412  # 2. Delete old GatewayProxy (clean slate)
+ 1413  kubectl delete gatewayproxy apisix-shared -n apisix-tenant-a --ignore-not-found
+ 1414  # 3. Apply new GatewayProxy
+ 1415  kubectl apply -f gpxy.yaml
+ 1416  kubectl run -it --rm debug --image=alpine --namespace=apisix-tenant-a -- sh
+ 1417  kubectl get pod debug -n apisix-tenant-a
+ 1418  kubectl exec -it debug -n apisix-tenant-a -- sh
+ 1419  clear
+ 1420  kubectl get endpoints apisix-admin -n apisix-system -o wide
+ 1421  kubectl get pods -n apisix-system -o wide
+ 1422  vi gpxy.yaml 
+ 1423  clear
+ 1424  vi gpxy.yaml
+ 1425  kubectl delete gatewayproxy apisix-admin -n apisix-tenant-a
+ 1426  kubectl apply -f gpxy.yaml
+ 1427  kubectl delete gatewayproxy apisix -n apisix-tenant-a
+ 1428  kubectl get gatewayproxy -n apisix-tenant-a
+ 1429  kubectl delete gatewayproxy apisix-admin -n apisix-tenant-a
+ 1430  kubectl delete gatewayproxy apisix-shared -n apisix-tenant-a
+ 1431  clear
+ 1432  kubectl delete gatewayproxy apisix-admin -n apisix-tenant-a
+ 1433  clear
+ 1434  kubectl apply -f gpxy.yaml
+ 1435  clear
+ 1436  kubectl logs -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller-78886f6b7f-776l5 -f
+ 1437  clear
+ 1438  kubectl get pod debug -n apisix-tenant-a
+ 1439  kubectl get pods -n apisix-tenant-a
+ 1440  kubectl logs apisix-ic-a-apisix-ingress-controller-78886f6b7f-776l5 -n apisix-tenant-a
+ 1441  clear
+ 1442  kubectl get pods -n apisix-tenant-a
+ 1443  kubectl delete pod  apisix-ic-a-apisix-ingress-controller-78886f6b7f-776l5 -n apisix-tenant-a
+ 1444  kubectl get pods -n apisix-tenant-a
+ 1445  kubectl logs apisix-ic-a-apisix-ingress-controller-78886f6b7f-7k6dh -n apisix-tenant-a
+ 1446  clear
+ 1447  kubectl logs apisix-ic-a-apisix-ingress-controller-78886f6b7f-7k6dh -n apisix-tenant-a -f
+ 1448  helm upgrade apisix-ic-a apisix/apisix-ingress-controller   -n apisix-tenant-a   --reuse-values   --set config.gatewayProxyName=apisix-admin
+ 1449  kubectl logs apisix-ic-a-apisix-ingress-controller-78886f6b7f-7k6dh -n apisix-tenant-a -f
+ 1450  clearr
+ 1451  clear
+ 1452  kubectl get deploy -n apisix-tenant-a apisix-ic-a -o yaml | grep -A3 gateway
+ 1453  kubectl get deploy -n apisix-tenant-a apisix-ic -o yaml | grep -A3 gateway
+ 1454  kubectl get deploy apisix-ic-a-apisix-ingress-controller-78886f6b7f-7k6dh -n apisix-tenant-a 
+ 1455  kubectl get deploy -n apisix-tenant-a apisix-ingress-controller -o yaml
+ 1456  kubectl get deploy -n apisix-tenant-a -o wide
+ 1457  clear
+ 1458  kubectl get deploy -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller -o yaml | grep -A5 gateway
+ 1459  kubectl get deploy -n apisix-tenant-a -o wide
+ 1460  kubectl get deploy -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller -o yaml | grep -A5 gateway
+ 1461  kubectl get deploy -n apisix-tenant-a apisix-ic-a-apisix-ingress-controller -o yaml
+ 1462  helm upgrade apisix-ic-a apisix/apisix-ingress-controller   -n apisix-tenant-a   --reuse-values   --set gatewayAPI.enabled=true   --set gatewayAPI.gatewayProxyName=apisix-admin
+ 1463  clear
+ 1464  kubectl get configmap apisix-ic-a-ingress-config   -n apisix-tenant-a -o yaml
+ 1465  helm upgrade apisix-ic-a apisix/apisix-ingress-controller   -n apisix-tenant-a   --reuse-values   --set config.provider.apisix.baseURL=http://apisix-admin.apisix-system.svc.cluster.local:9180   --set config.provider.apisix.adminKey=edd1c9f034335f136f87ad84b625c8f1
+ 1466  kubectl logs -n apisix-tenant-a   deploy/apisix-ic-a-apisix-ingress-controller
+ 1467  kubectl delete gatewayproxy apisix-admin -n apisix-tenant-a --ignore-not-found
+ 1468  kubectl get gatewayproxy -A
+ 1469  clear
+ 1470  kubectl edit configmap apisix -n apisix-system
+ 1471  helm list -A | grep -i apisix
+ 1472  kubectl get crds | grep apisix
+ 1473  kubectl get ns | grep apisix
+ 1474  # APISIX data plane
+ 1475  helm uninstall apisix -n apisix || true
+ 1476  # Ingress controller
+ 1477  helm uninstall apisix-ingress-controller -n apisix-ingress-system || true
+ 1478  kubectl delete namespace apisix --wait=false || true
+ 1479  kubectl delete namespace apisix-ingress-system --wait=false || true
+ 1480  kubectl delete crd   apisixroutes.apisix.apache.org   apisixupstreams.apisix.apache.org   apisixtls.apisix.apache.org   apisixconsumers.apisix.apache.org   apisixpluginconfigs.apisix.apache.org   apisixglobalrules.apisix.apache.org   apisixstreamroutes.apisix.apache.org   apisixclusterconfigs.apisix.apache.org   --ignore-not-found
+ 1481  kubectl delete clusterrole apisix-ingress-controller --ignore-not-found
+ 1482  kubectl delete clusterrolebinding apisix-ingress-controller --ignore-not-found
+ 1483  helm list -A | grep apisix     # nothing
+ 1484  kubectl get crds | grep apisix # nothing
+ 1485  kubectl get pods -A | grep apisix # nothing
+ 1486  kubectl delete pod -n apisix --all
+ 1487  kubectl delete pvc -n apisix --all
+ 1488  kubectl delete namespace apisix
+ 1489  helm list -A | grep -i apisix || echo "✔ No APISIX Helm releases"
+ 1490  kubectl get crds | grep apisix || echo "✔ No APISIX CRDs"
+ 1491  kubectl get ns | grep -E 'apisix|etcd|tenant' || echo "✔ No APISIX or tenant namespaces"
+ 1492  kubectl get clusterrole | grep -i apisix || echo "✔ No APISIX ClusterRoles"
+ 1493  kubectl get clusterrolebinding | grep -i apisix || echo "✔ No APISIX ClusterRoleBindings"
+ 1494  kubectl get pv | grep Released || echo "✔ No dangling PVs"
+ 1495  #!/bin/bash
+ 1496  set -e
+ 1497  echo "=== Deleting APISIX Helm releases ==="
+ 1498  helm list -n apisix-system -q | xargs -r -n1 helm uninstall -n apisix-system
+ 1499  echo "=== Deleting APISIX namespaces ==="
+ 1500  kubectl delete ns apisix-system apisix-tenant-a apisix-tenant-b --ignore-not-found --wait=true
+ 1501  echo "=== Deleting leftover CRDs ==="
+ 1502  kubectl get crd | grep apisix | awk '{print $1}' | xargs -r kubectl delete crd
+ 1503  echo "=== Deleting leftover clusterroles and clusterrolebindings ==="
+ 1504  kubectl get clusterrole | grep apisix | awk '{print $1}' | xargs -r kubectl delete clusterrole
+ 1505  kubectl get clusterrolebinding | grep apisix | awk '{print $1}' | xargs -r kubectl delete clusterrolebinding
+ 1506  echo "=== Deleting leftover ConfigMaps and Secrets ==="
+ 1507  kubectl get cm --all-namespaces | grep apisix | awk '{print $2 " -n " $1}' | xargs -r -n3 sh -c 'kubectl delete cm $0 -n $1'
+ 1508  kubectl get secret --all-namespaces | grep apisix | awk '{print $2 " -n " $1}' | xargs -r -n3 sh -c 'kubectl delete secret $0 -n $1'
+ 1509  echo "=== Checking for leftover APISIX pods/services ==="
+ 1510  kubectl get pods,svc -A | grep apisix || echo "No APISIX pods/services remaining"
+ 1511  echo "=== Cleanup complete ==="
+ 1512  clear
+ 1513  helm list -A | grep -i apisix
+ 1514  kubectl run -it --rm debug   --image=curlimages/curl   --namespace=apisix-system   -- sh
+ 1515  clear
+ 1516  helm list -A | grep -i apisix
+ 1517  kubectl get crds | grep apisix
+ 1518  kubectl get ns | grep apisix
+ 1519  # APISIX data plane
+ 1520  helm uninstall apisix -n apisix || true
+ 1521  # Ingress controller
+ 1522  helm uninstall apisix-ingress-controller -n apisix-ingress-system || true
+ 1523  kubectl delete namespace apisix --wait=false || true
+ 1524  kubectl delete namespace apisix-ingress-system --wait=false || true
+ 1525  kubectl delete crd   apisixroutes.apisix.apache.org   apisixupstreams.apisix.apache.org   apisixtls.apisix.apache.org   apisixconsumers.apisix.apache.org   apisixpluginconfigs.apisix.apache.org   apisixglobalrules.apisix.apache.org   apisixstreamroutes.apisix.apache.org   apisixclusterconfigs.apisix.apache.org   --ignore-not-found
+ 1526  kubectl delete clusterrole apisix-ingress-controller --ignore-not-found
+ 1527  kubectl delete clusterrolebinding apisix-ingress-controller --ignore-not-found
+ 1528  helm list -A | grep apisix     # nothing
+ 1529  kubectl get crds | grep apisix # nothing
+ 1530  kubectl get pods -A | grep apisix # nothing
+ 1531  kubectl delete pod -n apisix --all
+ 1532  kubectl delete pvc -n apisix --all
+ 1533  kubectl delete namespace apisix
+ 1534  helm list -A | grep -i apisix || echo "✔ No APISIX Helm releases"
+ 1535  kubectl get crds | grep apisix || echo "✔ No APISIX CRDs"
+ 1536  kubectl get ns | grep -E 'apisix|etcd|tenant' || echo "✔ No APISIX or tenant namespaces"
+ 1537  kubectl get clusterrole | grep -i apisix || echo "✔ No APISIX ClusterRoles"
+ 1538  kubectl get clusterrolebinding | grep -i apisix || echo "✔ No APISIX ClusterRoleBindings"
+ 1539  kubectl get pv | grep Released || echo "✔ No dangling PVs"
+ 1540  #!/bin/bash
+ 1541  set -e
+ 1542  echo "=== Deleting APISIX Helm releases ==="
+ 1543  helm list -n apisix-system -q | xargs -r -n1 helm uninstall -n apisix-system
+ 1544  echo "=== Deleting APISIX namespaces ==="
+ 1545  kubectl delete ns apisix-system apisix-tenant-a apisix-tenant-b --ignore-not-found --wait=true
+ 1546  echo "=== Deleting leftover CRDs ==="
+ 1547  kubectl get crd | grep apisix | awk '{print $1}' | xargs -r kubectl delete crd
+ 1548  echo "=== Deleting leftover clusterroles and clusterrolebindings ==="
+ 1549  kubectl get clusterrole | grep apisix | awk '{print $1}' | xargs -r kubectl delete clusterrole
+ 1550  kubectl get clusterrolebinding | grep apisix | awk '{print $1}' | xargs -r kubectl delete clusterrolebinding
+ 1551  echo "=== Deleting leftover ConfigMaps and Secrets ==="
+ 1552  kubectl get cm --all-namespaces | grep apisix | awk '{print $2 " -n " $1}' | xargs -r -n3 sh -c 'kubectl delete cm $0 -n $1'
+ 1553  kubectl get secret --all-namespaces | grep apisix | awk '{print $2 " -n " $1}' | xargs -r -n3 sh -c 'kubectl delete secret $0 -n $1'
+ 1554  echo "=== Checking for leftover APISIX pods/services ==="
+ 1555  kubectl get pods,svc -A | grep apisix || echo "No APISIX pods/services remaining"
+ 1556  echo "=== Cleanup complete ==="
+ 1557  helm repo add apisix https://charts.apiseven.com
+ 1558  helm repo update
+ 1559  clear
+ 1560  kubectl create namespace apisix-tenant-a
+ 1561  helm install apisix apisix/apisix   -n apisix-tenant-a   --create-namespace     --set apisix.replicaCount=2   --set apisix.podDisruptionBudget.enabled=true   --set apisix.podDisruptionBudget.minAvailable=1     --set apisix.admin.enabled=true   --set apisix.admin.allow.ipList[0]="0.0.0.0/0"     --set etcd.enabled=true   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.storageClass=cinder-standard   --set etcd.persistence.size=20Gi     --set apisix.ingress.enabled=false
+ 1562  kubectl get pods -n apisix-tenant-a
+ 1563  clear
+ 1564  kubectl get pods -n apisix-tenant-a
+ 1565  kubectl logs apisix-5cb9d79fdc-v7hfl -m apisix-tenant-a
+ 1566  clear
+ 1567  curl -H "Host: tenant-a.apisix.local" http://127.0.0.1:9080/get
+ 1568  kubectl exec -n apisix-tenant-a deploy/apisix-ingress-controller --   curl -s http://apisix-admin:9180/apisix/admin/routes
+ 1569  kubectl get deploy -n apisix-tenant-a
+ 1570  kubectl exec -n apisix-tenant-a deploy/apisix-ingress-apisix-ingress-controller --   curl -s http://apisix-admin:9180/apisix/admin/routes
+ 1571  kubectl port-forward -n apisix-tenant-a svc/apisix-admin 9180:9180
+ 1572  clear
+ 1573  kubectl port-forward -n apisix-tenant-a svc/apisix 9180:9180
+ 1574  clear
+ 1575  kubectl port-forward -n apisix-tenant-a svc/apisix 9180:9180
+ 1576  kubectl get svc -n apisix-tenant-a
+ 1577  clear
+ 1578  kubectl port-forward -n apisix-tenant-a svc/apisix-admin 9180:9180
+ 1579  clear
+ 1580  kubectl port-forward -n apisix-tenant-a svc/apisix-gateway 9080:80
+ 1581  helm uninstall apisix -n apisix-tenant-a
+ 1582  helm uninstall apisix-ingress -n apisix-tenant-a
+ 1583  kubectl delete pod -n apisix-tenant-a --all --grace-period=0 --force
+ 1584  kubectl delete pvc -n apisix-tenant-a --all
+ 1585  kubectl delete svc,configmap,secret -n apisix-tenant-a --all
+ 1586  kubectl delete validatingwebhookconfigurations apisix-ingress-controller-webhook
+ 1587  kubectl get pvc -n apisix-tenant-a
+ 1588  ADMIN_KEY="my-admin-key-1234"
+ 1589  helm install apisix apisix/apisix   -n apisix-tenant-a   --create-namespace   --set apisix.replicaCount=1   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.storageClass=cinder-standard   --set etcd.persistence.size=20Gi   --set apisix.adminKey=${ADMIN_KEY}   --set ingress-controller.enabled=true   --set ingress-controller.watchNamespace=apisix-tenant-a
+ 1590  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set config.apisix.adminKey=${ADMIN_KEY}   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a
+ 1591  kubectl delete ingressclass apisix
+ 1592  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set config.apisix.adminKey=${ADMIN_KEY}   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a
+ 1593  kubectl port-forward -n apisix-tenant-a svc/apisix-admin 9180:9180
+ 1594  kubectl get pods -n apisix-tenant-a
+ 1595  kubectl get pvc -n apisix-tenant-a
+ 1596  kubectl get pods -n apisix-tenant-a
+ 1597  kubectl port-forward -n apisix-tenant-a svc/apisix-admin 9180:9180
+ 1598  clear
+ 1599  kubectl port-forward -n apisix-tenant-a svc/apisix-admin 9180:9180
+ 1600  clear
+ 1601  kubectl port-forward -n apisix-tenant-a svc/apisix-gateway 9080:80
+ 1602  clear
+ 1603  kubectl get svc apisix-dashboard -n apisix-tenant-a -o yaml
+ 1604  clear
+ 1605  kubectl logs apisix-5cb9d79fdc-v7hfl -m apisix-tenant-a
+ 1606  kubectl logs apisix-5cb9d79fdc-v7hfl -n apisix-tenant-a
+ 1607  clear
+ 1608  kubectl get pods -n apisix-tenant-a
+ 1609  kubectl get pvc -n apisix-tenant-a
+ 1610  kubectl get pv -n apisix-tenant-a
+ 1611  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a     --set replicaCount=1     --set watchNamespaces[0]=apisix-tenant-a     --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix-admin   --set config.apisix.servicePort=9180     --set podDisruptionBudget.enabled=true   --set podDisruptionBudget.minAvailable=1
+ 1612  kubectl get ingressclass
+ 1613  kubectl delete ingressclass apisix apisix-tenant-b apisix-tenant-a
+ 1614  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a     --set replicaCount=1     --set watchNamespaces[0]=apisix-tenant-a     --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix-admin   --set config.apisix.servicePort=9180     --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a     --set podDisruptionBudget.enabled=true   --set podDisruptionBudget.minAvailable=1
+ 1615  kubectl get ingressclass
+ 1616  helm uninstall apisix-ingress -n apisix-tenant-a
+ 1617  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix-admin   --set config.apisix.servicePort=9180   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a   --set podDisruptionBudget.enabled=true   --set podDisruptionBudget.minAvailable=1
+ 1618  kubectl get ingressclass
+ 1619  kubectl logs -n apisix-tenant-a deploy/apisix-ingress-controller
+ 1620  clear
+ 1621  kubectl get pods -n tenant-apisix-a
+ 1622  kubectl get namespaces
+ 1623  kubectl get pods -n tenant-apisix-a
+ 1624  kubectl get pods -n apisix-tenant-a
+ 1625  kubectl logs apisix-ingress-apisix-ingress-controller-86c8647659-fkvr8 -n apiix-tenant-a
+ 1626  kubectl logs apisix-ingress-apisix-ingress-controller-86c8647659-fkvr8 -n apisix-tenant-a
+ 1627  clear
+ 1628  kubectl logs -n apisix-tenant-a deploy/apisix-ingress-controller
+ 1629  clear
+ 1630  kubectl logs apisix-ingress-apisix-ingress-controller-86c8647659-fkvr8 -n apisix-tenant-a
+ 1631  kubectl apply -n apisix-tenant-a -f httpbin-deployment.yaml
+ 1632  kubectl apply -n apisix-tenant-a -f httpbin-route.yaml
+ 1633  vi httpbin-deployment.yaml
+ 1634  vihttpbin-service.yaml
+ 1635  vi httpbin-service.yaml
+ 1636  vi httpbin-route.yaml
+ 1637  kubectl apply -f httpbin-deployment.yaml
+ 1638  kubectl apply -f httpbin-service.yaml
+ 1639  kubectl apply -f httpbin-route.yaml
+ 1640  kubectl port-forward -n apisix-tenant-a svc/apisix-gateway 9080:80
+ 1641  curl -H "Host: tenant-a.apisix.local" http://127.0.0.1:9080/get
+ 1642  clear
+ 1643  curl http://127.0.0.1:9180/routes
+ 1644  curl http://127.0.0.1:9180/apisix/admin/routes
+ 1645  kubectl get secret -n apisix-tenant-a apisix-admin-secret -o yaml
+ 1646  kubectl get secret -n apisix-tenant-a
+ 1647  ADMIN_KEY="my-admin-key-1234"
+ 1648  helm uninstall apisix -n apisix-tenant-a
+ 1649  helm uninstall apisix-ingress -n apisix-tenant-a
+ 1650  # Install APISIX with Admin API key
+ 1651  helm install apisix apisix/apisix   -n apisix-tenant-a   --set apisix.replicaCount=1   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.storageClass=cinder-standard   --set etcd.persistence.size=20Gi   --set apisix.adminKey=${ADMIN_KEY}   --set ingress-controller.enabled=true   --set ingress-controller.watchNamespace=apisix-tenant-a
+ 1652  # Install Ingress Controller pointing to the same key
+ 1653  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set config.apisix.adminKey=${ADMIN_KEY}   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a
+ 1654  curl -H "X-API-KEY: my-admin-key-1234" http://127.0.0.1:9180/apisix/admin/routes
+ 1655  kubectl delete validatingwebhookconfigurations apisix-ingress-controller-webhook
+ 1656  kubectl delete pvc -n apisix-tenant-a -l app=apisix-etcd
+ 1657  helm uninstall apisix -n apisix-tenant-a
+ 1658  helm uninstall apisix-ingress -n apisix-tenant-a
+ 1659  kubectl delete deploy -n apisix-tenant-a --all
+ 1660  kubectl delete svc -n apisix-tenant-a --all
+ 1661  kubectl delete configmap -n apisix-tenant-a --all
+ 1662  kubectl delete secret -n apisix-tenant-a --all
+ 1663  kubectl get all -n apisix-tenant-a
+ 1664  kubectl delete svc,configmap,secret -n apisix-tenant-a --all
+ 1665  export ADMIN_KEY="my-admin-key-1234"
+ 1666  # Uninstall Helm releases
+ 1667  helm uninstall apisix -n apisix-tenant-a
+ 1668  helm uninstall apisix-ingress -n apisix-tenant-a
+ 1669  # Delete all remaining pods (force if needed)
+ 1670  kubectl delete pod -n apisix-tenant-a --all --grace-period=0 --force
+ 1671  # Delete all services, configmaps, secrets
+ 1672  kubectl delete svc,configmap,secret -n apisix-tenant-a --all
+ 1673  # Delete leftover validating webhook
+ 1674  kubectl delete validatingwebhookconfigurations apisix-ingress-controller-webhook
+ 1675  kubectl get all -n apisix-tenant-a
+ 1676  helm install apisix apisix/apisix   -n apisix-tenant-a   --create-namespace   --set apisix.replicaCount=1   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.storageClass=cinder-standard   --set etcd.persistence.size=20Gi   --set apisix.adminKey=${ADMIN_KEY}   --set ingress-controller.enabled=true   --set ingress-controller.watchNamespace=apisix-tenant-a
+ 1677  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set config.apisix.adminKey=${ADMIN_KEY}   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a
+ 1678  kubectl delete ingressclass apisix
+ 1679  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set config.apisix.adminKey=${ADMIN_KEY}   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a
+ 1680  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1681  apiVersion: apps/v1
+ 1682  kind: Deployment
+ 1683  metadata:
+ 1684    name: httpbin
+ 1685    namespace: apisix-tenant-a
+ 1686  spec:
+ 1687    replicas: 1
+ 1688    selector:
+ 1689      matchLabels:
+ 1690        app: httpbin
+ 1691    template:
+ 1692      metadata:
+ 1693        labels:
+ 1694          app: httpbin
+ 1695      spec:
+ 1696        containers:
+ 1697        - name: httpbin
+ 1698          image: kennethreitz/httpbin
+ 1699          ports:
+ 1700          - containerPort: 80
+ 1701  EOF
+ 1702  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1703  apiVersion: v1
+ 1704  kind: Service
+ 1705  metadata:
+ 1706    name: httpbin
+ 1707    namespace: apisix-tenant-a
+ 1708  spec:
+ 1709    selector:
+ 1710      app: httpbin
+ 1711    ports:
+ 1712    - port: 80
+ 1713      targetPort: 80
+ 1714  EOF
+ 1715  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1716  apiVersion: apisix.apache.org/v2
+ 1717  kind: ApisixRoute
+ 1718  metadata:
+ 1719    name: httpbin-route
+ 1720    namespace: apisix-tenant-a
+ 1721  spec:
+ 1722    http:
+ 1723    - name: httpbin-rule
+ 1724      match:
+ 1725        hosts:
+ 1726        - tenant-a.apisix.local
+ 1727        paths:
+ 1728        - /*
+ 1729      backends:
+ 1730      - serviceName: httpbin
+ 1731        servicePort: 80
+ 1732  EOF
+ 1733  clear
+ 1734  curl -H "X-API-KEY: my-admin-key-1234" http://127.0.0.1:9180/apisix/admin/routes
+ 1735  curl -H "Host: tenant-a.apisix.local" http://127.0.0.1:9080/get
+ 1736  clear
+ 1737  curl -H "X-API-KEY: ${ADMIN_KEY}" http://127.0.0.1:9180/apisix/admin/routes
+ 1738  export ADMIN_KEY="my-admin-key-1234"
+ 1739  curl -H "X-API-KEY: ${ADMIN_KEY}" http://127.0.0.1:9180/apisix/admin/routes
+ 1740  curl -H "X-API-KEY: my-admin-key-1234" http://127.0.0.1:9180/apisix/admin/routes
+ 1741  curl -H "X-API-KEY: 'my-admin-key-1234'" http://127.0.0.1:9180/apisix/admin/routes
+ 1742  kubectl get pods -n apisix-tenant-a
+ 1743  kubectl exec -n apisix-tenant-a -it apisix-etcd-0 -- sh
+ 1744  clear
+ 1745  helm uninstall apisix -n apisix-tenant-a
+ 1746  helm uninstall apisix-ingress -n apisix-tenant-a
+ 1747  kubectl delete pod -n apisix-tenant-a --all --grace-period=0 --force
+ 1748  kubectl delete pvc -n apisix-tenant-a --all
+ 1749  kubectl delete svc,secret,configmap -n apisix-tenant-a --all
+ 1750  kubectl delete validatingwebhookconfigurations apisix-ingress-controller-webhook
+ 1751  kubectl get pvc -n apisix-tenant-a
+ 1752  kubectl get pv -n apisix-tenant-a
+ 1753  kubectl get ingressclass
+ 1754  clear
+ 1755  ADMIN_KEY="my-admin-key-1234"
+ 1756  helm install apisix apisix/apisix   -n apisix-tenant-a   --create-namespace   --set apisix.replicaCount=1   --set etcd.replicaCount=3   --set etcd.persistence.enabled=true   --set etcd.persistence.storageClass=cinder-standard   --set etcd.persistence.size=20Gi   --set apisix.adminKey=my-admin-key-1234   --set ingress-controller.enabled=true   --set ingress-controller.watchNamespace=apisix-tenant-a
+ 1757  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set config.apisix.adminKey=my-admin-key-1234   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a
+ 1758  kubectl get ingressclass
+ 1759  kubectl delete ingressclass apisix
+ 1760  clear
+ 1761  helm install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set config.apisix.adminKey=my-admin-key-1234   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a
+ 1762  kubectl get pods -n apisix-tenant-a
+ 1763  kubectl get pvc -n apisix-tenant-a
+ 1764  kubectl get pods -n apisix-tenant-a
+ 1765  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1766  apiVersion: apps/v1
+ 1767  kind: Deployment
+ 1768  metadata:
+ 1769    name: httpbin
+ 1770    namespace: apisix-tenant-a
+ 1771  spec:
+ 1772    replicas: 1
+ 1773    selector:
+ 1774      matchLabels:
+ 1775        app: httpbin
+ 1776    template:
+ 1777      metadata:
+ 1778        labels:
+ 1779          app: httpbin
+ 1780      spec:
+ 1781        containers:
+ 1782        - name: httpbin
+ 1783          image: kennethreitz/httpbin
+ 1784          ports:
+ 1785          - containerPort: 80
+ 1786  EOF
+ 1787  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1788  apiVersion: v1
+ 1789  kind: Service
+ 1790  metadata:
+ 1791    name: httpbin
+ 1792    namespace: apisix-tenant-a
+ 1793  spec:
+ 1794    selector:
+ 1795      app: httpbin
+ 1796    ports:
+ 1797    - port: 80
+ 1798      targetPort: 80
+ 1799  EOF
+ 1800  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1801  apiVersion: apisix.apache.org/v2
+ 1802  kind: ApisixRoute
+ 1803  metadata:
+ 1804    name: httpbin-route
+ 1805    namespace: apisix-tenant-a
+ 1806  spec:
+ 1807    http:
+ 1808    - name: httpbin-rule
+ 1809      match:
+ 1810        hosts:
+ 1811        - tenant-a.apisix.local
+ 1812        paths:
+ 1813        - /*
+ 1814      backends:
+ 1815      - serviceName: httpbin
+ 1816        servicePort: 80
+ 1817  EOF
+ 1818  curl -H "X-API-KEY: my-admin-key-1234" http://127.0.0.1:9180/apisix/admin/routes
+ 1819  curl -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" http://127.0.0.1:9180/apisix/admin/routes
+ 1820  helm upgrade apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set config.apisix.adminKey=edd1c9f034335f136f87ad84b625c8f1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a
+ 1821  clear
+ 1822  curl -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" http://127.0.0.1:9180/apisix/admin/routes
+ 1823  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1824  apiVersion: apps/v1
+ 1825  kind: Deployment
+ 1826  metadata:
+ 1827    name: httpbin
+ 1828  spec:
+ 1829    replicas: 1
+ 1830    selector:
+ 1831      matchLabels:
+ 1832        app: httpbin
+ 1833    template:
+ 1834      metadata:
+ 1835        labels:
+ 1836          app: httpbin
+ 1837      spec:
+ 1838        containers:
+ 1839        - name: httpbin
+ 1840          image: kennethreitz/httpbin
+ 1841          ports:
+ 1842          - containerPort: 80
+ 1843  EOF
+ 1844  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1845  apiVersion: v1
+ 1846  kind: Service
+ 1847  metadata:
+ 1848    name: httpbin
+ 1849  spec:
+ 1850    selector:
+ 1851      app: httpbin
+ 1852    ports:
+ 1853    - port: 80
+ 1854      targetPort: 80
+ 1855  EOF
+ 1856  kubectl apply -n apisix-tenant-a -f - <<EOF
+ 1857  apiVersion: apisix.apache.org/v2
+ 1858  kind: ApisixRoute
+ 1859  metadata:
+ 1860    name: httpbin-route
+ 1861  spec:
+ 1862    http:
+ 1863    - name: httpbin-rule
+ 1864      match:
+ 1865        hosts:
+ 1866        - tenant-a.apisix.local
+ 1867        paths:
+ 1868        - /*
+ 1869      backends:
+ 1870      - serviceName: httpbin
+ 1871        servicePort: 80
+ 1872  EOF
+ 1873  curl -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" http://127.0.0.1:9180/apisix/admin/routes
+ 1874  clear
+ 1875  kubectl get pods -n apisix-tenant-a
+ 1876  kubectl delete deploy apisix-ingress-controller -n apisix-tenant-a
+ 1877  kubectl get pods -n apisix-tenant-a
+ 1878  clear
+ 1879  kubectl get pods -n apisix-tenant-a
+ 1880  kubectl logs -n apisix-tenant-a deploy/apisix-ingress-apisix-ingress-controller -c manager
+ 1881  kubectl delete apisixroute httpbin-route -n apisix-tenant-a
+ 1882  kubectl apply -n apisix-tenant-a -f httpbin-route.yaml
+ 1883  kubectl logs -n apisix-tenant-a deploy/apisix-ingress-apisix-ingress-controller -c manager -f
+ 1884  helm upgrade apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set gateway.enabled=false   --set config.apisix.adminKey=edd1c9f034335f136f87ad84b625c8f1   --set watchNamespaces[0]=apisix-tenant-a
+ 1885  kubectl delete apisixroute httpbin-route -n apisix-tenant-a
+ 1886  kubectl apply -n apisix-tenant-a -f httpbin-route.yaml
+ 1887  ls -ltr
+ 1888  kubectl get deploy -n apisix-tenant-a
+ 1889  kubectl delete deploy httpbin -n apisix-tenant-a
+ 1890  kubectl appy -f httpbin-deployment.yaml -f httpbin-service.yaml -f apisix-tenant-a
+ 1891  kubectl apply -f httpbin-deployment.yaml -f httpbin-service.yaml -f apisix-tenant-a
+ 1892  kubectl apply -f httpbin-deployment.yaml -f httpbin-service.yaml -f httpbin-route.yaml
+ 1893  =kubectl get route -n apisix-tenant-a
+ 1894  kubectl get route -n apisix-tenant-a
+ 1895  cat httpbin-route.yaml 
+ 1896  kubectl delete apisixroute httpbin-route -n apisix-tenant-a
+ 1897  kubectl apply -f httpbin-deployment.yaml -f httpbin-service.yaml -f httpbin-route.yaml
+ 1898  clear
+ 1899  kubectl logs -n apisix-tenant-a deploy/apisix-ingress-apisix-ingress-controller -c manager -f
+ 1900  clear
+ 1901  kubectl delete deploy apisix-ingress-apisix-ingress-controller -n apisix-tenant-a
+ 1902  helm upgrade --install apisix-ingress apisix/apisix-ingress-controller   -n apisix-tenant-a   --set replicaCount=1   --set watchNamespaces[0]=apisix-tenant-a   --set config.apisix.serviceNamespace=apisix-tenant-a   --set config.apisix.serviceName=apisix   --set config.apisix.servicePort=9180   --set config.apisix.adminKey=edd1c9f034335f136f87ad84b625c8f1   --set ingressClass.enabled=true   --set ingressClass.name=apisix-tenant-a   --set gateway.enabled=false
+ 1903  kubectl get pods -n apisix-tenant-a
+ 1904  kubectl logs -n apisix-tenant-a apisix-ingress-apisix-ingress-controller-86c8647659-z54pn -c manager -f
+ 1905  clear
+ 1906  curl -i -X PUT http://127.0.0.1:9180/apisix/admin/routes/1   -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1"   -H "Content-Type: application/json"   -d '{
+ 1907          "uri": "/get",
+ 1908          "upstream": {
+ 1909              "type": "roundrobin",
+ 1910              "nodes": {
+ 1911                  "httpbin:80": 1
+ 1912              }
+ 1913          }
+ 1914        }'
+ 1915  curl -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" http://127.0.0.1:9180/apisix/admin/routes
+ 1916  curl -H "Host: tenant-a.apisix.local" http://127.0.0.1:9080/get
+ 1917  helm repo add apisix https://charts.apiseven.com
+ 1918  helm repo update
+ 1919  helm install apisix-dashboard apisix/apisix-dashboard   -n apisix-tenant-a   --set apisix.adminKey=edd1c9f034335f136f87ad84b625c8f1   --set service.type=NodePort
+ 1920  kubectl get svc -n apisix-tenant-a
+ 1921  kubectl port-forward -n apisix-tenant-a svc/apisix-dashboard 8080:8080
+ 1922  kubectl port-forward -n apisix-tenant-a svc/apisix-dashboard 80:8080
+ 1923  kubectl port-forward -n apisix-tenant-a svc/apisix-dashboard 80:80
+ 1924  kubectl port-forward -n apisix-tenant-a svc/apisix-dashboard 8080:80
+ 1925  clear
+ 1926  kubectl port-forward   --address 0.0.0.0   -n apisix-tenant-a   svc/apisix-dashboard 8080:80
+ 1927  clear
+ 1928  source kafka_files/kafka_script_v3.sh 
+ 1929  kubectl get kafkauser -n kafka
+ 1930  kubectl get pods -n kafka
+ 1931  kubectl logs pod/strimzi-cluster-operator-65f789fc9b-rhcn2 -n kafka
+ 1932  clear
+ 1933  ./kafka_files/kafka_script_v4.sh uninstall-kafka
+ 1934  ./kafka_files/kafka_script_v4.sh install-kafka
+ 1935  ./kafka_files/kafka_script_v4.sh uninstall-kafka
+ 1936  nano kafka_files/kafka_script_v5.sh
+ 1937  kubectl get all -n kafka
+ 1938  kubectl get all | grep kafka
+ 1939  kubectl get crds | grep kafka
+ 1940  kubectl delete crds kafkabridges.kafka.strimzi.io kafkaconnectors.kafka.strimzi.io kafkaconnects.kafka.strimzi.io kafkamirrormaker2s.kafka.strimzi.io kafkanodepools.kafka.strimzi.io kafkarebalances.kafka.strimzi.io kafkas.kafka.strimzi.io kafkatopics.kafka.strimzi.io kafkausers.kafka.strimzi.io
+ 1941  nano kafka_files/kafka_script_v5.sh
+ 1942  kubectl get clusterrole | grep kafka
+ 1943  kubectl delete clusterrole strmizi-kafka-broker strimzi-kafka-client
+ 1944  kubectl delete clusterrole strimzi-kafka-broker strimzi-kafka-client
+ 1945  kubectl get clusterrolebinding | grep kafka
+ 1946  kubectl delete clusterrolebinding strimzi-cluster-operator-kafka-broker-delegation strimzi-cluster-operator-kafka-client-delegation strimzi-kafka-my-cluster-kafka-init
+ 1947  rm kafka_files/kafka_script_v5.sh
+ 1948  nano kafka_files/kafka_script_v5.sh
+ 1949  chmod +x kafka_files/kafka_script_v5.sh 
+ 1950  ./kafka_files/kafka_script_v5.sh install-kafka
+ 1951  kubectl get clusterrole | grep strimzi
+ 1952  kubectl delete clusterrole strimzi-cluster-operator-global strimzi-cluster-operator-leader-election strimzi-cluster-operator-namespaced strimzi-cluster-operator-watched strimzi-entity-operator
+ 1953  kubectl get clusterrolebinding | grep strimzi
+ 1954  kubectl delete clusterrolebinding strimzi-cluster-operator strimzi-cluster-operator-kafka-broker-delegation strimzi-cluster-operator-kafka-client-delegation
+ 1955  ./kafka_files/kafka_script_v5.sh uninstall-kafka
+ 1956  clear
+ 1957  chmod +x kafka_files/kafka_script_v3.sh 
+ 1958  ./kafka_files/kafka_script_v3.sh create tenant-a
+ 1959  kubectl wait kafkauser/tenant-a-user -n kafka --for=condition=Ready --timeout=120s
+ 1960  kubectl get kafkauser -n kafka
+ 1961  nano kafka_files/kafka_script_v4.sh
+ 1962  ./kafka_files/kafka_script_v4.sh delete tenant-a
+ 1963  chmod +x kafka_files/kafka_script_v4.sh
+ 1964  ./kafka_files/kafka_script_v4.sh delete tenant-a
+ 1965  rm kafka_files/kafka_script_v4.sh 
+ 1966  nano kafka_files/kafka_script_v4.sh 
+ 1967  ./kafka_files/kafka_script_v4.sh create-tenant tenant-a
+ 1968  chmod +x kafka_files/kafka_script_v4.sh
+ 1969  ./kafka_files/kafka_script_v4.sh create-tenant tenant-a
+ 1970  kubectl get pods
+ 1971  kubectl get deployments
+ 1972  kubectl get kafkausers
+ 1973  kubectl get kafkauser
+ 1974  clear
+ 1975  kubectl get role | grep kafka
+ 1976  kubectl get ns
+ 1977  kubectl delete ns tenant-a tenant-b
+ 1978  nano kafka_files/kafka_script_v6.sh
+ 1979  chmod +x kafka_files/kafka_script_v6.sh 
+ 1980  ./kafka_files/kafka_script_v6.sh install-kafka
+ 1981  kubectl get ns
+ 1982  kubectl get pods -n kafka
+ 1983  kubectl get svc -n kafka
+ 1984  ./kafka_files/kafka_script_v6.sh create-tenant tenant-a
+ 1985  ./kafka_files/kafka_script_v6.sh delete-tenant tenant-a
+ 1986  ./kafka_files/kafka_script_v6.sh install-kafka
+ 1987  ./kafka_files/kafka_script_v6.sh uninstall-kafka
+ 1988  nano kafka_files/kafka_script_v7.sh
+ 1989  chmod +x kafka_files/kafka_script_v7.sh
+ 1990  ./kafka_files/kafka_script_v7.sh install-kafka
+ 1991  rm kafka_files/kafka_script_v7.sh 
+ 1992  nano kafka_files/kafka_script_v7.sh 
+ 1993  chmod +x kafka_files/kafka_script_v7.sh 
+ 1994  kubectl delete kafka my-cluster -n kafka --ignore-not-found
+ 1995  kubectl delete kafkanodepool --all -n kafka
+ 1996  ./kafka_files/kafka_script_v7.sh install-kafka
+ 1997  kubectl get pods -n kafka
+ 1998  kubectl get kafka -n kafka
+ 1999  kubectl get kafkanodepool -n kafka
+ 2000  kubectl get pods -n kafka
+ 2001  kubectl get svc -n kafka
+ 2002  ./kafka_files/kafka_script_v7.sh create-tenant tenant-a
+ 2003  kubectl describe kafka my-cluster -n kafka | grep -A5 Conditions
+ 2004  kubectl get kafkauser -n kafka
+ 2005  kubectl describe kafkauser tenant-a-user -n kafka
+ 2006  kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d
+ 2007  export TENANT_A_PASSWORD=$(kubectl get secret tenant-a-user -n kafka -o jsonpath='{.data.password}' | base64 -d)
+ 2008  nano kafka_files/kafka_script_v8.sh
+ 2009  .kafka_files//kafka_script_v8.sh test-kafka
+ 2010  ./kafka_files/kafka_script_v8.sh test-kafka
+ 2011  chmod +x kafka_files/kafka_script_v8.sh 
+ 2012  ./kafka_files/kafka_script_v8.sh test-kafka
+ 2013  ./kafka_files/kafka_script_v8.sh test-tenant tenant-a
+ 2014  kubectl get kafkatopic -n kafka
+ 2015  kubectl delete topic tenant-a-topic -n kafka
+ 2016  kubectl delete kafkatopic tenant-a-topic -n kafka
+ 2017  nano kafka_files/kafka_script_v8.sh
+ 2018  ./kafka_files/kafka_script_v8.sh test-tenant tenant-a
+ 2019  ls /home/admusr/kafka_2.13-4.1.1/bin
+ 2020  rm kafka_files/kafka_script_v8.sh 
+ 2021  nano kafka_files/kafka_script_v8.sh 
+ 2022  kubectl get kafkatopic -n kafka
+ 2023  kubectl delete kafkatopic tenant-a-topic -n kafka
+ 2024  chmod +x kafka_files/kafka_script_v8.sh 
+ 2025  ./kafka_files/kafka_script_v8.sh test-tenant tenant-a
+ 2026  history | grep bootstrap
+ 2027  kubectl get svc -n kafka
+ 2028  nano kafka_files/kafka_script_v8.sh 
+ 2029  ./kafka_files/kafka_script_v8.sh delete-topic tenant-a
+ 2030  ./kafka_files/kafka_script_v8.sh cleanup-test-topics tenant-a
+ 2031  ./kafka_files/kafka_script_v8.sh test-tenant tenant-a
+ 2032  kubectl get ns
+ 2033  kubectl get kafkausers -n kafka
+ 2034  ./kafka_files/kafka_script_v8.sh create-tenant tenant-b
+ 2035  ./kafka_files/kafka_script_v8.sh test-isolation tenant-a tenant-b
+ 2036  ./kafka_files/kafka_script_v8.sh cleanup-test-topics tenant-a
+ 2037  ./kafka_files/kafka_script_v8.sh cleanup-test-topics tenant-b
+ 2038  kubectl patch kafkauser ${TENANT}-user -n kafka --type merge -p '{"spec":{"authorization":{"acls":[{"resource":{"type":"topic","name":"'"${TENANT}-"'","patternType":"prefix"},"operations":["Create","Alter","Describe","Read","Write","DescribeConfigs","Delete"]}]}}}'
+ 2039  kubectl patch kafkauser tenant-a-user -n kafka --type merge -p '{"spec":{"authorization":{"acls":[{"resource":{"type":"topic","name":"'"tenant-a-"'","patternType":"prefix"},"operations":["Create","Alter","Describe","Read","Write","DescribeConfigs","Delete"]}]}}}'
+ 2040  ./kafka_files/kafka_script_v8.sh cleanup-test-topics tenant-b
+ 2041  ./kafka_files/kafka_script_v8.sh cleanup-test-topics tenant-a
+ 2042  nano kafka_files/kafka_script_v8.sh 
+ 2043  history > kafka_25_12_2025.txt
