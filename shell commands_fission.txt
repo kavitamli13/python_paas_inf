@@ -1,0 +1,12 @@
+﻿# Install Fission cluster
+install_fission default
+
+# Create tenants
+create_tenant tenant-a
+create_tenant tenant-b
+
+# Delete a tenant
+delete_tenant tenant-a
+
+# Uninstall the whole Fission cluster
+uninstall_fission
