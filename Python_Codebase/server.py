@@ -76,6 +76,7 @@ async def invoke_action(req: ProvisionRequest):
             req.tenant = 'default'
         log("Tenant name cannot be empty. Changing tenant name to default")
         user_input = {"tenant": req.tenant, "product": req.product, "plan": req.plan, "action": req.action}
+        print(f"Input::{user_input}")
         result = await provisioner.provision(user_input)
         return {"status": "ok", "result": result}
     except Exception as e:
