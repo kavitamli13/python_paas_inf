@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Ensure bash even if invoked via sh
-if [ -z "$BASH_VERSION" ]; then
+
+# Force bash if executed via sh, but preserve arguments
+if [ -z "${BASH_VERSION:-}" ]; then
   exec /usr/bin/env bash "$0" "$@"
 fi
 
