@@ -301,7 +301,6 @@ EOF
 # DELETE A TEST FUNCTION
 ############################################
 function delete_test_function() {
-  local TENANT="$2"
   local FUNC_NAME="test-func"
 
   if [[ -z "$TENANT" ]]; then
@@ -323,7 +322,6 @@ function delete_test_function() {
 # SCRAPE PROMETHEUS METRICS FOR A NAMESPACE
 ############################################
 function scrape_metrics() {
-  local TENANT="$2"
 
   if [[ -z "$TENANT" ]]; then
     echo "Usage: scrape_metrics <tenant-namespace>"
