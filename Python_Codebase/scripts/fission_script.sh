@@ -364,10 +364,10 @@ case "$1" in
     uninstall_fission
     ;;
   test-function)
-    test_tenant "$2"
+    test_function "$2"
     ;;
   delete-test-function)
-    cleanup_test_functions "$2"
+    delete_test_function "$2"
     ;;
   scrape-metrics)
     scrape_metrics "$2"
