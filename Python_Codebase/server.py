@@ -69,6 +69,19 @@ async def create_tenant(req: ProvisionRequest):
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/provision/action")
+async def create_tenant(req: ProvisionRequest):
+    try:
+        if req.tenant is None:
+            req.tenant = 'default'
+        log("Tenant name cannot be empty. Changing tenant name to default")
+        user_input = {"tenant": req.tenant, "product": req.product, "plan": req.plan, "action": req.action}
+        result = await provisioner.provision(user_input)
+        return {"status": "ok", "result": result}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=str(e))
+        
 # @app.post("/billing")
 # def generate_billing(req: BillingRequest):
 #     try:
