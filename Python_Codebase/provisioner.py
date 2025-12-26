@@ -47,11 +47,12 @@ def tenant_exists(tenant: str):
 
 # ---------------- Kafka Operations ----------------
 async def kafka_operation(action: str, tenant: str = ""):
-    script_path = "/home/admusr/Python_Codebase/scripts/kafka_script_v8.sh"
+    script_path = "/home/admusr/Python_Codebase/scripts/kafka_script.sh"
+    
     cmd = f"{script_path} {action}"
     if tenant:
         cmd += f" {tenant}"
-
+    log(f"Kafka command: {cmd}")
     # Validate tenant creation
     if action == "create-tenant" and tenant_exists(tenant):
         log(f"Tenant '{tenant}' already exists. Skipping creation.")
@@ -62,7 +63,7 @@ async def kafka_operation(action: str, tenant: str = ""):
 
 # ---------------- Fission Operations ----------------
 async def fission_operation(action: str, tenant: str = ""):
-    script_path = "/home/admusr/Python_Codebase/scripts/fission_script_v7.sh"
+    script_path = "/home/admusr/Python_Codebase/scripts/fission_script.sh"
     cmd = f"{script_path} {action}"
     if tenant:
         cmd += f" {tenant}"
@@ -138,6 +139,7 @@ async def provisioner(product: str, tenant: str, action: str):
 
 async def provision(user_input: dict[str, Any]):
     result = provisioner(user_input['product'], user_input['tenant'], user_input['action'])
+    print(result)
     #products=["fission","kafka"]
     #kafka_actions = ["install-kafka", "create-tenant", "test-tenant", "test-isolation", "cleanup-test-topics"]
     #fission_actions = ["install-fission", "create-tenant", "delete-tenant", "uninstall-fission"]
