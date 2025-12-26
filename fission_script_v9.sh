@@ -8,7 +8,7 @@ FISSION_VERSION="v1.22.0"
 FISSION_NS="fission"
   
 usage() {
-  echo "Usage: $0 {install-fission|create-tenant|delete-tenant|uninstall-fission|test-function|delete-test-function} <tenant>"
+  echo "Usage: $0 {install-fission|create-tenant|delete-tenant|uninstall-fission|test-function|delete-test-function|scrape-metrics} <tenant>"
   exit 1
 }
 ############################################
