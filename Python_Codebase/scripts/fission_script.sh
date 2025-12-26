@@ -3,9 +3,9 @@
 
 set -euo pipefail
 
-local TENANT="${2:-default}"
-local FISSION_VERSION="v1.22.0"
-local FISSION_NS="fission"
+TENANT="${2:-default}"
+FISSION_VERSION="v1.22.0"
+FISSION_NS="fission"
   
 usage() {
   echo "Usage: $0 {install-fission|create-tenant|test-tenant|delete-tenant|uninstall-fission} <tenant>"
