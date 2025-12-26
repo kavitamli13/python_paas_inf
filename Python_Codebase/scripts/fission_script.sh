@@ -104,7 +104,7 @@ function create_tenant() {
   #     }
   #   ]" || true
   # done
-  update_fission_resource_namespaces
+  edit_apply_yaml_namespace
 
 
   kubectl rollout restart deploy executor -n ${FISSION_NS} || true
@@ -193,22 +193,26 @@ EOF
   echo "✅ Tenant $TENANT created and Prometheus integration applied"
 }
 
-update_fission_resource_namespaces() {
+edit_apply_yaml_namespace() {
   for DEPLOY in executor router; do
     echo "Processing $DEPLOY..."
 
-    TMP="$(mktemp)"
+    TMP=$(mktemp)
+    kubectl get deploy "$DEPLOY" -n "$FISSION_NS" -o yaml > "$TMP" || return 1
 
-    # 1. Export YAML
-    kubectl get deploy "$DEPLOY" -n "$FISSION_NS" -o yaml > "$TMP"
+    # Extract current namespaces (flatten all occurrences)
+    CURRENT=$(awk '
+      $1=="name:" && $2=="FISSION_RESOURCE_NAMESPACES" {
+        getline; gsub(/"/,"",$2); print $2
+      }
+    ' "$TMP" | paste -sd "," -)
 
-    # 2. Extract existing value
-    CURRENT=$(grep -A1 'name: FISSION_RESOURCE_NAMESPACES' "$TMP" \
-              | awk '/value:/ {print $2}' | tr -d '"')
+    # Normalize
+    CURRENT=$(echo "$CURRENT" | tr -s ',' | sed 's/^,//;s/,$//')
 
-    # 3. Append tenant if missing
+    # Merge sets
     if [[ ",$CURRENT," == *",$TENANT,"* ]]; then
-      echo " $TENANT already present ($CURRENT)"
+      echo "  ℹ️ $TENANT already present ($CURRENT)"
       rm -f "$TMP"
       continue
     fi
@@ -219,26 +223,22 @@ update_fission_resource_namespaces() {
       NEW="$CURRENT,$TENANT"
     fi
 
-    echo "Updating namespaces: $NEW"
+    echo "  ✏️ Updating namespaces: $NEW"
 
-    # 4. Replace or insert value
-    if grep -q 'name: FISSION_RESOURCE_NAMESPACES' "$TMP"; then
-      sed -i "s|\(name: FISSION_RESOURCE_NAMESPACES\)[[:space:]]*$|\1\n        value: \"$NEW\"|" "$TMP"
-      sed -i "/name: FISSION_RESOURCE_NAMESPACES/{n; s|value:.*|value: \"$NEW\"|}" "$TMP"
-    else
-      sed -i "/env:/a\\
+    # Remove all old entries
+    sed -i '/name: FISSION_RESOURCE_NAMESPACES/{N;d;}' "$TMP"
+
+    # Insert under env:
+    sed -i "/env:/a\\
         - name: FISSION_RESOURCE_NAMESPACES\\
           value: \"$NEW\"" "$TMP"
-    fi
 
-    # 5. Apply back
     kubectl apply -f "$TMP"
 
     rm -f "$TMP"
   done
-
-  echo "FISSION_RESOURCE_NAMESPACES updated"
 }
+
 
 
 ############################################
