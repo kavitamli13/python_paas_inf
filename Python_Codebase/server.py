@@ -70,7 +70,7 @@ async def create_tenant(req: ProvisionRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/provision/action")
-async def create_tenant(req: ProvisionRequest):
+async def invoke_action(req: ProvisionRequest):
     try:
         if req.tenant is None:
             req.tenant = 'default'
