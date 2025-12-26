@@ -5,6 +5,13 @@ curl --location 'http://localhost:3000/api/provision' --header 'Content-Type: ap
 }'
 
 
+curl --location 'http://localhost:3000/api/provision/action' --header 'Content-Type: application/json' --data '{
+    "tenant": "",
+    "product": "kafka",
+    "action": "uninstall-kafka",
+    "plan": "test"
+}'
+
 kubectl create clusterrolebinding fission-executor-admin \
   --clusterrole=cluster-admin \
   --serviceaccount=fission:fission-executor
