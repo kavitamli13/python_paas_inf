@@ -104,29 +104,7 @@ function create_tenant() {
   #     }
   #   ]" || true
   # done
-
-  for DEPLOY in executor router; do
-  echo "Processing $DEPLOY..."
-
-  CURRENT=$(kubectl get deploy "$DEPLOY" -n "${FISSION_NS}" \
-    -o jsonpath='{range .spec.template.spec.containers[0].env[?(@.name=="FISSION_RESOURCE_NAMESPACES")]}{.value}{end}')
-
-  if [[ ",$CURRENT," == *",$TENANT,"* ]]; then
-    echo "  ℹ️ Already present"
-    continue
-  fi
-
-  NEW="${CURRENT:+$CURRENT,}$TENANT"
-
-  kubectl patch deploy "$DEPLOY" -n "${FISSION_NS}" --type='json' -p="[
-    {
-      \"op\": \"add\",
-      \"path\": \"/spec/template/spec/containers/0/env/-\",
-      \"value\": {\"name\": \"FISSION_RESOURCE_NAMESPACES\", \"value\": \"$NEW\"}
-    }
-  ]" || true
-done
-
+  update_fission_resource_namespaces()
 
 
   kubectl rollout restart deploy executor -n ${FISSION_NS} || true
@@ -214,6 +192,54 @@ EOF
 
   echo "✅ Tenant $TENANT created and Prometheus integration applied"
 }
+
+update_fission_resource_namespaces() {
+  for DEPLOY in executor router; do
+    echo "Processing $DEPLOY..."
+
+    TMP="$(mktemp)"
+
+    # 1. Export YAML
+    kubectl get deploy "$DEPLOY" -n "$FISSION_NS" -o yaml > "$TMP"
+
+    # 2. Extract existing value
+    CURRENT=$(grep -A1 'name: FISSION_RESOURCE_NAMESPACES' "$TMP" \
+              | awk '/value:/ {print $2}' | tr -d '"')
+
+    # 3. Append tenant if missing
+    if [[ ",$CURRENT," == *",$TENANT,"* ]]; then
+      echo " $TENANT already present ($CURRENT)"
+      rm -f "$TMP"
+      continue
+    fi
+
+    if [[ -z "$CURRENT" ]]; then
+      NEW="$TENANT"
+    else
+      NEW="$CURRENT,$TENANT"
+    fi
+
+    echo "Updating namespaces: $NEW"
+
+    # 4. Replace or insert value
+    if grep -q 'name: FISSION_RESOURCE_NAMESPACES' "$TMP"; then
+      sed -i "s|\(name: FISSION_RESOURCE_NAMESPACES\)[[:space:]]*$|\1\n        value: \"$NEW\"|" "$TMP"
+      sed -i "/name: FISSION_RESOURCE_NAMESPACES/{n; s|value:.*|value: \"$NEW\"|}" "$TMP"
+    else
+      sed -i "/env:/a\\
+        - name: FISSION_RESOURCE_NAMESPACES\\
+          value: \"$NEW\"" "$TMP"
+    fi
+
+    # 5. Apply back
+    kubectl apply -f "$TMP"
+
+    rm -f "$TMP"
+  done
+
+  echo "FISSION_RESOURCE_NAMESPACES updated"
+}
+
 
 ############################################
 # DELETE TENANT (namespace + tenant-specific configs)
