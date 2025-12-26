@@ -258,16 +258,25 @@ function uninstall_fission() {
 # CREATE A TEST FUNCTION
 ############################################
 function test_function() {
-  local TENANT="$2"
+  #local TENANT="$2"
   local FUNC_NAME="test-func"
-  local ENV_NAME="python"   # Change to your preferred environment
+  local ENV_NAME="python-test-env"   # Change to your preferred environment
   local ENTRYPOINT="handler"
   local FILE_NAME="test.py"
-
+  
   if [[ -z "$TENANT" ]]; then
     echo "Usage: create_test_function <tenant-namespace> [function-name]"
     return 1
   fi
+
+  # Create test environment in Fission
+  #fission env create --name  --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3
+  fission env create \
+    --name "$ENV_NAME" \
+    --image ghcr.io/fission/python-env \
+    --builder ghcr.io/fission/python-builder\
+    --poolsize 3\
+    --namespace "$TENANT"
 
   echo "========== CREATING TEST FUNCTION: $FUNC_NAME in $TENANT =========="
 
