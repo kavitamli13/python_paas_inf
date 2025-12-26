@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-#set -u
+# Ensure bash even if invoked via sh
+if [ -z "$BASH_VERSION" ]; then
+  exec /usr/bin/env bash "$0" "$@"
+fi
 
 set -euo pipefail
 
