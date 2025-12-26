@@ -3,7 +3,10 @@ set -euo pipefail
 
 KAFKA_NS="kafka"
 CLUSTER_NAME="my-cluster"
-BOOTSTRAP="10.10.252.244:31727"
+
+BOOTSTRAP_NODEPORT=$(kubectl get configmap kafka-bootstrap-info -n kafka \
+  -o jsonpath='{.data.bootstrapNodePort}')
+BOOTSTRAP="10.10.252.244: $BOOTSTRAP_NODEPORT"
 KAFKA_HOME="$HOME/kafka_2.13-4.1.1"
 
 usage() {
@@ -89,7 +92,14 @@ EOF
 
   echo "Waiting for Kafka to be Ready..."
   kubectl wait kafka/my-cluster -n kafka --for=condition=Ready --timeout=600s
-
+  
+  NODEPORT=$(kubectl get svc my-cluster-kafka-external-bootstrap -n kafka \
+  -o jsonpath='{.spec.ports[0].nodePort}')
+  BOOTSTRAP="10.10.252.244: $NODEPORT"
+  kubectl create configmap kafka-bootstrap-info \
+  -n kafka \
+  --from-literal=bootstrapNodePort="$NODEPORT" \
+  --dry-run=client -o yaml | kubectl apply -f -
   echo "Kafka installed successfully."
 }
 
