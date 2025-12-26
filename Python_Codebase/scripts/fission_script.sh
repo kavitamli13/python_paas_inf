@@ -104,36 +104,29 @@ function create_tenant() {
   #     }
   #   ]" || true
   # done
+
   for DEPLOY in executor router; do
   echo "Processing $DEPLOY..."
 
   CURRENT=$(kubectl get deploy "$DEPLOY" -n "${FISSION_NS}" \
     -o jsonpath='{range .spec.template.spec.containers[0].env[?(@.name=="FISSION_RESOURCE_NAMESPACES")]}{.value}{end}')
 
-  if [[ -z "$CURRENT" ]]; then
-    kubectl patch deploy "$DEPLOY" -n "${FISSION_NS}" --type='json' -p="[
-      {
-        \"op\": \"add\",
-        \"path\": \"/spec/template/spec/containers/0/env/-\",
-        \"value\": {\"name\": \"FISSION_RESOURCE_NAMESPACES\", \"value\": \"$TENANT\"}
-      }
-    ]" || true
-
-  elif [[ ",$CURRENT," == *",$TENANT,"* ]]; then
-    echo "$TENANT already present in $DEPLOY — skipping"
-
-  else
-    NEW="${CURRENT},${TENANT}"
-
-    kubectl patch deploy "$DEPLOY" -n "${FISSION_NS}" --type='json' -p="[
-      {
-        \"op\": \"replace\",
-        \"path\": \"/spec/template/spec/containers/0/env/$(kubectl get deploy "$DEPLOY" -n "${FISSION_NS}" -o jsonpath='{range $i := .spec.template.spec.containers[0].env}{if eq .name \"FISSION_RESOURCE_NAMESPACES\"}{$i}{end}{end}')/value\",
-        \"value\": \"$NEW\"
-      }
-    ]" || true
+  if [[ ",$CURRENT," == *",$TENANT,"* ]]; then
+    echo "  ℹ️ Already present"
+    continue
   fi
+
+  NEW="${CURRENT:+$CURRENT,}$TENANT"
+
+  kubectl patch deploy "$DEPLOY" -n "${FISSION_NS}" --type='json' -p="[
+    {
+      \"op\": \"add\",
+      \"path\": \"/spec/template/spec/containers/0/env/-\",
+      \"value\": {\"name\": \"FISSION_RESOURCE_NAMESPACES\", \"value\": \"$NEW\"}
+    }
+  ]" || true
 done
+
 
 
   kubectl rollout restart deploy executor -n ${FISSION_NS} || true
