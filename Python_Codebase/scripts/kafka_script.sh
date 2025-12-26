@@ -129,9 +129,9 @@ EOF
 
   PASSWORD=$(kubectl get secret ${TENANT}-user -n ${KAFKA_NS} -o jsonpath='{.data.password}' | base64 -d)
   
-  export ${TENANT}_PASSWORD=$(kubectl get secret ${TENANT}-user -n ${KAFKA_NS} -o jsonpath='{.data.password}' | base64 -d)
+  #export ${TENANT}_PASSWORD=$(kubectl get secret ${TENANT}-user -n ${KAFKA_NS} -o jsonpath='{.data.password}' | base64 -d)
 
-  mkdir -p "$HOME/kafka_files"
+  #mkdir -p "$HOME/kafka_files"
 
   cat <<EOF > "$HOME/kafka_files/${TENANT}.properties"
 security.protocol=SASL_PLAINTEXT
