@@ -138,7 +138,7 @@ async def provisioner(product: str, tenant: str, action: str):
 #     asyncio.run(provisioner())
 
 async def provision(user_input: dict[str, Any]):
-    result = provisioner(user_input['product'], user_input['tenant'], user_input['action'])
+    result = await provisioner(user_input['product'], user_input['tenant'], user_input['action'])
     print(result)
     #products=["fission","kafka"]
     #kafka_actions = ["install-kafka", "create-tenant", "test-tenant", "test-isolation", "cleanup-test-topics"]
