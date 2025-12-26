@@ -301,7 +301,7 @@ EOF
     --method GET \
     --namespace "$TENANT"
   echo "Route for Function $FUNC_NAME: $TENANT/$FUNC_NAME"
-  FISSION_SVC=$(kubectl get svc router -n kafka)
+  FISSION_SVC=$(kubectl get svc router -n fission)
   echo "Fission router: $FISSION_SVC"
   echo "✅ Test function $FUNC_NAME created in namespace $TENANT"
 }
@@ -318,9 +318,10 @@ function delete_test_function() {
   fi
 
   echo "========== DELETING TEST FUNCTION: $FUNC_NAME from $TENANT =========="
-
+  
   fission route delete --name "${FUNC_NAME}-route" --namespace "$TENANT" || true
   fission fn delete --name "$FUNC_NAME" --namespace "$TENANT" || true
+  fission env delete --name "$ENV_NAME" --namespace "$TENANT" || true
 
   rm -f test.py
 
