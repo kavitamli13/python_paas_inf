@@ -238,33 +238,36 @@ function test_isolation() {
   echo "Testing tenant isolation: $TENANT -> $OTHER_TENANT topics"
 
   OTHER_TOPIC="${OTHER_TENANT}-test1"
+echo "Attempting to produce message to $OTHER_TOPIC as $TENANT..."
+"$KAFKA_HOME/bin/kafka-console-producer.sh" \
+    --bootstrap-server "$BOOTSTRAP" \
+    --topic "$OTHER_TOPIC" \
+    --producer.config "$HOME/kafka_files/${TENANT}-producer.properties" \
+    <<< "hello" 2>/tmp/test-isolation.log
 
-  echo "Attempting to produce message to $OTHER_TOPIC as $TENANT..."
-  if "$KAFKA_HOME/bin/kafka-console-producer.sh" \
-      --bootstrap-server "$BOOTSTRAP" \
-      --topic "$OTHER_TOPIC" \
-      --producer.config "$HOME/kafka_files/${TENANT}-producer.properties" \
-      <<< "hello" 2>/tmp/test-isolation.log; then
+if grep -qE "(TopicAuthorizationException|TOPIC_AUTHORIZATION_FAILED)" /tmp/test-isolation.log; then
+    echo "SUCCESS: Tenant $TENANT cannot produce to $OTHER_TOPIC (authorization enforced)."
+else
     echo "ERROR: Tenant $TENANT could produce to $OTHER_TOPIC! Isolation FAILED."
-  else
-    grep -q "TopicAuthorizationException" /tmp/test-isolation.log && \
-      echo "SUCCESS: Tenant $TENANT cannot access $OTHER_TOPIC (authorization enforced)."
-  fi
+fi
 
-  echo "Attempting to consume message from $OTHER_TOPIC as $TENANT..."
-  if "$KAFKA_HOME/bin/kafka-console-consumer.sh" \
-      --bootstrap-server "$BOOTSTRAP" \
-      --topic "$OTHER_TOPIC" \
-      --group "${TENANT}-group" \
-      --from-beginning \
-      --timeout-ms 5000 \
-      --consumer.config "$HOME/kafka_files/${TENANT}-consumer.properties" \
-      2>/tmp/test-isolation.log; then
+echo "Attempting to consume message from $OTHER_TOPIC as $TENANT..."
+"$KAFKA_HOME/bin/kafka-console-consumer.sh" \
+    --bootstrap-server "$BOOTSTRAP" \
+    --topic "$OTHER_TOPIC" \
+    --group "${TENANT}-group" \
+    --from-beginning \
+    --timeout-ms 5000 \
+    --consumer.config "$HOME/kafka_files/${TENANT}-consumer.properties" \
+    2>/tmp/test-isolation.log
+
+if grep -qE "(TopicAuthorizationException|TOPIC_AUTHORIZATION_FAILED)" /tmp/test-isolation.log; then
+    echo "SUCCESS: Tenant $TENANT cannot consume from $OTHER_TOPIC (authorization enforced)."
+else
     echo "ERROR: Tenant $TENANT could consume from $OTHER_TOPIC! Isolation FAILED."
-  else
-    grep -q "TopicAuthorizationException" /tmp/test-isolation.log && \
-      echo "SUCCESS: Tenant $TENANT cannot consume from $OTHER_TOPIC (authorization enforced)."
-  fi
+fi
+
+  
 }
 
 # =========================================
