@@ -104,7 +104,7 @@ function create_tenant() {
   #     }
   #   ]" || true
   # done
-  update_fission_resource_namespaces()
+  update_fission_resource_namespaces
 
 
   kubectl rollout restart deploy executor -n ${FISSION_NS} || true
