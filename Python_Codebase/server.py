@@ -2,7 +2,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
-import provisioner_v1 as provisioner
+import provisioner as provisioner
 # import datetime
 # import Billing_Policy as bp
 import logging
