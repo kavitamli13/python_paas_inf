@@ -97,13 +97,44 @@ function create_tenant() {
   kubectl create namespace "$TENANT" 2>/dev/null || true
 
   # 2. Patch Fission deployments for tenant
+  # for DEPLOY in executor router; do
+  #   kubectl patch deploy $DEPLOY -n ${FISSION_NS} --type='json' -p="[ 
+  #     {\"op\": \"add\", \"path\": \"/spec/template/spec/containers/0/env/-\", \"value\": 
+  #       {\"name\": \"FISSION_RESOURCE_NAMESPACES\", \"value\": \"$TENANT\"}
+  #     }
+  #   ]" || true
+  # done
   for DEPLOY in executor router; do
-    kubectl patch deploy $DEPLOY -n ${FISSION_NS} --type='json' -p="[ 
-      {\"op\": \"add\", \"path\": \"/spec/template/spec/containers/0/env/-\", \"value\": 
-        {\"name\": \"FISSION_RESOURCE_NAMESPACES\", \"value\": \"$TENANT\"}
+  echo "Processing $DEPLOY..."
+
+  CURRENT=$(kubectl get deploy "$DEPLOY" -n "${FISSION_NS}" \
+    -o jsonpath='{range .spec.template.spec.containers[0].env[?(@.name=="FISSION_RESOURCE_NAMESPACES")]}{.value}{end}')
+
+  if [[ -z "$CURRENT" ]]; then
+    kubectl patch deploy "$DEPLOY" -n "${FISSION_NS}" --type='json' -p="[
+      {
+        \"op\": \"add\",
+        \"path\": \"/spec/template/spec/containers/0/env/-\",
+        \"value\": {\"name\": \"FISSION_RESOURCE_NAMESPACES\", \"value\": \"$TENANT\"}
       }
     ]" || true
-  done
+
+  elif [[ ",$CURRENT," == *",$TENANT,"* ]]; then
+    echo "$TENANT already present in $DEPLOY — skipping"
+
+  else
+    NEW="${CURRENT},${TENANT}"
+
+    kubectl patch deploy "$DEPLOY" -n "${FISSION_NS}" --type='json' -p="[
+      {
+        \"op\": \"replace\",
+        \"path\": \"/spec/template/spec/containers/0/env/$(kubectl get deploy "$DEPLOY" -n "${FISSION_NS}" -o jsonpath='{range $i := .spec.template.spec.containers[0].env}{if eq .name \"FISSION_RESOURCE_NAMESPACES\"}{$i}{end}{end}')/value\",
+        \"value\": \"$NEW\"
+      }
+    ]" || true
+  fi
+done
+
 
   kubectl rollout restart deploy executor -n ${FISSION_NS} || true
   kubectl rollout restart deploy router -n ${FISSION_NS} || true
@@ -248,8 +279,8 @@ function uninstall_fission() {
   kubectl delete crd $(kubectl get crd | grep fission | awk '{print $1}') --ignore-not-found
 
   echo "Deleting RBAC..."
-  kubectl delete clusterrolebinding fission-executor-admin --ignore-not-found
-  kubectl delete clusterrole fission-router-global --ignore-not-found
+  kubectl delete clusterrolebinding fission-builder-multins fission-executor-admin fission-executor-multins fission-router-global fission-router-multins fission-runtime-cluster-access
+  kubectl delete clusterrole fission-builder-multins fission-executor-multins fission-router-multins fission-runtime-cluster-access --ignore-not-found
 
   echo "✅ Fission cleanup completed"
 }
