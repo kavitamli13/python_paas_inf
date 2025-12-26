@@ -8,10 +8,9 @@ FISSION_VERSION="v1.22.0"
 FISSION_NS="fission"
   
 usage() {
-  echo "Usage: $0 {install-fission|create-tenant|test-tenant|delete-tenant|uninstall-fission} <tenant>"
+  echo "Usage: $0 {install-fission|create-tenant|delete-tenant|uninstall-fission} <tenant>"
   exit 1
 }
-
 ############################################
 # INSTALL FISSION (dependency-free)
 ############################################
@@ -19,9 +18,10 @@ function install_fission() {
   #set +e
   #trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
 
+  #local FISSION_VERSION="${1:-v1.21.0}"
+  #local FISSION_NS="fission"
 
   echo "========== INSTALLING FISSION =========="
-  echo "Tenant          : $TENANT"
   echo "Fission Version : $FISSION_VERSION"
   echo "======================================="
 
@@ -30,9 +30,8 @@ function install_fission() {
   ########################################
   if ! command -v fission >/dev/null 2>&1; then
     echo "Installing Fission CLI..."
-    curl -Lo fission "https://github.com/fission/fission/releases/download/${FISSION_VERSION}/fission-${FISSION_VERSION}-linux-amd64" \
-      && chmod +x fission \
-      && sudo mv fission /usr/local/bin/
+    curl -Lo fission https://github.com/fission/fission/releases/download/v1.22.0/fission-v1.22.0-linux-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+    sudo chmod +x /usr/local/bin/fission
     export PATH=$PATH:/usr/local/bin
   fi
   fission version
@@ -42,12 +41,14 @@ function install_fission() {
   ########################################
   if ! helm list -n ${FISSION_NS} | grep -q fission; then
     echo "Installing Fission server..."
+
     helm repo add fission-charts https://fission.github.io/fission-charts/
     helm repo update
 
     kubectl create namespace ${FISSION_NS} 2>/dev/null || true
 
-    kubectl create -k "github.com/fission/fission/crds/v1?ref=${FISSION_VERSION}" || true
+    kubectl create -k \
+      "github.com/fission/fission/crds/v1?ref=${FISSION_VERSION}" || true
 
     helm install fission fission-charts/fission-all \
       --namespace ${FISSION_NS} \
@@ -58,9 +59,9 @@ function install_fission() {
   fi
 
   ########################################
-  # 3. Cluster-wide RBAC
+  # 3. Multi-namespace RBAC (inline)
   ########################################
-  echo "Applying cluster-wide RBAC..."
+  echo "Applying multi-namespace RBAC"
   kubectl apply -f - <<EOF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -76,43 +77,59 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 EOF
 
-  echo "✅ Fission installation completed (cluster-level)"
+  ########################################
+  # 4. Verification
+  ########################################
+  fission check || true
+  echo "✅ Fission installation completed"
 }
 
 ############################################
-# CREATE TENANT (namespace + tenant-specific configs)
+# CREATE TENANT
 ############################################
 function create_tenant() {
   #set +e
   #trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
 
-  if [[ -z "$TENANT" ]]; then
+  #local TENANT="$1"
+  #local FISSION_NS="fission"
+
+  if [[ -z "${TENANT:-}" ]]; then
     echo "Usage: create_tenant <tenant-namespace>"
     return 1
   fi
 
   echo "========== CREATING TENANT: $TENANT =========="
 
-  # 1. Create tenant namespace
-  kubectl create namespace "$TENANT" 2>/dev/null || true
+  # 1️⃣ Ensure the tenant namespace exists
+  kubectl create ns "$TENANT" 2>/dev/null || true
+  ########################################
+  # Tenant namespace wiring (FISSION_RESOURCE_NAMESPACES)
+  ########################################
+  for DEPLOY in executor router; do
+    CURRENT_NS=$(kubectl get deploy "$DEPLOY" -n "$FISSION_NS" \
+      -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name=="FISSION_RESOURCE_NAMESPACES")].value}' 2>/dev/null)
 
-  # 2. Patch Fission deployments for tenant
-  # for DEPLOY in executor router; do
-  #   kubectl patch deploy $DEPLOY -n ${FISSION_NS} --type='json' -p="[ 
-  #     {\"op\": \"add\", \"path\": \"/spec/template/spec/containers/0/env/-\", \"value\": 
-  #       {\"name\": \"FISSION_RESOURCE_NAMESPACES\", \"value\": \"$TENANT\"}
-  #     }
-  #   ]" || true
-  # done
-  edit_apply_yaml_namespace
+    if [ -n "$CURRENT_NS" ]; then
+      UPDATED_NS=$(echo "$CURRENT_NS,$TENANT" | tr ',' '\n' | sort -u | paste -sd ',' -)
+      kubectl patch deploy "$DEPLOY" -n "$FISSION_NS" --type='json' -p="[
+        {\"op\": \"replace\", \"path\": \"/spec/template/spec/containers/0/env/$(kubectl get deploy "$DEPLOY" -n "$FISSION_NS" -o json | \
+          jq -r '.spec.template.spec.containers[0].env | map(.name) | index("FISSION_RESOURCE_NAMESPACES")')/value\", \"value\": \"$UPDATED_NS\"}
+      ]"
+    else
+      kubectl patch deploy "$DEPLOY" -n "$FISSION_NS" --type='json' -p="[
+        {\"op\": \"add\", \"path\": \"/spec/template/spec/containers/0/env/-\", \"value\": {\"name\": \"FISSION_RESOURCE_NAMESPACES\", \"value\": \"$TENANT\"}}
+      ]"
+    fi
+  done
 
+  kubectl rollout restart deploy/executor -n "$FISSION_NS"
+  kubectl rollout restart deploy/router -n "$FISSION_NS"
 
-  kubectl rollout restart deploy executor -n ${FISSION_NS} || true
-  kubectl rollout restart deploy router -n ${FISSION_NS} || true
-
-  #3. Tenant-specific RBAC
-  echo "Applying tenant-specific RBAC"
-  cat <<EOF | kubectl apply -f -
+  ########################################
+  # Prometheus integration & RBAC for tenant
+  ########################################
+  kubectl apply -f - <<EOF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -126,7 +143,7 @@ rules:
     verbs: ["get", "list", "watch"]
 EOF
 
-  cat <<EOF | kubectl apply -f -
+  kubectl apply -f - <<EOF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -142,131 +159,44 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 EOF
 
-  ########################################
-  # 4. Prometheus Integration (tenant-aware)
-  ########################################
-  echo "Configuring Prometheus scraping for tenant $TENANT..."
-
-  # Label services
-  kubectl label svc router -n fission app=router --overwrite
-  kubectl label svc executor -n fission app=executor --overwrite
-
-  # Expose metrics ports if missing
-  for svc in router executor; do
-    kubectl patch svc $svc -n fission --type='json' -p='[{"op": "add", "path": "/spec/ports/0/name", "value": "http"}]' || true
-    kubectl patch svc $svc -n fission --type='json' -p='[{"op":"add","path":"/spec/ports/-","value":{"name":"metrics","port":8080,"targetPort":8080}}]' || true
-  done
-
-  # Create ServiceMonitors
-  cat <<EOF | kubectl apply -f -
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: fission-router-${TENANT}
-  namespace: monitoring
-spec:
-  selector:
-    matchLabels:
-      app: router
-  namespaceSelector:
-    matchNames: ["fission"]
-  endpoints:
-  - port: metrics
-    interval: 30s
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: fission-executor-${TENANT}
-  namespace: monitoring
-spec:
-  selector:
-    matchLabels:
-      app: executor
-  namespaceSelector:
-    matchNames: ["fission"]
-  endpoints:
-  - port: metrics
-    interval: 30s
-EOF
-
-  echo "✅ Tenant $TENANT created and Prometheus integration applied"
+  echo "✅ Tenant $TENANT created and configured"
 }
 
-edit_apply_yaml_namespace() {
-  for DEPLOY in executor router; do
-    echo "Processing $DEPLOY..."
-
-    TMP=$(mktemp)
-    kubectl get deploy "$DEPLOY" -n "$FISSION_NS" -o yaml > "$TMP" || return 1
-
-    # Extract current namespaces (flatten all occurrences)
-    CURRENT=$(awk '
-      $1=="name:" && $2=="FISSION_RESOURCE_NAMESPACES" {
-        getline; gsub(/"/,"",$2); print $2
-      }
-    ' "$TMP" | paste -sd "," -)
-
-    # Normalize
-    CURRENT=$(echo "$CURRENT" | tr -s ',' | sed 's/^,//;s/,$//')
-
-    # Merge sets
-    if [[ ",$CURRENT," == *",$TENANT,"* ]]; then
-      echo "  ℹ️ $TENANT already present ($CURRENT)"
-      rm -f "$TMP"
-      continue
-    fi
-
-    if [[ -z "$CURRENT" ]]; then
-      NEW="$TENANT"
-    else
-      NEW="$CURRENT,$TENANT"
-    fi
-
-    echo "  ✏️ Updating namespaces: $NEW"
-
-    # Remove all old entries
-    sed -i '/name: FISSION_RESOURCE_NAMESPACES/{N;d;}' "$TMP"
-
-    # Insert under env:
-    sed -i "/env:/a\\
-        - name: FISSION_RESOURCE_NAMESPACES\\
-          value: \"$NEW\"" "$TMP"
-
-    kubectl apply -f "$TMP"
-
-    rm -f "$TMP"
-  done
-}
-
-
-
 ############################################
-# DELETE TENANT (namespace + tenant-specific configs)
+# DELETE TENANT
 ############################################
-
 function delete_tenant() {
   #set +e
   #trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
 
-  if [[ -z "$TENANT" ]]; then
+  #local TENANT="$1"
+  #local FISSION_NS="fission"
+
+  if [[ -z "${TENANT:-}" ]]; then
     echo "Usage: delete_tenant <tenant-namespace>"
     return 1
   fi
 
   echo "========== DELETING TENANT: $TENANT =========="
 
-  # Remove tenant namespace
+  # Remove tenant namespace from FISSION_RESOURCE_NAMESPACES
+  for DEPLOY in executor router; do
+    CURRENT_NS=$(kubectl get deploy "$DEPLOY" -n "$FISSION_NS" \
+      -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name=="FISSION_RESOURCE_NAMESPACES")].value}' 2>/dev/null)
+    if [ -n "$CURRENT_NS" ]; then
+      UPDATED_NS=$(echo "$CURRENT_NS" | tr ',' '\n' | grep -v "^$TENANT\$" | paste -sd ',' -)
+      kubectl patch deploy "$DEPLOY" -n "$FISSION_NS" --type='json' -p="[
+        {\"op\": \"replace\", \"path\": \"/spec/template/spec/containers/0/env/$(kubectl get deploy "$DEPLOY" -n "$FISSION_NS" -o json | \
+          jq -r '.spec.template.spec.containers[0].env | map(.name) | index("FISSION_RESOURCE_NAMESPACES")')/value\", \"value\": \"$UPDATED_NS\"}
+      ]"
+    fi
+  done
+
+  kubectl rollout restart deploy/executor -n "$FISSION_NS"
+  kubectl rollout restart deploy/router -n "$FISSION_NS"
+
+  # Delete tenant namespace
   kubectl delete ns "$TENANT" --ignore-not-found
-
-  # Remove ServiceMonitors
-  kubectl delete servicemonitor fission-router-${TENANT} -n monitoring --ignore-not-found
-  kubectl delete servicemonitor fission-executor-${TENANT} -n monitoring --ignore-not-found
-
-  # Remove tenant env vars from Fission deployments
-
-  kubectl rollout restart deploy executor -n ${FISSION_NS} || true
-  kubectl rollout restart deploy router -n ${FISSION_NS} || true
 
   echo "✅ Tenant $TENANT deleted"
 }
@@ -278,12 +208,19 @@ function uninstall_fission() {
   #set +e
   #trap 'echo "❌ Error on line $LINENO (continuing uninstall)"' ERR
 
+  #local FISSION_NS="fission"
+
   echo "========== UNINSTALLING FISSION =========="
 
-  echo "Removing Fission ServiceMonitors..."
-  kubectl delete servicemonitor --all -n monitoring --ignore-not-found
+  echo "Removing ServiceMonitors..."
+  kubectl delete servicemonitor fission-router -n monitoring --ignore-not-found
+  kubectl delete servicemonitor fission-executor -n monitoring --ignore-not-found
 
-  echo "Removing Fission Helm release..."
+  echo "Removing service labels..."
+  kubectl label svc router -n fission app- --ignore-not-found
+  kubectl label svc executor -n fission app- --ignore-not-found
+
+  echo "Uninstalling Fission Helm release..."
   helm uninstall fission -n ${FISSION_NS} || true
 
   echo "Deleting Fission namespace..."
@@ -293,116 +230,11 @@ function uninstall_fission() {
   kubectl delete crd $(kubectl get crd | grep fission | awk '{print $1}') --ignore-not-found
 
   echo "Deleting RBAC..."
-  kubectl delete clusterrolebinding fission-builder-multins fission-executor-admin fission-executor-multins fission-router-global fission-router-multins fission-runtime-cluster-access
-  kubectl delete clusterrole fission-builder-multins fission-executor-multins fission-router-multins fission-runtime-cluster-access --ignore-not-found
+  kubectl delete clusterrolebinding fission-executor-admin --ignore-not-found
+  kubectl delete clusterrole fission-router-global --ignore-not-found
 
   echo "✅ Fission cleanup completed"
 }
-
-############################################
-# CREATE A TEST FUNCTION
-############################################
-function test_function() {
-  #local TENANT="$2"
-  local FUNC_NAME="test-func"
-  local ENV_NAME="python-test-env"   # Change to your preferred environment
-  local ENTRYPOINT="handler"
-  local FILE_NAME="test.py"
-  
-  if [[ -z "$TENANT" ]]; then
-    echo "Usage: create_test_function <tenant-namespace> [function-name]"
-    return 1
-  fi
-
-  # Create test environment in Fission
-  #fission env create --name  --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3
-  fission env create \
-    --name "$ENV_NAME" \
-    --image ghcr.io/fission/python-env \
-    --builder ghcr.io/fission/python-builder\
-    --poolsize 3\
-    --namespace "$TENANT"
-
-  echo "========== CREATING TEST FUNCTION: $FUNC_NAME in $TENANT =========="
-
-  # Create a simple Python handler file
-  cat <<EOF > $FILE_NAME
-def $ENTRYPOINT(context, data):
-    return "Hello from $FUNC_NAME!"
-EOF
-
-  # Create function in Fission
-  fission fn create \
-    --name "$FUNC_NAME" \
-    --env "$ENV_NAME" \
-    --code "$FILE_NAME" \
-    --namespace "$TENANT"
-
-  # Create HTTP trigger
-  fission route create \
-    --name "${FUNC_NAME}-route" \
-    --function "$FUNC_NAME" \
-    --url "$TENANT/$FUNC_NAME" \
-    --method GET \
-    --namespace "$TENANT"
-  echo "Route for Function $FUNC_NAME: $TENANT/$FUNC_NAME"
-  FISSION_SVC=$(kubectl get svc router -n fission)
-  echo "Fission router: $FISSION_SVC"
-  echo "✅ Test function $FUNC_NAME created in namespace $TENANT"
-}
-
-############################################
-# DELETE A TEST FUNCTION
-############################################
-function delete_test_function() {
-  local FUNC_NAME="test-func"
-
-  if [[ -z "$TENANT" ]]; then
-    echo "Usage: delete_test_function <tenant-namespace> [function-name]"
-    return 1
-  fi
-
-  echo "========== DELETING TEST FUNCTION: $FUNC_NAME from $TENANT =========="
-  
-  fission route delete --name "${FUNC_NAME}-route" --namespace "$TENANT" || true
-  fission fn delete --name "$FUNC_NAME" --namespace "$TENANT" || true
-  fission env delete --name "$ENV_NAME" --namespace "$TENANT" || true
-
-  rm -f test.py
-
-  echo "✅ Test function $FUNC_NAME deleted from namespace $TENANT"
-}
-
-############################################
-# SCRAPE PROMETHEUS METRICS FOR A NAMESPACE
-############################################
-function scrape_metrics() {
-
-  if [[ -z "$TENANT" ]]; then
-    echo "Usage: scrape_metrics <tenant-namespace>"
-    return 1
-  fi
-
-  echo "========== SCRAPING METRICS FOR NAMESPACE: $TENANT =========="
-
-  # Assumes Prometheus is exposed via kube-prometheus operator
-  PROM_POD=$(kubectl get pods -n monitoring -l app.kubernetes.io/name=kube-prometheus -o jsonpath='{.items[0].metadata.name}')
-  
-  if [[ -z "$PROM_POD" ]]; then
-    echo "❌ Prometheus pod not found in 'monitoring' namespace"
-    return 1
-  fi
-
-  kubectl exec -n monitoring "$PROM_POD" -- \
-    wget -qO- "http://router.fission.svc.cluster.local:8080/metrics" \
-    | grep "fission_function" \
-    | grep "$TENANT"
-
-  echo "✅ Metrics scrape completed for namespace $TENANT"
-}
-
-
-
 case "$1" in
   install-fission)
     install_fission
@@ -416,17 +248,8 @@ case "$1" in
   uninstall-fission)
     uninstall_fission
     ;;
-  test-function)
-    test_function "$2"
-    ;;
-  delete-test-function)
-    delete_test_function "$2"
-    ;;
-  scrape-metrics)
-    scrape_metrics "$2"
-    ;;
   *)
-    echo "Usage: $0 {install-fission|create-tenant|delete-tenant|uninstall-fission|test-function|delete-test-function|scrape-metrics}"
+    echo "Usage: $0 {install-fission|create-tenant|delete-tenant|uninstall-fission}"
     exit 1
     ;;
 esac
