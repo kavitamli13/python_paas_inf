@@ -1,16 +1,24 @@
 #!/usr/bin/env bash
-set -u
+#set -u
+
+set -euo pipefail
+
+local TENANT="${2:-default}"
+local FISSION_VERSION="v1.22.0"
+local FISSION_NS="fission"
+  
+usage() {
+  echo "Usage: $0 {install-fission|create-tenant|test-tenant|delete-tenant|uninstall-fission} <tenant>"
+  exit 1
+}
 
 ############################################
 # INSTALL FISSION (dependency-free)
 ############################################
-install_fission() {
-  set +e
-  trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
+function install_fission() {
+  #set +e
+  #trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
 
-  local TENANT="${1:-default}"
-  local FISSION_VERSION="${2:-v1.22.0}"
-  local FISSION_NS="fission"
 
   echo "========== INSTALLING FISSION =========="
   echo "Tenant          : $TENANT"
@@ -74,12 +82,9 @@ EOF
 ############################################
 # CREATE TENANT (namespace + tenant-specific configs)
 ############################################
-create_tenant() {
-  set +e
-  trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
-
-  local TENANT="$1"
-  local FISSION_NS="fission"
+function create_tenant() {
+  #set +e
+  #trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
 
   if [[ -z "$TENANT" ]]; then
     echo "Usage: create_tenant <tenant-namespace>"
@@ -103,7 +108,8 @@ create_tenant() {
   kubectl rollout restart deploy executor -n ${FISSION_NS} || true
   kubectl rollout restart deploy router -n ${FISSION_NS} || true
 
-  # 3. Tenant-specific RBAC
+  #3. Tenant-specific RBAC
+  echo "Applying tenant-specific RBAC"
   cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -188,12 +194,10 @@ EOF
 ############################################
 # DELETE TENANT (namespace + tenant-specific configs)
 ############################################
-delete_tenant() {
-  set +e
-  trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
 
-  local TENANT="$1"
-  local FISSION_NS="fission"
+function delete_tenant() {
+  #set +e
+  #trap 'echo "❌ Error on line $LINENO (continuing safely)"' ERR
 
   if [[ -z "$TENANT" ]]; then
     echo "Usage: delete_tenant <tenant-namespace>"
@@ -225,11 +229,9 @@ delete_tenant() {
 ############################################
 # CLEAN UNINSTALL (including Prometheus integration)
 ############################################
-uninstall_fission() {
-  set +e
-  trap 'echo "❌ Error on line $LINENO (continuing uninstall)"' ERR
-
-  local FISSION_NS="fission"
+function uninstall_fission() {
+  #set +e
+  #trap 'echo "❌ Error on line $LINENO (continuing uninstall)"' ERR
 
   echo "========== UNINSTALLING FISSION =========="
 
@@ -251,3 +253,127 @@ uninstall_fission() {
 
   echo "✅ Fission cleanup completed"
 }
+
+############################################
+# CREATE A TEST FUNCTION
+############################################
+function test_function() {
+  local TENANT="$2"
+  local FUNC_NAME="test-func"
+  local ENV_NAME="python"   # Change to your preferred environment
+  local ENTRYPOINT="handler"
+  local FILE_NAME="test.py"
+
+  if [[ -z "$TENANT" ]]; then
+    echo "Usage: create_test_function <tenant-namespace> [function-name]"
+    return 1
+  fi
+
+  echo "========== CREATING TEST FUNCTION: $FUNC_NAME in $TENANT =========="
+
+  # Create a simple Python handler file
+  cat <<EOF > $FILE_NAME
+def $ENTRYPOINT(context, data):
+    return "Hello from $FUNC_NAME!"
+EOF
+
+  # Create function in Fission
+  fission fn create \
+    --name "$FUNC_NAME" \
+    --env "$ENV_NAME" \
+    --code "$FILE_NAME" \
+    --namespace "$TENANT"
+
+  # Create HTTP trigger
+  fission route create \
+    --name "${FUNC_NAME}-route" \
+    --function "$FUNC_NAME" \
+    --url "$TENANT/$FUNC_NAME" \
+    --method GET \
+    --namespace "$TENANT"
+  echo "Route for Function $FUNC_NAME: $TENANT/$FUNC_NAME"
+  FISSION_SVC=$(kubectl get svc router -n kafka)
+  echo "Fission router: $FISSION_SVC"
+  echo "✅ Test function $FUNC_NAME created in namespace $TENANT"
+}
+
+############################################
+# DELETE A TEST FUNCTION
+############################################
+function delete_test_function() {
+  local TENANT="$2"
+  local FUNC_NAME="test-func"
+
+  if [[ -z "$TENANT" ]]; then
+    echo "Usage: delete_test_function <tenant-namespace> [function-name]"
+    return 1
+  fi
+
+  echo "========== DELETING TEST FUNCTION: $FUNC_NAME from $TENANT =========="
+
+  fission route delete --name "${FUNC_NAME}-route" --namespace "$TENANT" || true
+  fission fn delete --name "$FUNC_NAME" --namespace "$TENANT" || true
+
+  rm -f test.py
+
+  echo "✅ Test function $FUNC_NAME deleted from namespace $TENANT"
+}
+
+############################################
+# SCRAPE PROMETHEUS METRICS FOR A NAMESPACE
+############################################
+function scrape_metrics() {
+  local TENANT="$2"
+
+  if [[ -z "$TENANT" ]]; then
+    echo "Usage: scrape_metrics <tenant-namespace>"
+    return 1
+  fi
+
+  echo "========== SCRAPING METRICS FOR NAMESPACE: $TENANT =========="
+
+  # Assumes Prometheus is exposed via kube-prometheus operator
+  PROM_POD=$(kubectl get pods -n monitoring -l app.kubernetes.io/name=kube-prometheus -o jsonpath='{.items[0].metadata.name}')
+  
+  if [[ -z "$PROM_POD" ]]; then
+    echo "❌ Prometheus pod not found in 'monitoring' namespace"
+    return 1
+  fi
+
+  kubectl exec -n monitoring "$PROM_POD" -- \
+    wget -qO- "http://router.fission.svc.cluster.local:8080/metrics" \
+    | grep "fission_function" \
+    | grep "$TENANT"
+
+  echo "✅ Metrics scrape completed for namespace $TENANT"
+}
+
+
+
+case "$1" in
+  install-fission)
+    install_fission
+    ;;
+  create-tenant)
+    create_tenant "$2"
+    ;;
+  delete-tenant)
+    delete_tenant "$2"
+    ;;
+  uninstall-fission)
+    uninstall_fission
+    ;;
+  test-function)
+    test_tenant "$2"
+    ;;
+  delete-test-function)
+    cleanup_test_functions "$2"
+    ;;
+  scrape-metrics)
+    scrape_metrics "$2"
+    ;;
+  *)
+    echo "Usage: $0 {install-fission|create-tenant|delete-tenant|uninstall-fission|test-function|delete-test-function|scrape-metrics}"
+    exit 1
+    ;;
+esac
