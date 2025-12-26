@@ -264,11 +264,6 @@ function delete_tenant() {
   kubectl delete servicemonitor fission-executor-${TENANT} -n monitoring --ignore-not-found
 
   # Remove tenant env vars from Fission deployments
-  for DEPLOY in executor router; do
-    kubectl get deploy $DEPLOY -n ${FISSION_NS} -o json | \
-      jq '(.spec.template.spec.containers[0].env) |= map(select(.name != "FISSION_RESOURCE_NAMESPACES"))' | \
-      kubectl apply -f - >/dev/null 2>&1 || true
-  done
 
   kubectl rollout restart deploy executor -n ${FISSION_NS} || true
   kubectl rollout restart deploy router -n ${FISSION_NS} || true
