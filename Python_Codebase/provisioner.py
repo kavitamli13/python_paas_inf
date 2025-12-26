@@ -47,7 +47,7 @@ def tenant_exists(tenant: str):
 
 # ---------------- Kafka Operations ----------------
 async def kafka_operation(action: str, tenant: str = ""):
-    script_path = "/home/admusr/kafka_files/kafka_script_v8.sh"
+    script_path = "/home/admusr/Python_Codebase/scripts/kafka_script_v8.sh"
     cmd = f"{script_path} {action}"
     if tenant:
         cmd += f" {tenant}"
@@ -62,7 +62,7 @@ async def kafka_operation(action: str, tenant: str = ""):
 
 # ---------------- Fission Operations ----------------
 async def fission_operation(action: str, tenant: str = ""):
-    script_path = "/home/admusr/fission_files/fission_script_v7.sh"
+    script_path = "/home/admusr/Python_Codebase/scripts/fission_script_v7.sh"
     cmd = f"{script_path} {action}"
     if tenant:
         cmd += f" {tenant}"
