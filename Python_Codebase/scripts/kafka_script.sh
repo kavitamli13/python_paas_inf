@@ -6,7 +6,7 @@ CLUSTER_NAME="my-cluster"
 
 BOOTSTRAP_NODEPORT=$(kubectl get configmap kafka-bootstrap-info -n kafka \
   -o jsonpath='{.data.bootstrapNodePort}')
-BOOTSTRAP="10.10.252.244: $BOOTSTRAP_NODEPORT"
+BOOTSTRAP="10.10.252.244:$BOOTSTRAP_NODEPORT"
 KAFKA_HOME="$HOME/kafka_2.13-4.1.1"
 
 usage() {
