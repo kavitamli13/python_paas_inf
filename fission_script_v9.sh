@@ -252,16 +252,14 @@ def $ENTRYPOINT(context, data):
 EOF
 
   fission env create --name python-test --image ghcr.io/fission/python-env --builder ghcr.io/fission/python-builder --poolsize 3 --namespace $TENANT
-
   fission fn create \
     --name "$FUNC_NAME" \
     --env python-test \
     --code "$FILE_NAME" \
     --namespace "$TENANT"
-
   #fission route create --method GET --url /$TENANT/test-func --function test-func -n $TENANT
   fission route create \
-    --name "${FUNC_NAME}-route"
+    --name "${FUNC_NAME}-route" \
     --function "$FUNC_NAME" \
     --url "/$TENANT/$FUNC_NAME" \
     --method GET \
