@@ -101,6 +101,8 @@ function create_tenant() {
 
   echo "========== CREATING TENANT: $TENANT =========="
 
+  # 1️⃣ Ensure the tenant namespace exists
+  kubectl create ns "$TENANT" 2>/dev/null || true
   ########################################
   # Tenant namespace wiring (FISSION_RESOURCE_NAMESPACES)
   ########################################
