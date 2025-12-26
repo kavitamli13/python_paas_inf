@@ -127,4 +127,17 @@ async def provisioner():
         if product == "kafka":
             result = await kafka_operation(action, tenant)
         else:
-            resu
+            result = await fission_operation(action, tenant)
+    except Exception as e:
+        log(f"Error executing command: {e}")
+        return
+
+    log("\n--- Command Output ---")
+    log(result["stdout"])
+    if result["stderr"]:
+        log(result["stderr"])
+    log("--- End Output ---")
+
+# ---------------- Run Async ----------------
+if __name__ == "__main__":
+    asyncio.run(provisioner())
