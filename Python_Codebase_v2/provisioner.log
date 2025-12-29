@@ -1,0 +1,410 @@
+2025-12-26 05:13:46,711 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 05:26:34,418 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 05:30:28,135 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 05:32:41,553 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 05:36:53,087 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 05:36:53,087 [INFO] Selected product: kafka
+2025-12-26 05:36:53,087 [INFO] [2025-12-26 05:36:53] Product: kafka, Action: uninstall-kafka
+2025-12-26 05:36:53,087 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh uninstall-kafka
+2025-12-26 05:36:53,087 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh uninstall-kafka
+2025-12-26 05:36:53,090 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh uninstall-kafka
+/bin/sh: 1: /home/admusr/Python_Codebase/scripts/kafka_script.sh: Permission denied
+2025-12-26 05:36:53,091 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh uninstall-kafka
+/bin/sh: 1: /home/admusr/Python_Codebase/scripts/kafka_script.sh: Permission denied
+2025-12-26 05:37:58,756 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 05:37:58,758 [INFO] Selected product: kafka
+2025-12-26 05:37:58,758 [INFO] [2025-12-26 05:37:58] Product: kafka, Action: uninstall-kafka
+2025-12-26 05:37:58,758 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh uninstall-kafka
+2025-12-26 05:37:58,758 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh uninstall-kafka
+2025-12-26 05:38:37,835 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh uninstall-kafka
+Error from server (NotFound): clusterrolebindings.rbac.authorization.k8s.io "strimzi-cluster-operator-kafka-broker-delegation" not found
+Error from server (NotFound): clusterrolebindings.rbac.authorization.k8s.io "strimzi-cluster-operator-kafka-client-delegation" not found
+2025-12-26 05:38:37,835 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh uninstall-kafka
+Error from server (NotFound): clusterrolebindings.rbac.authorization.k8s.io "strimzi-cluster-operator-kafka-broker-delegation" not found
+Error from server (NotFound): clusterrolebindings.rbac.authorization.k8s.io "strimzi-cluster-operator-kafka-client-delegation" not found
+2025-12-26 05:40:37,785 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 05:40:37,785 [INFO] Selected product: kafka
+2025-12-26 05:40:37,786 [INFO] [2025-12-26 05:40:37] Product: kafka, Action: install-kafka
+2025-12-26 05:40:37,786 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh install-kafka
+2025-12-26 05:40:37,786 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh install-kafka
+2025-12-26 05:42:14,229 [INFO] 
+--- Command Output ---
+2025-12-26 05:42:14,230 [INFO] Installing Strimzi...
+namespace/kafka created
+customresourcedefinition.apiextensions.k8s.io/kafkabridges.kafka.strimzi.io unchanged
+rolebinding.rbac.authorization.k8s.io/strimzi-cluster-operator-entity-operator-delegation created
+customresourcedefinition.apiextensions.k8s.io/kafkamirrormaker2s.kafka.strimzi.io unchanged
+customresourcedefinition.apiextensions.k8s.io/kafkatopics.kafka.strimzi.io unchanged
+clusterrole.rbac.authorization.k8s.io/strimzi-cluster-operator-namespaced created
+customresourcedefinition.apiextensions.k8s.io/kafkas.kafka.strimzi.io unchanged
+clusterrolebinding.rbac.authorization.k8s.io/strimzi-cluster-operator-kafka-client-delegation created
+rolebinding.rbac.authorization.k8s.io/strimzi-cluster-operator-watched created
+configmap/strimzi-cluster-operator created
+deployment.apps/strimzi-cluster-operator created
+customresourcedefinition.apiextensions.k8s.io/kafkausers.kafka.strimzi.io unchanged
+clusterrole.rbac.authorization.k8s.io/strimzi-cluster-operator-global created
+customresourcedefinition.apiextensions.k8s.io/kafkarebalances.kafka.strimzi.io unchanged
+clusterrole.rbac.authorization.k8s.io/strimzi-kafka-broker created
+clusterrole.rbac.authorization.k8s.io/strimzi-entity-operator created
+clusterrole.rbac.authorization.k8s.io/strimzi-cluster-operator-leader-election created
+customresourcedefinition.apiextensions.k8s.io/strimzipodsets.core.strimzi.io unchanged
+serviceaccount/strimzi-cluster-operator created
+customresourcedefinition.apiextensions.k8s.io/kafkaconnects.kafka.strimzi.io unchanged
+rolebinding.rbac.authorization.k8s.io/strimzi-cluster-operator created
+clusterrole.rbac.authorization.k8s.io/strimzi-cluster-operator-watched created
+rolebinding.rbac.authorization.k8s.io/strimzi-cluster-operator-leader-election created
+customresourcedefinition.apiextensions.k8s.io/kafkaconnectors.kafka.strimzi.io unchanged
+customresourcedefinition.apiextensions.k8s.io/kafkanodepools.kafka.strimzi.io unchanged
+clusterrolebinding.rbac.authorization.k8s.io/strimzi-cluster-operator-kafka-broker-delegation created
+clusterrole.rbac.authorization.k8s.io/strimzi-kafka-client created
+clusterrolebinding.rbac.authorization.k8s.io/strimzi-cluster-operator created
+Waiting for deployment "strimzi-cluster-operator" rollout to finish: 0 of 1 updated replicas are available...
+deployment "strimzi-cluster-operator" successfully rolled out
+Installing Kafka cluster (KRaft mode)...
+kafka.kafka.strimzi.io/my-cluster created
+kafkanodepool.kafka.strimzi.io/controllers created
+kafkanodepool.kafka.strimzi.io/brokers created
+Waiting for Kafka to be Ready...
+kafka.kafka.strimzi.io/my-cluster condition met
+Kafka installed successfully.
+2025-12-26 05:42:14,230 [INFO] --- End Output ---
+2025-12-26 05:45:24,074 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 05:45:24,075 [INFO] Selected product: kafka
+2025-12-26 05:45:24,075 [INFO] [2025-12-26 05:45:24] Product: kafka, Action: create-tenant, Tenant: kafka-tenant-a
+2025-12-26 05:45:24,075 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-a
+2025-12-26 05:45:24,180 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-a
+2025-12-26 05:45:25,064 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-a
+/home/admusr/Python_Codebase/scripts/kafka_script.sh: line 132: export: `kafka-tenant-a_PASSWORD=vyZn7D13DmOsMNUBGoTFoMxnivaelm2m': not a valid identifier
+2025-12-26 05:45:25,065 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-a
+/home/admusr/Python_Codebase/scripts/kafka_script.sh: line 132: export: `kafka-tenant-a_PASSWORD=vyZn7D13DmOsMNUBGoTFoMxnivaelm2m': not a valid identifier
+2025-12-26 06:41:02,383 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 06:41:02,383 [INFO] Selected product: kafka
+2025-12-26 06:41:02,383 [INFO] [2025-12-26 06:41:02] Product: kafka, Action: create-tenant
+2025-12-26 06:41:02,383 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant
+2025-12-26 06:41:02,494 [INFO] Tenant '' already exists. Skipping creation.
+2025-12-26 06:41:02,494 [INFO] 
+--- Command Output ---
+2025-12-26 06:41:02,494 [INFO] Tenant '' already exists.
+2025-12-26 06:41:02,495 [INFO] --- End Output ---
+2025-12-26 06:41:19,948 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 06:41:19,948 [INFO] Selected product: kafka
+2025-12-26 06:41:19,949 [INFO] [2025-12-26 06:41:19] Product: kafka, Action: create-tenant, Tenant: kafka-tenant-a
+2025-12-26 06:41:19,949 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-a
+2025-12-26 06:41:20,039 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-a
+2025-12-26 06:41:21,379 [INFO] 
+--- Command Output ---
+2025-12-26 06:41:21,379 [INFO] Creating tenant: kafka-tenant-a
+kafkauser.kafka.strimzi.io/kafka-tenant-a-user unchanged
+kafkauser.kafka.strimzi.io/kafka-tenant-a-user condition met
+Tenant kafka-tenant-a created.
+2025-12-26 06:41:21,379 [INFO] --- End Output ---
+2025-12-26 06:55:06,976 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 06:55:06,977 [INFO] Selected product: kafka
+2025-12-26 06:55:06,977 [INFO] [2025-12-26 06:55:06] Product: kafka, Action: create-tenant, Tenant: kafka-tenant-b
+2025-12-26 06:55:06,977 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-b
+2025-12-26 06:55:07,086 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-b
+2025-12-26 06:55:07,089 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-b
+/bin/sh: 1: /home/admusr/Python_Codebase/scripts/kafka_script.sh: Permission denied
+2025-12-26 06:55:07,089 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-b
+/bin/sh: 1: /home/admusr/Python_Codebase/scripts/kafka_script.sh: Permission denied
+2025-12-26 06:55:56,404 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 06:55:56,404 [INFO] Selected product: kafka
+2025-12-26 06:55:56,404 [INFO] [2025-12-26 06:55:56] Product: kafka, Action: create-tenant, Tenant: kafka-tenant-b
+2025-12-26 06:55:56,404 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-b
+2025-12-26 06:55:56,507 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh create-tenant kafka-tenant-b
+2025-12-26 06:55:57,145 [INFO] 
+--- Command Output ---
+2025-12-26 06:55:57,145 [INFO] Creating tenant: kafka-tenant-b
+kafkauser.kafka.strimzi.io/kafka-tenant-b-user created
+kafkauser.kafka.strimzi.io/kafka-tenant-b-user condition met
+Tenant kafka-tenant-b created.
+2025-12-26 06:55:57,146 [INFO] --- End Output ---
+2025-12-26 07:01:19,360 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 07:01:19,360 [INFO] Selected product: kafka
+2025-12-26 07:01:19,361 [INFO] [2025-12-26 07:01:19] Product: kafka, Action: test-tenant, Tenant: kafka-tenant-a
+2025-12-26 07:01:19,361 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-tenant kafka-tenant-a
+2025-12-26 07:01:19,361 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-tenant kafka-tenant-a
+2025-12-26 07:01:21,368 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-tenant kafka-tenant-a
+Failed to create new KafkaAdminClient
+org.apache.kafka.common.KafkaException: Failed to create new KafkaAdminClient
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:571)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:516)
+	at org.apache.kafka.clients.admin.Admin.create(Admin.java:133)
+	at org.apache.kafka.tools.TopicCommand$TopicService.createAdminClient(TopicCommand.java:449)
+	at org.apache.kafka.tools.TopicCommand$TopicService.<init>(TopicCommand.java:438)
+	at org.apache.kafka.tools.TopicCommand.execute(TopicCommand.java:99)
+	at org.apache.kafka.tools.TopicCommand.mainNoExit(TopicCommand.java:88)
+	at org.apache.kafka.tools.TopicCommand.main(TopicCommand.java:83)
+Caused by: org.apache.kafka.common.config.ConfigException: Invalid url in bootstrap.servers: 10.10.252.244: 30988
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:74)
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:63)
+	at org.apache.kafka.clients.admin.internals.AdminBootstrapAddresses.fromConfig(AdminBootstrapAddresses.java:72)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:535)
+	... 7 more
+2025-12-26 07:01:21,368 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-tenant kafka-tenant-a
+Failed to create new KafkaAdminClient
+org.apache.kafka.common.KafkaException: Failed to create new KafkaAdminClient
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:571)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:516)
+	at org.apache.kafka.clients.admin.Admin.create(Admin.java:133)
+	at org.apache.kafka.tools.TopicCommand$TopicService.createAdminClient(TopicCommand.java:449)
+	at org.apache.kafka.tools.TopicCommand$TopicService.<init>(TopicCommand.java:438)
+	at org.apache.kafka.tools.TopicCommand.execute(TopicCommand.java:99)
+	at org.apache.kafka.tools.TopicCommand.mainNoExit(TopicCommand.java:88)
+	at org.apache.kafka.tools.TopicCommand.main(TopicCommand.java:83)
+Caused by: org.apache.kafka.common.config.ConfigException: Invalid url in bootstrap.servers: 10.10.252.244: 30988
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:74)
+	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:63)
+	at org.apache.kafka.clients.admin.internals.AdminBootstrapAddresses.fromConfig(AdminBootstrapAddresses.java:72)
+	at org.apache.kafka.clients.admin.KafkaAdminClient.createInternal(KafkaAdminClient.java:535)
+	... 7 more
+2025-12-26 09:38:55,674 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 09:38:55,674 [INFO] Selected product: kafka
+2025-12-26 09:38:55,674 [INFO] [2025-12-26 09:38:55] Product: kafka, Action: test-tenant, Tenant: kafka-tenant-a
+2025-12-26 09:38:55,675 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-tenant kafka-tenant-a
+2025-12-26 09:38:55,675 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-tenant kafka-tenant-a
+2025-12-26 09:39:13,462 [INFO] 
+--- Command Output ---
+2025-12-26 09:39:13,463 [INFO] Testing tenant: kafka-tenant-a
+Creating topic kafka-tenant-a-test1 (if not exists)...
+Created topic kafka-tenant-a-test1.
+Producing message...
+Consuming message...
+hello-from-kafka-tenant-a
+2025-12-26 09:39:13,463 [INFO] [2025-12-26 09:39:12,606] ERROR Error processing message, terminating consumer process:  (org.apache.kafka.tools.consumer.ConsoleConsumer)
+org.apache.kafka.common.errors.TimeoutException: null
+Processed a total of 1 messages
+2025-12-26 09:39:13,463 [INFO] --- End Output ---
+2025-12-26 09:40:55,573 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 09:40:55,574 [INFO] Selected product: kafka
+2025-12-26 09:40:55,574 [INFO] [2025-12-26 09:40:55] Product: kafka, Action: test-tenant, Tenant: kafka-tenant-b
+2025-12-26 09:40:55,574 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-tenant kafka-tenant-b
+2025-12-26 09:40:55,574 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-tenant kafka-tenant-b
+2025-12-26 09:41:11,823 [INFO] 
+--- Command Output ---
+2025-12-26 09:41:11,823 [INFO] Testing tenant: kafka-tenant-b
+Creating topic kafka-tenant-b-test1 (if not exists)...
+Created topic kafka-tenant-b-test1.
+Producing message...
+Consuming message...
+hello-from-kafka-tenant-b
+2025-12-26 09:41:11,823 [INFO] [2025-12-26 09:41:11,403] ERROR Error processing message, terminating consumer process:  (org.apache.kafka.tools.consumer.ConsoleConsumer)
+org.apache.kafka.common.errors.TimeoutException: null
+Processed a total of 1 messages
+2025-12-26 09:41:11,823 [INFO] --- End Output ---
+2025-12-26 09:42:54,754 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 09:42:54,754 [INFO] Selected product: kafka
+2025-12-26 09:42:54,755 [INFO] [2025-12-26 09:42:54] Product: kafka, Action: test-isolation, Tenant: kafka-tenant-a kafka-tenant-b
+2025-12-26 09:42:54,755 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-isolation kafka-tenant-a kafka-tenant-b
+2025-12-26 09:42:54,755 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-isolation kafka-tenant-a kafka-tenant-b
+2025-12-26 09:42:59,895 [INFO] 
+--- Command Output ---
+2025-12-26 09:42:59,896 [INFO] Testing tenant isolation: kafka-tenant-a -> kafka-tenant-b topics
+Attempting to produce message to kafka-tenant-b-test1 as kafka-tenant-a...
+ERROR: Tenant kafka-tenant-a could produce to kafka-tenant-b-test1! Isolation FAILED.
+Attempting to consume message from kafka-tenant-b-test1 as kafka-tenant-a...
+ERROR: Tenant kafka-tenant-a could consume from kafka-tenant-b-test1! Isolation FAILED.
+2025-12-26 09:42:59,896 [INFO] --- End Output ---
+2025-12-26 10:37:20,230 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 10:37:20,231 [INFO] Selected product: kafka
+2025-12-26 10:37:20,231 [INFO] [2025-12-26 10:37:20] Product: kafka, Action: test-isolation, Tenant: kafka-tenant-a kafka-tenant-b
+2025-12-26 10:37:20,231 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-isolation kafka-tenant-a kafka-tenant-b
+2025-12-26 10:37:20,231 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-isolation kafka-tenant-a kafka-tenant-b
+2025-12-26 10:37:25,597 [INFO] 
+--- Command Output ---
+2025-12-26 10:37:25,597 [INFO] Testing tenant isolation: kafka-tenant-a -> kafka-tenant-b topics
+Attempting to produce message to kafka-tenant-b-test1 as kafka-tenant-a...
+/home/admusr/kafka_2.13-4.1.1/bin/kafka-console-producer.sh --bootstrap-server 10.10.252.244:30988 --topic kafka-tenant-b-test1 --producer.config /home/admusr/kafka_files/kafka-tenant-a-producer.properties
+ERROR: Tenant kafka-tenant-a could produce to kafka-tenant-b-test1! Isolation FAILED.
+Attempting to consume message from kafka-tenant-b-test1 as kafka-tenant-a...
+/home/admusr/kafka_2.13-4.1.1/bin/kafka-console-consumer.sh --bootstrap-server 10.10.252.244:30988 --topic kafka-tenant-b-test1 --group kafka-tenant-a-group --from-beginning --timeout-ms 5000 --consumer.config /home/admusr/kafka_files/kafka-tenant-a-consumer.properties
+ERROR: Tenant kafka-tenant-a could consume from kafka-tenant-b-test1! Isolation FAILED.
+2025-12-26 10:37:25,597 [INFO] --- End Output ---
+2025-12-26 10:44:45,175 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 10:44:45,176 [INFO] Selected product: kafka
+2025-12-26 10:44:45,176 [INFO] [2025-12-26 10:44:45] Product: kafka, Action: test-isolation, Tenant: kafka-tenant-a kafka-tenant-b
+2025-12-26 10:44:45,176 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-isolation kafka-tenant-a kafka-tenant-b
+2025-12-26 10:44:45,176 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh test-isolation kafka-tenant-a kafka-tenant-b
+2025-12-26 10:44:50,250 [INFO] 
+--- Command Output ---
+2025-12-26 10:44:50,250 [INFO] Testing tenant isolation: kafka-tenant-a -> kafka-tenant-b topics
+Attempting to produce message to kafka-tenant-b-test1 as kafka-tenant-a...
+SUCCESS: Tenant kafka-tenant-a cannot produce to kafka-tenant-b-test1 (authorization enforced).
+Attempting to consume message from kafka-tenant-b-test1 as kafka-tenant-a...
+SUCCESS: Tenant kafka-tenant-a cannot consume from kafka-tenant-b-test1 (authorization enforced).
+2025-12-26 10:44:50,250 [INFO] --- End Output ---
+2025-12-26 10:46:49,432 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 10:46:49,432 [INFO] Selected product: kafka
+2025-12-26 10:46:49,432 [INFO] [2025-12-26 10:46:49] Product: kafka, Action: cleanup-test-topics, Tenant: kafka-tenant-a
+2025-12-26 10:46:49,433 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh cleanup-test-topics kafka-tenant-a
+2025-12-26 10:46:49,433 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh cleanup-test-topics kafka-tenant-a
+2025-12-26 10:46:54,666 [INFO] 
+--- Command Output ---
+2025-12-26 10:46:54,666 [INFO] Cleaning up test topics for tenant: kafka-tenant-a
+Deleting topic kafka-tenant-a-test1...
+2025-12-26 10:46:54,666 [INFO] --- End Output ---
+2025-12-26 10:47:31,605 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 10:47:31,605 [INFO] Selected product: kafka
+2025-12-26 10:47:31,605 [INFO] [2025-12-26 10:47:31] Product: kafka, Action: cleanup-test-topics, Tenant: kafka-tenant-b
+2025-12-26 10:47:31,605 [INFO] Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh cleanup-test-topics kafka-tenant-b
+2025-12-26 10:47:31,605 [INFO] Executing Kafka command: /home/admusr/Python_Codebase/scripts/kafka_script.sh cleanup-test-topics kafka-tenant-b
+2025-12-26 10:47:36,651 [INFO] 
+--- Command Output ---
+2025-12-26 10:47:36,651 [INFO] Cleaning up test topics for tenant: kafka-tenant-b
+Deleting topic kafka-tenant-b-test1...
+2025-12-26 10:47:36,652 [INFO] --- End Output ---
+2025-12-26 10:52:41,866 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 10:52:41,867 [INFO] Selected product: fission
+2025-12-26 10:52:41,867 [INFO] [2025-12-26 10:52:41] Product: fission, Action: install-fission
+2025-12-26 10:52:41,867 [INFO] Executing Fission command: /home/admusr/Python_Codebase/scripts/fission_script.sh install-fission
+2025-12-26 10:52:41,877 [INFO] 
+--- Command Output ---
+2025-12-26 10:52:41,877 [INFO] 
+2025-12-26 10:52:41,877 [INFO] --- End Output ---
+2025-12-26 11:23:24,190 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 11:23:24,190 [INFO] Selected product: fission
+2025-12-26 11:23:24,190 [INFO] [2025-12-26 11:23:24] Product: fission, Action: install-fission
+2025-12-26 11:23:24,190 [INFO] Executing Fission command: /home/admusr/Python_Codebase/scripts/fission_script.sh install-fission
+2025-12-26 11:23:24,199 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh install-fission
+/home/admusr/Python_Codebase/scripts/fission_script.sh: line 6: local: can only be used in a function
+2025-12-26 11:23:24,199 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh install-fission
+/home/admusr/Python_Codebase/scripts/fission_script.sh: line 6: local: can only be used in a function
+2025-12-26 11:25:26,448 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 11:25:26,449 [INFO] Selected product: fission
+2025-12-26 11:25:26,449 [INFO] [2025-12-26 11:25:26] Product: fission, Action: install-fission
+2025-12-26 11:25:26,449 [INFO] Executing Fission command: /home/admusr/Python_Codebase/scripts/fission_script.sh install-fission
+2025-12-26 11:25:41,487 [INFO] 
+--- Command Output ---
+2025-12-26 11:25:41,488 [INFO] ========== INSTALLING FISSION ==========
+Tenant          : default
+Fission Version : v1.22.0
+=======================================
+Error forwarding to port 33719: no available pod for port-forwarding with label selector application=fission-routerWarning: could not connect to server
+client:
+  fission/core:
+    BuildDate: "2025-12-18T16:21:14Z"
+    GitCommit: 82e1ff76
+    Version: v1.22.0
+server:
+  fission/core: {}
+Installing Fission server...
+"fission-charts" already exists with the same configuration, skipping
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "fission-charts" chart repository
+...Successfully got an update from the "strimzi" chart repository
+...Successfully got an update from the "cpo" chart repository
+...Successfully got an update from the "prometheus-community" chart repository
+...Successfully got an update from the "apisix" chart repository
+...Successfully got an update from the "bitnami" chart repository
+...Successfully got an update from the "apisix-dashboard" chart repository
+Update Complete. ⎈Happy Helming!⎈
+namespace/fission created
+customresourcedefinition.apiextensions.k8s.io/canaryconfigs.fission.io created
+customresourcedefinition.apiextensions.k8s.io/environments.fission.io created
+customresourcedefinition.apiextensions.k8s.io/functions.fission.io created
+customresourcedefinition.apiextensions.k8s.io/httptriggers.fission.io created
+customresourcedefinition.apiextensions.k8s.io/kuberneteswatchtriggers.fission.io created
+customresourcedefinition.apiextensions.k8s.io/messagequeuetriggers.fission.io created
+customresourcedefinition.apiextensions.k8s.io/packages.fission.io created
+customresourcedefinition.apiextensions.k8s.io/timetriggers.fission.io created
+NAME: fission
+LAST DEPLOYED: Fri Dec 26 11:25:35 2025
+NAMESPACE: fission
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+NOTES:
+1. Install the client CLI.
+
+Mac:
+  $ curl -Lo fission https://github.com/fission/fission/releases/download/v1.22.0/fission-v1.22.0-darwin-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+
+Linux:
+  $ curl -Lo fission https://github.com/fission/fission/releases/download/v1.22.0/fission-v1.22.0-linux-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+
+Windows:
+  For Windows, you can use the linux binary on WSL. Or you can download this windows executable: https://github.com/fission/fission/releases/download/v1.22.0/fission-v1.22.0-windows-amd64.exe
+
+2. You're ready to use Fission!
+  You can create fission resources in the namespace "default"
+
+  # Create an environment
+  $ fission env create --name nodejs --image ghcr.io/fission/node-env --namespace default
+
+  # Get a hello world
+  $ curl https://raw.githubusercontent.com/fission/examples/master/nodejs/hello.js > hello.js
+
+  # Register this function with Fission
+  $ fission function create --name hello --env nodejs --code hello.js --namespace default
+
+  # Run this function
+  $ fission function test --name hello --namespace default
+  Hello, world!
+Applying cluster-wide RBAC...
+clusterrolebinding.rbac.authorization.k8s.io/fission-executor-admin created
+✅ Fission installation completed (cluster-level)
+2025-12-26 11:25:41,488 [INFO] I1226 11:25:37.588048 1309371 warnings.go:110] "Warning: metadata.name: this is used in Pod names and hostnames, which can result in surprising behavior; a DNS label is recommended: [must not contain dots]"
+2025-12-26 11:25:41,488 [INFO] --- End Output ---
+2025-12-26 11:27:24,811 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 11:27:24,811 [INFO] Selected product: fission
+2025-12-26 11:27:24,812 [INFO] [2025-12-26 11:27:24] Product: fission, Action: create-tenant, Tenant: fission-tenant-a
+2025-12-26 11:27:24,917 [INFO] Executing Fission command: /home/admusr/Python_Codebase/scripts/fission_script.sh create-tenant fission-tenant-a
+2025-12-26 11:27:26,933 [INFO] 
+--- Command Output ---
+2025-12-26 11:27:26,934 [INFO] ========== CREATING TENANT: fission-tenant-a ==========
+namespace/fission-tenant-a created
+deployment.apps/executor patched
+deployment.apps/router patched
+deployment.apps/executor restarted
+deployment.apps/router restarted
+Applying tenant-specific RBAC
+role.rbac.authorization.k8s.io/fission-router-role created
+rolebinding.rbac.authorization.k8s.io/fission-router-binding created
+Configuring Prometheus scraping for tenant fission-tenant-a...
+service/router labeled
+service/executor labeled
+service/router patched
+service/router patched
+service/executor patched
+service/executor patched
+servicemonitor.monitoring.coreos.com/fission-router-fission-tenant-a created
+servicemonitor.monitoring.coreos.com/fission-executor-fission-tenant-a created
+✅ Tenant fission-tenant-a created and Prometheus integration applied
+2025-12-26 11:27:26,934 [INFO] Warning: spec.template.spec.containers[0].env[28]: hides previous definition of "FISSION_RESOURCE_NAMESPACES", which may be dropped when using apply
+Warning: spec.template.spec.containers[0].env[24]: hides previous definition of "FISSION_RESOURCE_NAMESPACES", which may be dropped when using apply
+Warning: spec.template.spec.containers[0].env[28]: hides previous definition of "FISSION_RESOURCE_NAMESPACES", which may be dropped when using apply
+Warning: spec.template.spec.containers[0].env[24]: hides previous definition of "FISSION_RESOURCE_NAMESPACES", which may be dropped when using apply
+2025-12-26 11:27:26,934 [INFO] --- End Output ---
+2025-12-26 11:29:28,566 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 11:29:28,567 [INFO] Selected product: fission
+2025-12-26 11:29:28,567 [INFO] [2025-12-26 11:29:28] Product: fission, Action: test-function, Tenant: fission-tenant-a
+2025-12-26 11:29:28,568 [INFO] Executing Fission command: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+2025-12-26 11:29:28,582 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+/home/admusr/Python_Codebase/scripts/fission_script.sh: line 367: test_tenant: command not found
+2025-12-26 11:29:28,583 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+/home/admusr/Python_Codebase/scripts/fission_script.sh: line 367: test_tenant: command not found
+2025-12-26 11:42:05,865 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 11:42:05,866 [INFO] Selected product: fission
+2025-12-26 11:42:05,866 [INFO] [2025-12-26 11:42:05] Product: fission, Action: test-function, Tenant: fission-tenant-a
+2025-12-26 11:42:05,866 [INFO] Executing Fission command: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+2025-12-26 11:42:05,878 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+/home/admusr/Python_Codebase/scripts/fission_script.sh: line 261: $2: unbound variable
+2025-12-26 11:42:05,878 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+/home/admusr/Python_Codebase/scripts/fission_script.sh: line 261: $2: unbound variable
+2025-12-26 11:44:45,239 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 11:44:45,240 [INFO] Selected product: fission
+2025-12-26 11:44:45,240 [INFO] [2025-12-26 11:44:45] Product: fission, Action: test-function, Tenant: fission-tenant-a
+2025-12-26 11:44:45,240 [INFO] Executing Fission command: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+2025-12-26 11:44:45,354 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+Error: error retrieving environment information: environments.fission.io "python" not found
+2025-12-26 11:44:45,354 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+Error: error retrieving environment information: environments.fission.io "python" not found
+2025-12-26 11:50:55,550 [INFO] Tenant name cannot be empty. Changing tenant name to default
+2025-12-26 11:50:55,551 [INFO] Selected product: fission
+2025-12-26 11:50:55,551 [INFO] [2025-12-26 11:50:55] Product: fission, Action: test-function, Tenant: fission-tenant-a
+2025-12-26 11:50:55,551 [INFO] Executing Fission command: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+2025-12-26 11:50:56,035 [INFO] Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+Error from server (NotFound): services "router" not found
+2025-12-26 11:50:56,036 [INFO] Error executing command: Command failed: /home/admusr/Python_Codebase/scripts/fission_script.sh test-function fission-tenant-a
+Error from server (NotFound): services "router" not found

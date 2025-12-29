@@ -1,0 +1,31 @@
+Kafka Requests:
+
+Install Kafka:
+curl --location 'http://localhost:3000/api/provision/product' --header 'Content-Type: application/json' --data '{"tenant": "", "product": "kafka", "action": "install-kafka", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/tenant' --header 'Content-Type: application/json' --data '{"tenant": "kafka-tenant-a", "product": "kafka", "action": "create-tenant", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/tenant' --header 'Content-Type: application/json' --data '{"tenant": "kafka-tenant-b", "product": "kafka", "action": "create-tenant", "plan": "test"}'
+
+
+
+curl --location 'http://localhost:3000/api/provision/action' --header 'Content-Type: application/json' --data '{"tenant": "kafka-tenant-a kafka-tenant-b", "product": "kafka", "action": "test-isolation", "plan": "test"}'
+
+
+
+
+curl --location 'http://localhost:3000/api/provision/product' --header 'Content-Type: application/json' --data '{"tenant": "", "product": "fission", "action": "install-fission", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/tenant' --header 'Content-Type: application/json' --data '{"tenant": "fission-tenant-a", "product": "fission", "action": "create-tenant", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/action' --header 'Content-Type: application/json' --data '{"tenant": "fission-tenant-a", "product": "fission", "action": "test-function", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/action' --header 'Content-Type: application/json' --data '{"tenant": "fission-tenant-a", "product": "fission", "action": "delete-tenant", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/action' --header 'Content-Type: application/json' --data '{"tenant": "default", "product": "fission", "action": "uninstall-fission", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/tenant' --header 'Content-Type: application/json' --data '{"tenant": "fission-tenant-b", "product": "fission", "action": "create-tenant", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/action' --header 'Content-Type: application/json' --data '{"tenant": "fission-tenant-b", "product": "fission", "action": "test-function", "plan": "test"}'
+
+curl --location 'http://localhost:3000/api/provision/action' --header 'Content-Type: application/json' --data '{"tenant": "fission-tenant-b", "product": "fission", "action": "test-function", "plan": "test"}'
