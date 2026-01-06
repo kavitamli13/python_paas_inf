@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
-set -e
+if [ -z "${BASH_VERSION:-}" ]; then exec /usr/bin/env bash "$0" "$@"; fi
+set -euo pipefail
 
-TENANT_NAME=${2:-pg-tenant-a}
+TENANT_NAME="${2:-pg-tenant-a}"
+PG_PASSWORD="${3:-changeme}"
+PGADMIN_PASSWORD="${4:-admin123}"
+STORAGE_CLASS="${STORAGE_CLASS:-cinder-standard}"
+REPLICAS="${REPLICAS:-3}"
+
+PGADMIN_EMAIL="admin@${TENANT_NAME}.example.com"
+
+
 
 
 function install_postgresql() {
 
-	PG_PASSWORD=${3:-changeme}
-	PGADMIN_PASSWORD=${4:-admin123}
-	STORAGE_CLASS="cinder-standard"
-	REPLICAS=3
-
-	PGADMIN_EMAIL="admin@${TENANT_NAME}.example.com"
+	
 	echo "Provisioning PostgreSQL tenant: $TENANT_NAME"
 
 	# Namespace
@@ -28,7 +32,7 @@ function install_postgresql() {
 	  POSTGRES_USER: admin
 	  POSTGRES_PASSWORD: ${PG_PASSWORD}
 	  POSTGRES_DB: appdb
-	EOF
+EOF
 
 	# pgAdmin secrets
 	cat <<EOF | kubectl apply -n ${TENANT_NAME} -f -
@@ -40,7 +44,7 @@ function install_postgresql() {
 	stringData:
 	  PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
 	  PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-	EOF
+EOF
 
 	# Headless PostgreSQL service
 	cat <<EOF | kubectl apply -n ${TENANT_NAME} -f -
@@ -114,7 +118,7 @@ function install_postgresql() {
 		  resources:
 			requests:
 			  storage: 10Gi
-	EOF
+EOF
 
 	# Metrics service
 	cat <<EOF | kubectl apply -n ${TENANT_NAME} -f -
@@ -130,7 +134,7 @@ function install_postgresql() {
 	  ports:
 		- name: metrics
 		  port: 9187
-	EOF
+EOF
 
 	# ServiceMonitor
 	cat <<EOF | kubectl apply -n ${TENANT_NAME} -f -
@@ -150,7 +154,7 @@ function install_postgresql() {
 	  endpoints:
 		- port: metrics
 		  interval: 30s
-	EOF
+EOF
 
 	# pgAdmin Deployment
 	cat <<EOF | kubectl apply -n ${TENANT_NAME} -f -
@@ -179,7 +183,7 @@ function install_postgresql() {
 			env:
 			  - name: PGADMIN_LISTEN_PORT
 				value: "80"
-	EOF
+EOF
 
 	# pgAdmin Service
 	cat <<EOF | kubectl apply -n ${TENANT_NAME} -f -
@@ -193,7 +197,7 @@ function install_postgresql() {
 	  ports:
 		- port: 80
 		  targetPort: 80
-	EOF
+EOF
 
 	# ============================
 	# NetworkPolicies (NEW)
@@ -217,7 +221,7 @@ function install_postgresql() {
 		ports:
 		- protocol: TCP
 		  port: 5432
-	EOF
+EOF
 
 	# Allow Prometheus scraping metrics
 	cat <<EOF | kubectl apply -n ${TENANT_NAME} -f -
@@ -239,7 +243,7 @@ function install_postgresql() {
 		ports:
 		- protocol: TCP
 		  port: 9187
-	EOF
+EOF
 
 	echo "Waiting for PostgreSQL pods to be Ready..."
 	kubectl rollout status statefulset/pg -n ${TENANT_NAME}
@@ -293,7 +297,7 @@ function install_postgresql() {
 		"scrape_interval": "30s"
 	  }
 	}
-	EOF
+EOF
 
 }
 
@@ -346,6 +350,81 @@ function delete_postgresql() {
 }
 
 
+function get_application_info() {
+cat <<EOF
+{
+  "tenant": "${TENANT_NAME}",
+  "namespace": "${TENANT_NAME}",
+  "product": "postgresql",
+  "plan": "statefulset-ha",
+  "replicas": ${REPLICAS},
+
+  "storage": {
+    "class": "${STORAGE_CLASS}",
+    "size": "10Gi",
+    "access_mode": "ReadWriteOnce"
+  },
+
+  "postgres": {
+    "service_name": "pg",
+    "host": "pg.${TENANT_NAME}.svc.cluster.local",
+    "port": 5432,
+    "username": "admin",
+    "password": "${PG_PASSWORD}",
+    "database": "appdb",
+    "image": "postgres:15",
+    "pgdata": "/var/lib/postgresql/data/pgdata"
+  },
+
+  "pgadmin": {
+    "deployment": "pgadmin",
+    "service_name": "pgadmin",
+    "image": "dpage/pgadmin4",
+    "email": "${PGADMIN_EMAIL}",
+    "password": "${PGADMIN_PASSWORD}",
+    "listen_port": 80,
+    "url_port_forward": "http://<node-ip>:8080",
+    "port_forward_command": "kubectl port-forward -n ${TENANT_NAME} svc/pgadmin 8080:80",
+
+    "add_server": {
+      "general": {
+        "name": "${TENANT_NAME}-postgres"
+      },
+      "connection": {
+        "host": "pg.${TENANT_NAME}.svc.cluster.local",
+        "port": 5432,
+        "maintenance_db": "appdb",
+        "username": "admin",
+        "password": "${PG_PASSWORD}",
+        "ssl_mode": "Prefer"
+      },
+      "notes": [
+        "No port-forward is required for PostgreSQL itself",
+        "pgAdmin runs inside the cluster and connects via ClusterIP DNS",
+        "Do NOT use Node IP or localhost as the database host"
+      ]
+    }
+  },
+
+  "metrics": {
+    "enabled": true,
+    "exporter_image": "prometheuscommunity/postgres-exporter",
+    "service_name": "pg-metrics",
+    "endpoint": "pg-metrics.${TENANT_NAME}.svc.cluster.local:9187",
+    "scrape_interval": "30s",
+    "prometheus_job_type": "ServiceMonitor",
+    "prometheus_namespace": "monitoring"
+  },
+
+  "network_policy": {
+    "postgres_ingress": "same-namespace-only",
+    "metrics_ingress": "monitoring-namespace-only"
+  }
+}
+EOF
+}
+
+
 case "$1" in
   install-postgresql)
     install_postgresql "$2" "$3" "$4"
@@ -353,8 +432,12 @@ case "$1" in
   delete-postgresql)
     delete_postgresql "$2" "$3"
     ;;
+  get-application-info)
+    get_application_info "$2"
+    ;;
   *)
-    echo "Usage: $0 {install-postgresql|delete-postgresql}"
+    echo "Usage: $0 {install-postgresql|delete-postgresql|get-application-info}"
     exit 1
     ;;
 esac
+
