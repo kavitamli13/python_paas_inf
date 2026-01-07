@@ -260,30 +260,39 @@ test_isolation() {
     echo "Testing isolation: $TENANT -> $OTHER_TOPIC"
 
     echo "Producing message to $OTHER_TOPIC as $TENANT..."
-    if "$KAFKA_HOME/bin/kafka-console-producer.sh" \
-        --bootstrap-server "$BOOTSTRAP" \
-        --topic "$OTHER_TOPIC" \
-        --producer.config "$HOME/kafka_files/${TENANT}-producer.properties" \
-        <<< "hello" 2>/tmp/test-isolation.log; then
-        echo "ERROR: Tenant $TENANT could produce to $OTHER_TOPIC! Isolation FAILED."
-    else
+    PRODUCE_OUT=$(
+        echo "hello" | "$KAFKA_HOME/bin/kafka-console-producer.sh" \
+            --bootstrap-server "$BOOTSTRAP" \
+            --topic "$OTHER_TOPIC" \
+            --producer.config "$HOME/kafka_files/${TENANT}-producer.properties" \
+            2>&1
+    )
+
+    if echo "$PRODUCE_OUT" | grep -Eq "AuthorizationException|Not authorized|TOPIC_AUTHORIZATION_FAILED"; then
         echo "SUCCESS: Tenant $TENANT cannot produce to $OTHER_TOPIC."
+    else
+        echo "ERROR: Tenant $TENANT could produce to $OTHER_TOPIC! Isolation FAILED."
     fi
 
     echo "Consuming message from $OTHER_TOPIC as $TENANT..."
-    if "$KAFKA_HOME/bin/kafka-console-consumer.sh" \
-        --bootstrap-server "$BOOTSTRAP" \
-        --topic "$OTHER_TOPIC" \
-        --group "${TENANT}-group" \
-        --from-beginning \
-        --timeout-ms 5000 \
-        --consumer.config "$HOME/kafka_files/${TENANT}-consumer.properties" \
-        2>/tmp/test-isolation.log; then
-        echo "ERROR: Tenant $TENANT could consume from $OTHER_TOPIC! Isolation FAILED."
-    else
+    CONSUME_OUT=$(
+        "$KAFKA_HOME/bin/kafka-console-consumer.sh" \
+            --bootstrap-server "$BOOTSTRAP" \
+            --topic "$OTHER_TOPIC" \
+            --group "${TENANT}-group" \
+            --from-beginning \
+            --timeout-ms 5000 \
+            --consumer.config "$HOME/kafka_files/${TENANT}-consumer.properties" \
+            2>&1
+    )
+
+    if echo "$CONSUME_OUT" | grep -Eq "AuthorizationException|Not authorized|TOPIC_AUTHORIZATION_FAILED"; then
         echo "SUCCESS: Tenant $TENANT cannot consume from $OTHER_TOPIC."
+    else
+        echo "ERROR: Tenant $TENANT could consume from $OTHER_TOPIC! Isolation FAILED."
     fi
 }
+
 
 
 
