@@ -24,7 +24,7 @@ MEM_LIMIT="32Gi"
 LOG_NS="logging"
 FLUENTBIT_NAME="fluent-bit"
 
-INGRESS_CLASS="nginx"
+INGRESS_CLASS="platform-nginx"
 INGRESS_DOMAIN="tcs.private.cloud"
 INGRESS_NAME="${APP}-ingress"
 
