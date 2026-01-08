@@ -1,0 +1,481 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+########################################
+# Parameters (unchanged)
+########################################
+TENANT="${2:?Usage: $0 <tenant-name>}"
+AUTH_SECRET="${3:-rmq-auth-secret}"
+ERLANG_SECRET="${4:-rmq-erlang-secret}"
+
+APP="rabbitmq"
+NAMESPACE="$TENANT"
+REPLICAS=3
+STORAGE_CLASS="cinder-standard"
+STORAGE_SIZE="20Gi"
+PROVISIONING_ID="$(uuidgen)"
+START_TS="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+CPU_REQ="8"
+MEM_REQ="16Gi"
+CPU_LIMIT="16"
+MEM_LIMIT="32Gi"
+
+LOG_NS="logging"
+FLUENTBIT_NAME="fluent-bit"
+
+INGRESS_CLASS="nginx"
+INGRESS_DOMAIN="tcs.private.cloud"
+INGRESS_NAME="${APP}-ingress"
+
+RABBITMQ_CPU_REQUEST="500m"
+RABBITMQ_MEM_REQUEST="1Gi"
+RABBITMQ_CPU_LIMIT="2"
+RABBITMQ_MEM_LIMIT="2Gi"
+
+
+
+log() { echo "[RMQ][$TENANT] $*" >&2; }
+fail() { log "ERROR: $2"; emit_json "FAILED"; exit 1; }
+
+########################################
+# Emit JSON (extended with logging)
+########################################
+emit_json() {
+  local status="$2"
+  local USERNAME PASSWORD
+  USERNAME=$(kubectl get secret -n "$NAMESPACE" "$AUTH_SECRET" -o jsonpath='{.data.username}' | base64 --decode)
+  PASSWORD=$(kubectl get secret -n "$NAMESPACE" "$AUTH_SECRET" -o jsonpath='{.data.password}' | base64 --decode)
+
+cat <<EOF
+{
+  "status": "$status",
+  "provisioning_id": "$PROVISIONING_ID",
+  "tenant": {
+    "name": "$TENANT",
+    "namespace": "$NAMESPACE"
+  },
+  "service": {
+    "type": "rabbitmq",
+    "replicas": $REPLICAS,
+    "storage": "$STORAGE_SIZE",
+    "storageClass": "$STORAGE_CLASS"
+  },
+  "access": {
+    "amqp_endpoint": "amqp://$APP.$NAMESPACE.svc.cluster.local:5672",
+    "management_ui": "http://$APP.$NAMESPACE.svc.cluster.local:15672",
+    "auth": {
+      "username": "$USERNAME",
+      "password": "$PASSWORD"
+    }
+  },
+  "logging": {
+    "enabled": true,
+    "collector": "fluent-bit",
+    "mode": "daemonset",
+    "watched_namespace": "$NAMESPACE",
+    "tag": "tenant.$TENANT.*"
+  },
+  "timestamps": {
+    "started_at": "$START_TS",
+    "completed_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  }
+}
+EOF
+}
+
+########################################
+# Tenant Security Bootstrap
+########################################
+bootstrap_security() {
+
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${NAMESPACE}
+  labels:
+    tenant: ${TENANT}
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${TENANT}-sa
+  namespace: ${NAMESPACE}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: ${TENANT}-quota
+  namespace: ${NAMESPACE}
+spec:
+  hard:
+    requests.cpu: "${CPU_REQ}"
+    requests.memory: "${MEM_REQ}"
+    limits.cpu: "${CPU_LIMIT}"
+    limits.memory: "${MEM_LIMIT}"
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: ${NAMESPACE}
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+EOF
+}
+
+########################################
+# Fluent Bit Logging
+########################################
+install_fluentbit() {
+
+kubectl get ns "$LOG_NS" >/dev/null 2>&1 || kubectl create ns "$LOG_NS"
+
+kubectl apply -n "$LOG_NS" -f - <<EOF
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: $FLUENTBIT_NAME
+spec:
+  selector:
+    matchLabels:
+      app: fluent-bit
+  template:
+    metadata:
+      labels:
+        app: fluent-bit
+    spec:
+      serviceAccountName: fluent-bit
+      containers:
+      - name: fluent-bit
+        image: cr.fluentbit.io/fluent/fluent-bit:2.2
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+EOF
+}
+
+########################################
+# Install RabbitMQ
+########################################
+install_rabbitmq() {
+
+  bootstrap_security
+  install_fluentbit
+
+  log "Ensuring auth secret"
+  kubectl apply -n "$NAMESPACE" -f - <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: $AUTH_SECRET
+type: Opaque
+stringData:
+  username: rmq_user
+  password: $(openssl rand -base64 24)
+EOF
+
+  log "Ensuring Erlang secret"
+  kubectl apply -n "$NAMESPACE" -f - <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: $ERLANG_SECRET
+type: Opaque
+stringData:
+  erlang-cookie: $(openssl rand -base64 32)
+EOF
+
+  # (RabbitMQ StatefulSet, services, ServiceMonitor unchanged — omitted for brevity)
+
+  ########################################
+  # Headless Service (for clustering)
+  ########################################
+  log "Applying headless service"
+  kubectl apply -n "$NAMESPACE" -f - <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: $APP
+spec:
+  clusterIP: None
+  selector:
+    app: $APP
+  ports:
+  - name: amqp
+    port: 5672
+  - name: management
+    port: 15672
+  - name: metrics
+    port: 9419
+EOF
+
+  ########################################
+  # Metrics Service
+  ########################################
+  log "Applying metrics service"
+  kubectl apply -n "$NAMESPACE" -f - <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: $APP-metrics
+  labels:
+    app: $APP
+spec:
+  selector:
+    app: $APP
+  ports:
+  - name: metrics
+    port: 9419
+    targetPort: 15692
+EOF
+
+  ########################################
+  # StatefulSet
+  ########################################
+  log "Applying StatefulSet"
+  kubectl apply -n "$NAMESPACE" -f - <<EOF
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: $APP
+spec:
+  serviceName: $APP
+  replicas: $REPLICAS
+  selector:
+    matchLabels:
+      app: $APP
+  template:
+    metadata:
+      labels:
+        app: $APP
+    spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3-management
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 999
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          requests:
+            cpu: $RABBITMQ_CPU_REQUEST
+            memory: $RABBITMQ_MEM_REQUEST
+          limits:
+            cpu: $RABBITMQ_CPU_LIMIT
+            memory: $RABBITMQ_MEM_LIMIT
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+        - containerPort: 9419
+        env:
+        - name: RABBITMQ_USE_LONGNAME
+          value: "true"
+        - name: RABBITMQ_CLUSTER_FORMATION_PEER_DISCOVERY_BACKEND
+          value: rabbit_peer_discovery_k8s
+        - name: RABBITMQ_CLUSTER_FORMATION_K8S_SERVICE_NAME
+          value: $APP
+        - name: RABBITMQ_ERLANG_COOKIE
+          valueFrom:
+            secretKeyRef:
+              name: $ERLANG_SECRET
+              key: erlang-cookie
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: $AUTH_SECRET
+              key: username
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: $AUTH_SECRET
+              key: password
+        - name: RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS
+          value: "-rabbitmq_prometheus true"
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/rabbitmq
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: $STORAGE_CLASS
+      resources:
+        requests:
+          storage: $STORAGE_SIZE
+EOF
+
+
+
+
+  ########################################
+  # ServiceMonitor
+  ########################################
+  log "Applying ServiceMonitor"
+  kubectl apply -n "$NAMESPACE" -f - <<EOF
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: $APP
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: $APP
+  namespaceSelector:
+    matchNames:
+    - $NAMESPACE
+  endpoints:
+  - port: metrics
+    interval: 30s
+EOF
+
+
+  ########################################
+  # Ingress for RabbitMQ Management UI
+  ########################################
+  log "Applying Ingress"
+  kubectl apply -n "$NAMESPACE" -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: $INGRESS_NAME
+  annotations:
+    kubernetes.io/ingress.class: "$INGRESS_CLASS"
+spec:
+  rules:
+  - host: rabbitmq-$TENANT.$INGRESS_DOMAIN
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: $APP
+            port:
+              number: 15672
+EOF
+
+
+
+
+
+  log "Waiting for readiness"
+  kubectl rollout status statefulset/$APP -n "$NAMESPACE" --timeout=10m
+
+  emit_json "SUCCESS"
+}
+
+########################################
+# Delete
+########################################
+delete_rabbitmq() {
+  kubectl delete ns "$NAMESPACE" --ignore-not-found
+}
+
+########################################
+# Get Info (extended)
+########################################
+get_application_info() {
+cat <<EOF
+{
+  "tenant": {
+    "name": "$TENANT",
+    "namespace": "$TENANT"
+  },
+
+  "service": {
+    "service_name": "rabbitmq",
+    "cluster_dns": "rabbitmq.$TENANT.svc.cluster.local",
+
+    "endpoints": {
+      "amqp": "amqp://rabbitmq.$TENANT.svc.cluster.local:5672",
+      "management_ui": "http://rabbitmq.$TENANT.svc.cluster.local:15672",
+      "metrics": "http://rabbitmq-metrics.$TENANT.svc.cluster.local:9419"
+    },
+
+    "ports": {
+      "amqp": 5672,
+      "management": 15672,
+      "metrics": 9419
+    },
+
+    "auth": {
+      "username": "$USERNAME",
+      "password": "$PASSWORD",
+      "secret_name": "$AUTH_SECRET"
+    },
+
+    "clustering": {
+      "replicas": 3,
+      "peer_discovery": "kubernetes",
+      "headless_service": "rabbitmq.$TENANT.svc.cluster.local"
+    },
+
+    "storage": {
+      "size": "20Gi",
+      "class": "cinder-standard"
+    },
+
+    "monitoring": {
+      "enabled": true,
+      "service_monitor": true,
+      "scrape_interval": "30s",
+      "exporter_port": 15692
+    },
+    "ingress": {
+      "enabled": true,
+      "class": "nginx",
+      "host": "rabbitmq-$TENANT.$INGRESS_DOMAIN",
+      "path": "/",
+      "port": 80,
+      "management_ui": "http://rabbitmq-$TENANT.$INGRESS_DOMAIN"
+    },
+
+
+    "security": {
+      "namespace_isolated": true,
+      "auth_mechanism": "basic",
+      "erlang_cookie_secret": "$ERLANG_SECRET"
+    },
+
+    "logging": {
+      "enabled": true,
+      "collector": "fluent-bit",
+      "mode": "daemonset",
+      "watched_namespace": "$TENANT",
+      "container_log_path": "/var/log/containers/*$TENANT*.log",
+      "tag_format": "tenant.$TENANT.rabbitmq"
+    }
+  }
+}
+EOF
+
+}
+
+########################################
+# Dispatcher
+########################################
+case "$1" in
+  install-rabbitmq) install_rabbitmq ;;
+  delete-rabbitmq) delete_rabbitmq ;;
+  get-application-info) get_application_info ;;
+  *) echo "Usage: $0 {install-rabbitmq|delete-rabbitmq|get-application-info}"; exit 1 ;;
+esac
