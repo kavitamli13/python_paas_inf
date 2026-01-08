@@ -33,6 +33,8 @@ RABBITMQ_MEM_REQUEST="1Gi"
 RABBITMQ_CPU_LIMIT="2"
 RABBITMQ_MEM_LIMIT="2Gi"
 
+USERNAME=$(kubectl get secret -n "$NAMESPACE" "$AUTH_SECRET" -o jsonpath='{.data.username}' | base64 --decode)
+PASSWORD=$(kubectl get secret -n "$NAMESPACE" "$AUTH_SECRET" -o jsonpath='{.data.password}' | base64 --decode)
 
 
 log() { echo "[RMQ][$TENANT] $*" >&2; }
@@ -193,7 +195,7 @@ stringData:
   erlang-cookie: $(openssl rand -base64 32)
 EOF
 
-  # (RabbitMQ StatefulSet, services, ServiceMonitor unchanged — omitted for brevity)
+  # (RabbitMQ StatefulSet, services, ServiceMonitor unchanged â€” omitted for brevity)
 
   ########################################
   # Headless Service (for clustering)
@@ -259,6 +261,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 30
       securityContext:
+        fsGroup: 999
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -268,7 +271,6 @@ spec:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
           runAsUser: 999
-          readOnlyRootFilesystem: true
           capabilities:
             drop:
               - ALL
@@ -479,3 +481,4 @@ case "$1" in
   get-application-info) get_application_info ;;
   *) echo "Usage: $0 {install-rabbitmq|delete-rabbitmq|get-application-info}"; exit 1 ;;
 esac
+
