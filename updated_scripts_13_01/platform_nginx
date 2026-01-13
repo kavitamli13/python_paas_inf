@@ -1,0 +1,310 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+############################################
+# PLATFORM NGINX (INGRESS) INSTALLER
+# Global private cloud routing tier
+############################################
+
+# ---------------------------
+# Defaults (overridable)
+# ---------------------------
+PLATFORM_NAMESPACE="${PLATFORM_NAMESPACE:-platform-ingress}"
+INGRESS_CLASS_NAME="${INGRESS_CLASS_NAME:-platform-nginx}"
+REPLICA_COUNT="${REPLICA_COUNT:-3}"
+SERVICE_TYPE="${SERVICE_TYPE:-NodePort}"   # NodePort | LoadBalancer | ClusterIP
+ENABLE_METRICS="${ENABLE_METRICS:-true}"
+HTTP_NODEPORT="${HTTP_NODEPORT:-30080}"
+HTTPS_NODEPORT="${HTTPS_NODEPORT:-30443}"
+WAIT_TIMEOUT="${WAIT_TIMEOUT:-300s}"
+
+# ---------------------------
+# Helpers
+# ---------------------------
+log() { echo "[platform-nginx] $*"; }
+
+# ---------------------------
+# Preflight
+# ---------------------------
+command -v kubectl >/dev/null 2>&1 || { echo "kubectl not found"; exit 1; }
+
+log "Installing platform NGINX ingress"
+log "Namespace     : $PLATFORM_NAMESPACE"
+log "IngressClass  : $INGRESS_CLASS_NAME"
+log "Replicas      : $REPLICA_COUNT"
+log "Service type  : $SERVICE_TYPE"
+
+# ---------------------------
+# Namespace
+# ---------------------------
+kubectl get ns "$PLATFORM_NAMESPACE" >/dev/null 2>&1 || \
+kubectl create ns "$PLATFORM_NAMESPACE"
+
+# ---------------------------
+# RBAC
+# ---------------------------
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: platform-nginx
+  namespace: ${PLATFORM_NAMESPACE}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: platform-nginx
+rules:
+- apiGroups: [""]
+  resources: [configmaps, endpoints, nodes, pods, secrets, services, namespaces]
+  verbs: [get, list, watch]
+- apiGroups: ["networking.k8s.io"]
+  resources: [ingresses, ingressclasses]
+  verbs: [get, list, watch]
+- apiGroups: ["networking.k8s.io"]
+  resources: [ingresses/status]
+  verbs: [update]
+- apiGroups: ["coordination.k8s.io"]
+  resources: [leases]
+  verbs: [get, create, update]
+- apiGroups: [""]
+  resources: [events]
+  verbs: [create, patch]
+- apiGroups: ["discovery.k8s.io"]
+  resources: [endpointslices]
+  verbs: [get, list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: platform-nginx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: platform-nginx
+subjects:
+- kind: ServiceAccount
+  name: platform-nginx
+  namespace: ${PLATFORM_NAMESPACE}
+EOF
+
+# ---------------------------
+# IngressClass
+# ---------------------------
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: ${INGRESS_CLASS_NAME}
+spec:
+  controller: k8s.io/ingress-nginx
+EOF
+
+# ---------------------------
+# Global ConfigMap
+# ---------------------------
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: platform-nginx-config
+  namespace: ${PLATFORM_NAMESPACE}
+data:
+  proxy-body-size: "100m"
+  proxy-read-timeout: "3600"
+  proxy-send-timeout: "3600"
+  use-forwarded-headers: "true"
+  enable-real-ip: "true"
+  compute-full-forwarded-for: "true"
+  server-tokens: "false"
+  log-format-escape-json: "true"
+  ssl-protocols: "TLSv1.2 TLSv1.3"
+EOF
+
+# ---------------------------
+# Default backend deployment (404)
+# ---------------------------
+cat <<EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-nginx-default-backend
+  namespace: ${PLATFORM_NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: platform-nginx-default-backend
+  template:
+    metadata:
+      labels:
+        app: platform-nginx-default-backend
+    spec:
+      containers:
+      - name: default-backend
+        image: k8s.gcr.io/defaultbackend-amd64:1.5
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+EOF
+
+# ---------------------------
+# Default backend service
+# ---------------------------
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: platform-nginx-default-backend
+  namespace: ${PLATFORM_NAMESPACE}
+spec:
+  selector:
+    app: platform-nginx-default-backend
+  ports:
+    - port: 80
+      targetPort: 8080
+EOF
+
+# ---------------------------
+# Controller Deployment (fixed)
+# ---------------------------
+cat <<EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-nginx-controller
+  namespace: ${PLATFORM_NAMESPACE}
+spec:
+  replicas: ${REPLICA_COUNT}
+  selector:
+    matchLabels:
+      app: platform-nginx
+  template:
+    metadata:
+      labels:
+        app: platform-nginx
+    spec:
+      serviceAccountName: platform-nginx
+      containers:
+      - name: controller
+        image: registry.k8s.io/ingress-nginx/controller:v1.11.1
+        args:
+          - /nginx-ingress-controller
+          - --ingress-class=${INGRESS_CLASS_NAME}
+          - --controller-class=k8s.io/ingress-nginx
+          - --watch-ingress-without-class=false
+          - --configmap=${PLATFORM_NAMESPACE}/platform-nginx-config
+          - --enable-metrics=${ENABLE_METRICS}
+          - --default-backend-service=${PLATFORM_NAMESPACE}/platform-nginx-default-backend
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        ports:
+          - name: http
+            containerPort: 80
+          - name: https
+            containerPort: 443
+          - name: metrics
+            containerPort: 10254
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 10254
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 10254
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+EOF
+
+# ---------------------------
+# NodePort Service
+# ---------------------------
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: platform-nginx
+  namespace: ${PLATFORM_NAMESPACE}
+spec:
+  type: NodePort
+  selector:
+    app: platform-nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: ${HTTP_NODEPORT}
+    - name: https
+      port: 443
+      targetPort: 443
+      nodePort: ${HTTPS_NODEPORT}
+EOF
+
+# ---------------------------
+# Wait for readiness
+# ---------------------------
+log "Waiting for controller to be ready..."
+kubectl rollout status deployment/platform-nginx-controller \
+  -n "$PLATFORM_NAMESPACE" --timeout="$WAIT_TIMEOUT"
+
+# ---------------------------
+# Discover endpoint
+# ---------------------------
+log "Discovering service endpoint..."
+EXTERNAL_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+ENDPOINT="${EXTERNAL_IP}"
+HTTP_ENDPOINT="http://${ENDPOINT}:${HTTP_NODEPORT}"
+HTTPS_ENDPOINT="https://${ENDPOINT}:${HTTPS_NODEPORT}"
+
+# ---------------------------
+# Final JSON
+# ---------------------------
+cat <<EOF
+{
+  "status": "SUCCESS",
+  "component": "platform-nginx",
+  "namespace": "${PLATFORM_NAMESPACE}",
+  "ingressClass": "${INGRESS_CLASS_NAME}",
+  "replicas": ${REPLICA_COUNT},
+  "service": {
+    "name": "platform-nginx",
+    "type": "NodePort",
+    "http": "${HTTP_ENDPOINT}",
+    "https": "${HTTPS_ENDPOINT}"
+  },
+  "metrics": {
+    "enabled": ${ENABLE_METRICS}
+  },
+  "usage": {
+    "description": "Global platform ingress. All product ingresses must use ingressClassName=${INGRESS_CLASS_NAME}"
+  }
+}
+EOF
