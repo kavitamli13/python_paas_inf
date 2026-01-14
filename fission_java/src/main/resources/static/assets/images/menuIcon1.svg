@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="menuIcon1" transform="translate(-26 -241)">
+    <g id="Rectangle_1011" data-name="Rectangle 1011" transform="translate(26 241)" fill="#fff" stroke="#fff" stroke-width="1">
+      <rect width="18" height="4" rx="2" stroke="none"/>
+      <rect x="0.5" y="0.5" width="17" height="3" rx="1.5" fill="none"/>
+    </g>
+    <rect id="Rectangle_1016" data-name="Rectangle 1016" width="5" height="4" rx="2" transform="translate(45 241)" fill="#fff"/>
+    <g id="Rectangle_1012" data-name="Rectangle 1012" transform="translate(26 251)" fill="#fff" stroke="#fff" stroke-width="1">
+      <rect width="18" height="4" rx="2" stroke="none"/>
+      <rect x="0.5" y="0.5" width="17" height="3" rx="1.5" fill="none"/>
+    </g>
+    <rect id="Rectangle_1015" data-name="Rectangle 1015" width="5" height="4" rx="2" transform="translate(45 251)" fill="#fff"/>
+    <g id="Rectangle_1013" data-name="Rectangle 1013" transform="translate(26 261)" fill="#fff" stroke="#fff" stroke-width="1">
+      <rect width="18" height="4" rx="2" stroke="none"/>
+      <rect x="0.5" y="0.5" width="17" height="3" rx="1.5" fill="none"/>
+    </g>
+    <rect id="Rectangle_1014" data-name="Rectangle 1014" width="5" height="4" rx="2" transform="translate(45 261)" fill="#fff"/>
+  </g>
+</svg>
