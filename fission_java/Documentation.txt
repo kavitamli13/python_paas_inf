@@ -1,0 +1,271 @@
+
+
+Using existing VM - all configurations completed
+
+minikube start --driver=docker --force
+
+
+https://fission.io/docs/installation/
+
+kubectl create namespace fission
+
+https://github.com/fission/fission/tree/main/crds/v1
+
+kubectl create -k "github.com/fission/fission/crds/v1?ref=v1.21.0"
+
+
+
+helm repo add fission-charts https://fission.github.io/fission-charts/
+
+--for ghcr.io issue, close the VMs,  connect to personal hotspot/USB tethering and changed network setttings for VM as Bridged Adapter and then provide the appropriate driver details (For USB it is Remote NDIS) -- For driver details go to network settings and view the connected network details
+
+helm repo update
+
+
+--For minikube
+helm install --version v1.21.0 --namespace fission fission \
+  --set serviceType=NodePort,routerServiceType=NodePort \
+  fission-charts/fission-all
+  
+
+I1118 15:03:20.943459   20547 warnings.go:110] "Warning: metadata.name: this is used in Pod names and hostnames, which can result in surprising behavior; a DNS label is recommended: [must not contain dots]"
+NAME: fission
+LAST DEPLOYED: Tue Nov 18 15:03:17 2025
+NAMESPACE: fission
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+1. Install the client CLI.
+
+Mac:
+  $ curl -Lo fission https://github.com/fission/fission/releases/download/v1.21.0/fission-v1.21.0-darwin-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+
+Linux:
+  $ curl -Lo fission https://github.com/fission/fission/releases/download/v1.21.0/fission-v1.21.0-linux-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+
+Windows:
+  For Windows, you can use the linux binary on WSL. Or you can download this windows executable: https://github.com/fission/fission/releases/download/v1.21.0/fission-v1.21.0-windows-amd64.exe
+
+2. You're ready to use Fission!
+  You can create fission resources in the namespace "default"
+
+  # Create an environment
+  $ fission env create --name nodejs --image ghcr.io/fission/node-env --namespace default
+
+  # Get a hello world
+  $ curl https://raw.githubusercontent.com/fission/examples/master/nodejs/hello.js > hello.js
+
+  # Register this function with Fission
+  $ fission function create --name hello --env nodejs --code hello.js --namespace default
+
+  # Run this function
+  $ fission function test --name hello --namespace default
+  Hello, world!
+
+  
+ https://fission.io/docs/installation/env_vars/#fission-router-address
+export FISSION_ROUTER=$(minikube ip):$(kubectl -n fission get svc router -o jsonpath='{...nodePort}')
+ 
+  
+  
+fission env create --name nodejs --image ghcr.io/fission/node-env --namespace default
+
+curl https://raw.githubusercontent.com/fission/examples/master/nodejs/hello.js > hello.js
+
+fission function create --name hello --env nodejs --code hello.js --namespace default
+
+fission function test --name='hello' --namespace='default'
+
+
+
+--Installing Fission UI
+--Copy the fission-ui-master code to VM
+--go inside the directory
+
+
+kubectl create -f docker/fission-ui.yaml
+
+--error: resource mapping not found for name: "fission-ui" namespace: "fission" from "docker/fission-ui.yaml": no matches for kind "Deployment" in version "extensions/v1beta1"
+ensure CRDs are installed first
+-- due to kubernetes version for the yaml file - need to make some changes in yaml file
+1. apiVersion: extensions/v1beta1 -- change it to apiVersion: apps/v1
+2. spec:
+     replicas: 1
+	 template:
+	   metadata:
+	     labels:
+		   svc: fission-ui
+		   
+   change these lines as below
+   spec:
+     replicas: 1
+	 selector:
+	   matchLabels:
+	     app: fission-ui
+	 template:
+	   metadata:
+	     labels:
+		   app: fission-ui
+ 
+
+kubectl create -f docker/fission-ui.yaml
+
+--You can then access the ui via node_ip:31319 or the load balancer.
+
+
+vboxuser@master-node:~/Fission/fission-ui-master$ kubectl get svc -n fission
+NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)         AGE
+executor          ClusterIP   10.97.56.215     <none>        80/TCP          41m
+fission-ui        NodePort    10.105.228.196   <none>        80:31319/TCP    45s
+router            NodePort    10.102.185.61    <none>        80:31314/TCP    41m
+storagesvc        ClusterIP   10.98.242.170    <none>        80/TCP          41m
+webhook-service   NodePort    10.109.16.58     <none>        443:31283/TCP   41m
+
+Nodeport for ui is  10.105.228.196 : 31319
+
+
+
+inet 10.18.243.190/24 
+
+
+--Controller pod is not found. Might have been missed during installation
+
+
+helm upgrade --install fission fission-charts/fission-all --namespace=fission --set controller.enabled=true --set serviceType=NodePort
+
+
+==========================================
+
+
+Steps to create an HTTP endpoint
+Create the function with a route: Use the fission function create command and include the --route flag to define the URL path for your function.
+Example: fission function create --name my-func --env python --code handler.py --route /my-path.
+This command creates a function named my-func, loads the code from handler.py (for Python), and links it to the HTTP route /my-path.
+Find the Fission router address: The endpoint will use the address of the Fission router service. To find this, you can use kubectl get svc --namespace fission and look for the service named fission-router.
+If you're testing locally with Minikube, you can use minikube service fission-router --namespace fission -n http://localhost:3000 to get the local address.
+Combine the addresses: Once you have both the router address and the route path, combine them to get the full endpoint URL.
+Example: http://localhost:3000/my-path.
+Use the endpoint: You can now use this URL to make an HTTP request to your function, for example, by using curl http://<fission-router-address>/<your-route>. 
+
+
+
+fission env create --name nodejs --image ghcr.io/fission/node-env --namespace fission
+
+fission function create --name hello --env nodejs --code hello.js --namespace fission
+
+
+fission httptrigger create --name hello-trigger --function hello --url /hello --namespace fission
+
+kubectl get httptriggers -n fission
+
+kubectl get svc -n fission
+NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)         AGE
+executor          ClusterIP   10.103.111.249   <none>        80/TCP          5m1s
+router            NodePort    10.110.210.77    <none>        80:31314/TCP    5m1s
+storagesvc        ClusterIP   10.107.36.183    <none>        80/TCP          5m1s
+webhook-service   NodePort    10.110.25.172    <none>        443:32015/TCP   5m1s
+
+
+
+
+kubectl get nodes -o wide
+NAME       STATUS   ROLES           AGE    VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
+minikube   Ready    control-plane   126d   v1.33.1   192.168.49.2   <none>        Ubuntu 22.04.5 LTS   6.8.0-64-generic   docker://28.1.1
+vboxuser@master-node:~$ curl http://192.168.49.2:31314/hello
+404 page not found
+
+
+
+
+
+
+https://fission.io/docs/usage/languages/python/
+fission environment create --name python --image ghcr.io/fission/python-env
+
+fission function create --name hellopy --env python --code hello-python.py
+
+fission route create --method GET --url /hellopy --function hellopy
+
+
+curl $FISSION_ROUTER/hellopy
+curl 192.168.49.2:31314/hellopy
+
+
+--Prometheus Integration
+
+helm upgrade fission fission-charts/fission-all \
+-n fission \
+--reuse-values \
+--set router.metrics.enabled=true \
+--set executor.metrics.enabled=true 
+
+kubectl get pods -n fission
+
+
+kubectl port-forward svc/router -n fission 8888:80
+
+
+localhost:8888/metrics
+
+
+fission-service-monitor.yaml
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fission-router-servicemonitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      svc: router
+  namespaceSelector:
+    matchNames:
+      - fission
+  endpoints:
+    - port: http
+      interval: 15s
+      path: /metrics
+	  
+	  
+kubectl apply -f fission-service-monitor.yaml
+
+
+kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090:9090
+
+http://localhost:9090
+
+
+fission_function_calls
+
+kubectl apply -f fission-service-monitor.yaml
+
+
+
+
+
+
+
+ 1042  helm upgrade fission fission-charts/fission-all -n fission --reuse-values --set analytics=false --set enablePrometheus=true --set enableRouterMetrics=true --set enableExecutorMetrics=true
+ 1043  kubectl rollout status deployment/router -n fission
+ 1044  kubectl rollout status deployment/executor -n fission
+ 1045  kubectl get deployment router -n fission -o yaml | grep -A3 ports
+ 1046  kubectl port-forward svc/router -n fission 8080:8080
+ 1047  kubectl get svc router -n fission -o yaml
+ 1048  kubectl patch svc router -n fission --type='json' -p='[{"op":"add","path":"/spec/ports/-","value":{"name":"metrics","port":8080,"targetPort":8080}}]'
+ 1049  kubectl get svc router -n fission -o yaml
+ 1050  kubectl patch svc router -n fission --type='json' -p='[{"op":"replace","path":"/spec/ports/0/name","value":"http"}]'
+ 1051  kubectl patch svc router -n fission --type='json' -p='[{"op":"add","path":"/spec/ports/-","value":{"name":"metrics","port":8080,"targetPort":8080}}]'
+ 1052  kubectl get svc router -n fission -o yaml
+ 1053  kubectl port-forward svc/router -n fission 9090:8080
+ 1054  kubectl get deploy router -n fission -o yaml
+ 1055  kubectl get deploy router -n fission -o yaml | grep router
+ 1056  kubectl get deploy router -n fission -o yaml
+ 1057  kubectl patch deploy router -n fission --type=json -p='[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--routerMetrics=true"}]'
+ 
+ 
+ 
+ 

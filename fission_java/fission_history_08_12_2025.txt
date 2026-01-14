@@ -1,0 +1,1102 @@
+  487  mysql -u root -p
+  488  mysql -u
+  489  mysql -u root
+  490  sudo mysql_secure_installation
+  491  clear
+  492  mysql -u root
+  493  sudo mysql
+  494  mysql -u root -p
+  495  ls CO
+  496  ls Codebase/
+  497  clear
+  498  ls
+  499  ls Codebase/
+  500  cd Codebase/
+  501  pwd
+  502  mysqldump -u root -p knative_dev > /home/vboxuser/Codebase/schema.sql
+  503  mysql -u root -p
+  504  mysqldump -u root -p knative_dev > \home\vboxuser\Codebase\schema.sql
+  505  mysql -u root -p
+  506  mysqldump -u root -p knative_dev > \home\vboxuser\Codebase\schema.sql
+  507  clear
+  508  mysql -u root -p
+  509  clear
+  510  func list
+  511  minikube start --driver=docker --force
+  512  func list
+  513  func delete sprintt1
+  514  func delete springt1
+  515  func list
+  516  func delete springt1
+  517  func list
+  518  func delete springt1
+  519  wget https://ghcr.io
+  520  clea
+  521  clear
+  522  docker run -d -p 5000:5000 --name python1 kavitamil13/python1
+  523  docker ps -a
+  524  docker logs d63da45c1b8e
+  525  ls
+  526  cd python1/
+  527  ls
+  528  nano function/func.py 
+  529  nano function/__init__.py 
+  530  nano function/func.py 
+  531  docker images
+  532  docker rmi a6b7ce5636c5
+  533  docker rmi -f a6b7ce5636c5
+  534  docker ps -a
+  535  docker rm d63da45c1b8e
+  536  docker rm 13ba33bc67ad
+  537  clear
+  538  nano func.yaml 
+  539  clear
+  540  func build
+  541  docker images
+  542  docker run -d -p 5000:5000 --name python1 kavitamil13/python1
+  543  docker ps
+  544  docker ps -a
+  545  docker logs 9889e79f78f2
+  546  nano function/func.py 
+  547  func deploy
+  548  kubectl get pods
+  549  kubectl logs python1-00003-deployment-597fb6b89d-tw8jc
+  550  kubectl describe pods python1-00003-deployment-597fb6b89d-tw8jc
+  551  clear
+  552  curl http://localhost:8085
+  553  docker logs db3b7a50905d
+  554  wget http://localhost:8085/testFunction
+  555  docker logs db3b7a50905d
+  556  wget http://localhost:8085/testFunction
+  557  curl http://localhost:8085
+  558  curl http://localhost:8085/testFunction
+  559  curl -X POST http://localhost:8085/testFunction
+  560  cd ..
+  561  cd springt1/
+  562  ls
+  563  nano pom.xml 
+  564  func list
+  565  func delete springt1
+  566  docker images
+  567  docker rmi 4146c4bc783e
+  568  clear
+  569  func build --v
+  570  func build -v
+  571  func build --verbose
+  572  docker images
+  573  docker rmi fed4ec74cd3f
+  574  docker images
+  575  clear
+  576  func build --verbose
+  577  docker images
+  578  clear
+  579  func build --verbose
+  580  clear
+  581  mvn dependency:tree -Dincludes=org.bouncycastle
+  582  func build --verbose
+  583  mvn clean install -U
+  584  func build --verbose
+  585  mvn dependency:tree | grep bc
+  586  clear
+  587  func build --verbose
+  588  docker images
+  589  func deploy --verbose
+  590  mvn dependency:tree | grep jo
+  591  mvn package -Dmaven.repo.remote=https://repo1.maven.org/maven2/joda-time/joda-time/2.1/joda-time-2.1.jar
+  592  mvn dependency:tree -Dincludes=org.joda
+  593  mvn clean install -U
+  594  clear
+  595  ls
+  596  nano func.yaml 
+  597  func deploy
+  598  func deploy -v
+  599  clear
+  600  cd ..
+  601  mkdir Knative_images
+  602  cd Knative_images/
+  603  kubectl create ns knative-functions
+  604  nano csharp03061
+  605  kubectl apply -f csharp03061.yaml -n knative-functions
+  606  mv csharp03061 csharp03061.yaml
+  607  kubectl apply -f csharp03061.yaml -n knative-functions
+  608  kubectl get ksvc -n knative-functions
+  609  kubectl get pdos
+  610  kubectl get pods
+  611  kubectl get pods -n knative-functions
+  612  kubectl get deployments
+  613  kubectl get ksvc -n knative-functions
+  614  kubectl get deployments -n knative-functions
+  615  kubectl get deployments
+  616  kubectl get ksvc
+  617  kubectl describe ksvc -n knative-functions
+  618  curl https://index.docker.io/v2
+  619  sudo nano /etc/resolv.conf 
+  620  curl https://index.docker.io/v2
+  621  wget https://index.docker.io/v2
+  622  wget https://google.com
+  623  cd ..
+  624  func create -l python python2
+  625  cd python2
+  626  ls
+  627  nano function/func.py 
+  628  rm function/func.py 
+  629  nano function/func.py
+  630  func build
+  631  func deploy
+  632  docker images
+  633  docker ps -a
+  634  docker rm 9889e79f78f2
+  635  docker run -d -p 5000:5000 --name python2 kavitamil13/python2
+  636  docker ps
+  637  docker ps -a
+  638  docker logs 567063044ccd
+  639  kubectl get pods
+  640  kubectl describe pods python2-00001-deployment-5bdfdb496b-pkz4x
+  641  kubectl get pods
+  642  func list
+  643  kubectl get ksvc
+  644  func
+  645  cd ..
+  646  clear
+  647  ls
+  648  cd gotest1
+  649  ls
+  650  nano handle.go 
+  651  cd ..
+  652  cd springt1/
+  653  ls
+  654  func list
+  655  docker images
+  656  docker rmi 90438c82a6a4 f888cc604b7e 28808558cf3d
+  657  docker images
+  658  clear
+  659  func build
+  660  docker images
+  661  docker ps -a
+  662  docker rm 567063044ccd
+  663  docker run -d -p 5000:5000 --name springt1 kavitamil13/springt1
+  664  docker ps
+  665  ls
+  666  nano src/main/java/functions/CloudFunctionApplication.java 
+  667  nano src/main/java/functions/resource/testRes.java 
+  668  docker ps
+  669  docker stop db3b7a50905d
+  670  docker rm db3b7a50905d
+  671  docker run -d -p 8085:8085 --name springt1 kavitamil13/springt1
+  672  docker ps
+  673  docker logs 648928bc9b1b
+  674  docker ps
+  675  docker stop 648928bc9b1b
+  676  docker rm 648928bc9b1b
+  677  clearrr
+  678  clear
+  679  ls
+  680  nano func.yaml 
+  681  docker ps
+  682  func deploy
+  683  clear
+  684  nano src/main/java/functions/CloudFunctionApplication.java 
+  685  ls /workspace
+  686  sudo ls /workspace
+  687  ls /workspace
+  688  ls -a
+  689  cd ..
+  690  func create -l spring spring2
+  691  func create -l springboot spring2
+  692  cd spring2
+  693  nano pom.xml 
+  694  echo 
+  695  echo $JAVA_HOME
+  696  env
+  697  which java
+  698  cd /usr/bin/java
+  699  ls /usr/bin/
+  700  ls -l /usr/bin/java
+  701  ls -l /etc/alternatives/java
+  702  ls /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+  703  cd /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+  704  cd /usr/lib/jvm/java-8-openjdk-amd64/jre/bin
+  705  ls
+  706  cd ..
+  707  ls
+  708  cd /usr/lib/jvm/java-8-openjdk-amd64
+  709  ls
+  710  cd lib
+  711  ls
+  712  ls -a
+  713  find / -name java.security
+  714  sudo find / -name java.security
+  715  cd ..
+  716  cd jre/lib/security/
+  717  ls
+  718  nano java.security 
+  719  cd /home/vboxuser/
+  720  clear
+  721  cd springt1/src/main/java/
+  722  cd functions/
+  723  ls
+  724  nano WebClientConfig.java
+  725  minikube start --driver=docker --force
+  726  sudo nano /etc/resolv.conf 
+  727  clear
+  728  cd Knative_images/
+  729  kubectl apply -f csharp03061.yaml 
+  730  kubectl apply -f csharp03061.yaml -n knative-functions
+  731  kubcetl get ksvc
+  732  kubectl get ksvc
+  733  kubectl delete ksvc csharp03061
+  734  kubectl get ksvc
+  735  kubectl get ksvc -n knative-functions
+  736  kubectl delete ksvc csharp03061 -n knative-functions
+  737  clear
+  738  kubectl get pods
+  739  kubectl get pods -n knative-functions
+  740  clear
+  741  docker login -u kavitamil13
+  742  kubectl get pods -n knative-functions
+  743  kubectl get pods
+  744  kubectl get pods -n knative-functions
+  745  clear
+  746  kubectl apply -f csharp03061.yaml -n knative-functions
+  747  kubectl get ksvc -n knative-functions
+  748  curl http://csharp03061.knative-functions.127.0.0.1.kns.io
+  749  curl -H "Host: csharp03061.knative-functions.127.0.0.1.kns.io" http://192.168.49.2:31447
+  750  nano python03065.yaml
+  751  kubectl apply -f python03065.yaml -n knative-functions
+  752  curl -H "Host: python03065.knative-functions.127.0.0.1.kns.io" http://192.168.49.2:31447
+  753  kubectl get ksvc -n knative-functions
+  754  kubectl get pods -n knative-serving
+  755  kubectl get pods -n knative-functions
+  756  curl -H "Host: python03065.knative-functions.127.0.0.1.kns.io" http://192.168.49.2:31447
+  757  clear
+  758  nano java03064.yaml
+  759  kubectl apply -f java03064.yaml -n knative-functions
+  760  kubectl get ksvc -n knative-functions
+  761  kubectl get pods -n knative-functions
+  762  nano java03064.yaml
+  763  kubectl delete ksvc java03064 -n knative-functions
+  764  nano javafunc4.yaml
+  765  kubectl apply -f javafunc4.yaml -n knative-functions
+  766  kubectl get ksvc -n knative-functions
+  767  curl -H "Host: javafunc4.knative-functions.127.0.0.1.kns.io" http://192.168.49.2:31447
+  768  cd /media/sf_VM/
+  769  ls
+  770  cd Codebase/
+  771  ls
+  772  cd UI_Files_version2/
+  773  ls
+  774  minikube start --driver=docker --force
+  775  cd Codebase/JAVA/
+  776  ls
+  777  java -jar target/openfaas-dev.jar 
+  778  clear
+  779  mvn clean install -DskipTests
+  780  java -jar target/openfaas-dev.jar 
+  781  clear
+  782  mvn clean install -DskipTests
+  783  java -jar target/openfaas-dev.jar 
+  784  mvn clean install -DskipTests
+  785  java -jar target/openfaas-dev.jar 
+  786  mvn clean install -DskipTests
+  787  java -jar target/openfaas-dev.jar 
+  788  mysql -u root -p
+  789  mysqldump -u root -p knative_dev > /home/vboxuser/Codebase/db_bkp_29_07_2025.sql
+  790  helm version
+  791  helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring  --create-namespace
+  792  helm search hub Prometheus
+  793  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  794  kubectl get ksvc -n prj001
+  795  curl -H "Host: http://func007.prj001.127.0.0.1.kns.io" http://192.168.49.2:31447
+  796  curl -H "Host: func007.prj001.127.0.0.1.kns.io" http://192.168.49.2:31447
+  797  kn func list
+  798  kn func -h
+  799  kn func invoke example-service-one
+  800  ls
+  801  cd gotest1
+  802  kn func invoke gotest1
+  803  curl http://func007.prj001.127.0.0.1.kns.io
+  804  wget http://func007.prj001.127.0.0.1.kns.io
+  805  curl -H "Host: func007.prj001.127.0.0.1.kns.io" http://192.168.49.2:31447
+  806  curl http://192.168.49.2:31447
+  807  curl -H "Host: func007.prj001.127.0.0.1.kns.io" http://192.168.49.2:31447
+  808  kubectl apply -f https://raw.githubusercontent.com/knative-extensions/monitoring/main/grafana/dashboards.yaml
+  809  cd Codebase/JAVA/
+  810  java -jar target/openfaas-dev.jar 
+  811  mvn clean install -DskipTests
+  812  java -jar target/openfaas-dev.jar 
+  813  mvn clean install -DskipTests
+  814  java -jar target/openfaas-dev.jar 
+  815  mvn clean install -DskipTests
+  816  java -jar target/openfaas-dev.jar 
+  817  mvn clean install -DskipTests
+  818  java -jar target/openfaas-dev.jar 
+  819  mvn clean install -DskipTests
+  820  java -jar target/openfaas-dev.jar 
+  821  helm list
+  822  helm history
+  823  helm list
+  824  helm uninstall prometheus
+  825  kubectl get pods
+  826  kubectl describe pods prometheus-kube-prometheus-admission-create-gj8gl
+  827  kubectl get pods
+  828  kubectl describe pods prometheus-kube-prometheus-admission-create-gj8gl
+  829  kubectl get pods
+  830  clear
+  831  kubectl get service
+  832  kubecl get all | grep prometheus
+  833  kubectl get all | grep prometheus
+  834  clear
+  835  kubectl --namespace default get pods -l "release=prometheus"
+  836  kubectl --namespace default get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+  837  export POD_NAME=$(kubectl --namespace default get pod -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=prometheus" -oname)
+  838  kubectl get namespace
+  839  kubectl apply -f https://github.com/knative/eventing/releases/download/knative-v1.19.0/eventing-crds.yaml
+  840  kubectl apply -f https://github.com/knative/eventing/releases/download/knative-v1.19.0/eventing-core.yaml
+  841  kubectl get pods -n knative-eventing
+  842  clear
+  843  kubectl port-forward -n default svc/prometheus-grafana 3000:80
+  844  minikube start --driver=docker --force
+  845  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  846  helm repo update
+  847  helm install prometheus prometheus-community/prometheus
+  848  kubectl get all
+  849  kubectl get pods
+  850  kubectl get service
+  851  clear
+  852  kubectl apply -f https://raw.githubusercontent.com/knative-extensions/monitoring/main/servicemonitor.yaml
+  853  helm install prometheus prometheus-community/kube-prometheus-stack -n default -f values.yaml
+  854  nano values.yaml
+  855  helm install prometheus prometheus-community/kube-prometheus-stack -n default -f values.yaml
+  856  helm -help
+  857  helm -h
+  858  helm list
+  859  helm uninstall prometheus
+  860  helm install prometheus prometheus-community/kube-prometheus-stack -n default -f values.yaml
+  861  clear
+  862  helm install prometheus prometheus-community/kube-prometheus-stack -n default -f values.yaml
+  863  kubectl apply -f https://raw.githubusercontent.com/knative-extensions/monitoring/main/servicemonitor.yaml
+  864  kubectl port-forward -n default svc/prometheus-kube-prometheus-prometheus 9090:9090
+  865  curl -sSf https://ollama.com/install.sh | sh
+  866  minikube start --driver=docker --force
+  867  clear
+  868  fission
+  869  fission function
+  870  fission function list
+  871  fission env create --name nodejsv2 --image ghcr.io/fission/node-env --namespace default
+  872  fission function create --name hellov2 --env nodejsv2 --code hello.js --namespace default
+  873  fission function --name nodejsv2 getmeta
+  874  fission function --name hellov2 getmeta
+  875  kubectl get httptriggers -n fission
+  876  kubectl get pods -n fission
+  877  kubectl get ns
+  878  kubectl get pods -n default
+  879  kubectl get httptriggers -n default
+  880  kubectl get httptriggers
+  881  kubectl describe pods poolmgr-nodejsv2-default-449154-8569f5c6b-rm6hs -n default
+  882  fission function test
+  883  fission function test --nameee='hellov2'
+  884  fission function test --name='hellov2'
+  885  kubectl create namespace fission-functions
+  886  fission env create --name nodejsv3 --image ghcr.io/fission/node-env --namespace fission-functions
+  887  fission function create --name hellov3 -env nodejsv3 --code hello.js --namespace fission-functions --route /hellov3
+  888  fission function create --name hellov3 --env nodejsv3 --code hello.js --namespace fission-functions --route /hellov3
+  889  fission function create --name hellov3 --env nodejsv3 --code hello.js --namespace fission-functions
+  890  fission httptrigger create --name hellov3-trigger --function hellov3 --url /hellov3 --namespace fission-functions
+  891  kubectl get httptriggers -n fission-functions
+  892  kubectl get svc -n fission-functions
+  893  kubectl get svc -n fission
+  894  kubectl delete namespace fission
+  895  kubectl delete namespace fission-ui
+  896  kubectl delete namespace fission-functions
+  897  kubectl get ns
+  898  helm uninstall fission
+  899  helm 
+  900  helm lissst
+  901  helm list
+  902  helm uninstall
+  903  helm show
+  904  helm show all
+  905  helm install --version v1.21.0 --namespace fission fission   --set serviceType=NodePort,routerServiceType=NodePort   fission-charts/fission-all
+  906  kubectl create namespace fission
+  907  kubectl create -k "github.com/fission/fission/crds/v1?ref=v1.21.0"
+  908  helm uninstall -n fission
+  909  helm uninstall fission -n fission
+  910  helm list -n fission
+  911  helm list --sll-namespaces
+  912  helm list --all-namespaces
+  913  clear
+  914  kubectl delete crd
+  915  kubectl get crd
+  916  kubectl delete crd environments.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io packages.fission.io timetriggers.fission.io
+  917  helm install --version v1.21.0 --namespace fission fission   --set serviceType=NodePort,routerServiceType=NodePort   fission-charts/fission-all
+  918  fission env create --name nodejs --image ghcr.io/fission/node-env --namespace fission
+  919  kubectl create -k "github.com/fission/fission/crds/v1?ref=v1.21.0"
+  920  kubectl delete crd environments.fission.io functions.fission.io httptriggers.fission.io kuberneteswatchtriggers.fission.io messagequeuetriggers.fission.io packages.fission.io timetriggers.fission.io canaryconfigs.fission.io
+  921  kubectl create -k "github.com/fission/fission/crds/v1?ref=v1.21.0"
+  922  helm install --version v1.21.0 --namespace fission fission   --set serviceType=NodePort,routerServiceType=NodePort   fission-charts/fission-all
+  923  fission env create --name nodejs --image ghcr.io/fission/node-env --namespace fission
+  924  fission function create --name hello --env nodejs --code hello.js --namespace fission
+  925  fission httptrigger create --name hello-trigger --function hello --url /hello --namespace fission
+  926  kubecctl get httptriggers -n fission
+  927  kubectl get httptriggers -n fission
+  928  kubectl get svc -n fission
+  929  curl http://10.110.210.77:31314/hello
+  930  kubectl get nodes -o wide
+  931  curl http://192.168.49.2:31314/hello
+  932  kubectl get functions -n fission
+  933  kubectl get httptriggers -n fission
+  934  kubectl get httptriggers -n fission -o wide
+  935  kubectl get pods -n fission
+  936  kubectl delete httptrigger hello-trigger -n fission
+  937  fission httptrigger create --name hello-trigger --function hello --url /hellov1 --namespace fission
+  938  kubectl get httptriggers -n fission
+  939  kubectl logs -n fission -l function=hello
+  940  ~~
+  941  kubectl logs -n fission -l function=hello
+  942  kubectl get pods
+  943  kubectl get functions -n fission
+  944  kubectl get events -n fission
+  945  fission function test --name='hello'
+  946  fission function
+  947  fission function list
+  948  kubectl delete httptrigger hello-trigger -n fission
+  949  fission function create --name hello --env nodejs --code hello.js --namespace fission
+  950  fission function
+  951  fission function list -n fission
+  952  fission function pods -n fission
+  953  fission function pods --name='hello' -n fission
+  954  fission function test --name='hello' -n fission
+  955  fission function delete --name='hello'
+  956  fission function delete --name='hello' -n fission
+  957  clear
+  958  fission functions list -n fission
+  959  fission function list -n fission
+  960  kubectl get functions -n fission
+  961  kubectl get podsc -n fission
+  962  kubectl get pods -n fission
+  963  clear
+  964  fission environment create --name python --image fission/python-env
+  965  fission environment create --name python --image ghcr.io/fission/python-env
+  966  fission environment
+  967  fission environment delete python
+  968  fission environment delete --name='python'
+  969  fission environment create --name python --image ghcr.io/fission/python-env
+  970  clear
+  971  nano hello-python.py
+  972  fission function create --name hellopy --env python --code hello-python.py 
+  973  fission route create --method GET --url /hellopy --function hellopy 
+  974  $ export FISSION_ROUTER=$(minikube ip):$(kubectl -n fission get svc router -o jsonpath='{...nodePort}')
+  975  export FISSION_ROUTER=$(minikube ip):$(kubectl -n fission get svc router -o jsonpath='{...nodePort}')
+  976  kubectl --namespace fission get svc router
+  977  curl $FISSION_ROUTER/hellopy
+  978  echo FISSION_ROUTER
+  979  eCcho $FISSION_ROUTER
+  980  echo $FISSION_ROUTER
+  981  curl 192.168.49.2:31314/hellopy
+  982  nano values.yaml
+  983  nano values_fission.yaml
+  984  helm upgrade fission fission-charts/fission-all --namespace fission -f values.yaml
+  985  mysql -u root -p
+  986  ls
+  987  cd Fission/
+  988  ls
+  989  cd functions/
+  990  pwd
+  991  cd ~
+  992  clear
+  993  fission function
+  994  fission function update
+  995  mysql -u root -p
+  996  history > history_19_11_2025.txt
+  997  minikube start --driver=docker --force
+  998  java -jar /media/sf_VM/Fission/JAVA_CODE/target/openfaas-dev.jar 
+  999  cd /media/sf_VM/Fission/JAVA_CODE
+ 1000  ls
+ 1001  mvn clean install -DskipTests
+ 1002  clear
+ 1003  mvn clean install -DskipTests
+ 1004  cd ~
+ 1005  java -jar Fission/JAVA_CODE/target/fission-app.jar 
+ 1006  cd Fission/JAVA_CODE/
+ 1007  mvn clean install -DskipTests
+ 1008  java -jar target/fission-app.jar 
+ 1009  mvn clean install -DskipTests
+ 1010  java -jar target/fission-app.jar 
+ 1011  mvn clean install -DskipTests
+ 1012  java -jar target/fission-app.jar 
+ 1013  cd Fission/functions/
+ 1014  ls
+ 1015  cd prj2011/
+ 1016  ls
+ 1017  mysql -u root -p
+ 1018  ls
+ 1019  ls pyfunv62011
+ 1020  nano pyfunv62011/handler.py 
+ 1021  curl http://192.168.49.2:31314/pyfunv62011
+ 1022  fission function
+ 1023  fission function list
+ 1024  fission fn log --name pyfunv62011
+ 1025  cd ~
+ 1026  ls
+ 1027  nano hello-python.py 
+ 1028  mysqldump -u root -p knative_dev > Fission/DB_Bkp/fission_bkp_20_11_2025.sql
+ 1029  ls Fission/DB_Bkp/
+ 1030  mysqldump -u root -p knative_dev > Fission/DB_Bkp/fission_bkp_20_11_2025_2.sql
+ 1031  nano Fission/functions/prj2011/pyfunv72011/handler.py 
+ 1032  kubectl get svc router -n fission -o yaml | grep -A5 ports
+ 1033  kubectl get svc -n fission
+ 1034  kubectl get pod -n fission | grep router
+ 1035  kubectl dessscribe pod router-584cf8c7df-4lnpz -n fission | grep -A2 "Port"
+ 1036  kubectl describe pod router-584cf8c7df-4lnpz -n fission | grep -A2 "Port"
+ 1037  minikube start --driver=docker --force
+ 1038  helm upgrade fission fission-charts/fission-all -n fission --reuse-values --set router.metrics.enabled=true --set executor.metrics.enabled=true 
+ 1039  clear
+ 1040  fission function list
+ 1041  fission function getmeta --name pyfunv72011
+ 1042  kubectl get pods -n fission
+ 1043  kubectl port-forward svc/router -n fission 8888:80
+ 1044  helm upgrade fission fission-charts/fission-all -n fission --reuse-values --set router.metrics.enabled=true --set executor.metrics.enabled=true 
+ 1045  clear
+ 1046  kubectl get deployment router -n fission -o yaml | grep -i metrics
+ 1047  helm upgrade fission fission-charts/fission-all -n fission --reuse-values --set analytics=false --set enablePrometheus=true --set enableRouterMetrics=true --set enableExecutorMetrics=true
+ 1048  kubectl rollout status deployment/router -n fission
+ 1049  kubectl rollout status deployment/executor -n fission
+ 1050  kubectl get deployment router -n fission -o yaml | grep -A3 ports
+ 1051  kubectl port-forward svc/router -n fission 8080:8080
+ 1052  kubectl get svc router -n fission -o yaml
+ 1053  kubectl patch svc router -n fission --type='json' -p='[{"op":"add","path":"/spec/ports/-","value":{"name":"metrics","port":8080,"targetPort":8080}}]'
+ 1054  kubectl get svc router -n fission -o yaml
+ 1055  kubectl patch svc router -n fission --type='json' -p='[{"op":"replace","path":"/spec/ports/0/name","value":"http"}]'
+ 1056  kubectl patch svc router -n fission --type='json' -p='[{"op":"add","path":"/spec/ports/-","value":{"name":"metrics","port":8080,"targetPort":8080}}]'
+ 1057  kubectl get svc router -n fission -o yaml
+ 1058  kubectl port-forward svc/router -n fission 9090:8080
+ 1059  kubectl get deploy router -n fission -o yaml
+ 1060  kubectl get deploy router -n fission -o yaml | grep router
+ 1061  kubectl get deploy router -n fission -o yaml
+ 1062  kubectl patch deploy router -n fission --type=json -p='[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--routerMetrics=true"}]'
+ 1063  history > history_21_11_2025.txt
+ 1064  minikube start --driver=docker --force
+ 1065  kubectl rollout restart deploy/router -n fission
+ 1066  fission function list
+ 1067  fission fn test --name pyfunv72011
+ 1068  fission fn test --name='pyfunv72011'
+ 1069  kubectl get svc -n fission router
+ 1070  kubectl get svc -n fission 
+ 1071  nano router-metrics-ingress.yaml
+ 1072  minikube start --driver=docker --force
+ 1073  fission fn list
+ 1074  kubectl get deployments
+ 1075  kubectl patch statefulset prometheus -n fission -p '{"spec":{"volumeClaimTemplates": [{"metadata" {"name":"data"}, "spec": { "accessModes": ["ReadWriteOnce"], "resources": { "requests": {"storage": "10Gi"}}}}]}}'
+ 1076  kubectl get pvc -n fission
+ 1077  kubectl get pods -n fission
+ 1078  kubectl get pods -A | grep prometheus
+ 1079  kubectl get pvc -A | grep -i prometheus
+ 1080  kubectl get pvc
+ 1081  kubectl get servicemonitors -A
+ 1082  kubectl get svc -A | grep -i prometheus
+ 1083  kubectl get pvc -A | grep -i prometheus
+ 1084  kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090:9090
+ 1085  kubectl get storageclass
+ 1086  clear
+ 1087  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+ 1088  helm repo update
+ 1089  helm install fission-monitoring prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --set prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]=ReadWriteOnce --set prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage=10Gi
+ 1090  ls
+ 1091  fission function list
+ 1092  minikube start --driver=docker --force
+ 1093  fission function list
+ 1094  clear
+ 1095  kubectl get pods
+ 1096  kubectl describe pod container-pyfun1-default-babd-db21d17d9af3-6c9476fdbf-txxch
+ 1097  kubectl get pods
+ 1098  fission fn test --name='pyfun1'
+ 1099  fission fn run-container --name pyfun3 --image docker.io/kavitamil13/fission-python-demo
+ 1100  fission route create --method GET --method POST --url /pyfun3 --function pyfun3
+ 1101  fission fn test --name pyfun3
+ 1102  ls
+ 1103  nano app.py 
+ 1104  fission function run-container --name dkpythonfun271125 --image docker.io/kavitamil13/fission-python-demo  > /home/vboxuser/Fission/functions/prj2011/dkpythonfun271125.log
+ 1105  fission function run-container --name dkpythonfun271125 --image docker.io/kavitamil13/fission-python-demo
+ 1106  fission function list
+ 1107  kubectl get svc -n fission
+ 1108  minikube start --driver=docker --force
+ 1109  cd Fission/functions/
+ 1110  mkdir java28112025
+ 1111  cd java28112025/
+ 1112  mkdir -p src/main/java/io/fission/
+ 1113  curl -L https://raw.githubusercontent.com/fission/examples/main/java/hello-world/src/main/java/io/fission/HelloWorld.java   -o src/main/java/io/fission/HelloWorld.java
+ 1114  curl -LO https://raw.githubusercontent.com/fission/environments/master/jvm/examples/java/pom.xml
+ 1115  zip java-src-pkg.zip -r src/ pom.xml
+ 1116  fission package create --name hello-pkg --env java --src java-src-pkg.zip
+ 1117  fission pkg list
+ 1118  fission function create --name hello-java --env java --pkg hello-pkg --entrypoint io.fission.HelloWorld
+ 1119  fission pkg list
+ 1120  fission env
+ 1121  fission env list
+ 1122  fission environment create --name java --image ghcr.io/fission/jvm-env --builder ghcr.io/fission/jvm-builder
+ 1123  fission pkg 
+ 1124  fission pkg delete --name hello-pkf
+ 1125  fission pkg delete --name hello-pkg
+ 1126  fission pkg delete --name hello-pkg -f
+ 1127  fission fn list
+ 1128  fission fn delete --name hello-java
+ 1129  fission package create --name hello-pkg --env java --src java-src-pkg.zip
+ 1130  fission pkg list
+ 1131  kubectl get pods -n fission
+ 1132  minikube ip
+ 1133  minikube status
+ 1134  minkube
+ 1135  minikube --helm
+ 1136  minikube --help
+ 1137  minikube start --driver=docker --force
+ 1138  kubectl get pods -n fission
+ 1139  fission pkg list
+ 1140  fission pkg delete --name hello-pkg
+ 1141  fission fn list
+ 1142  cd Fission/functions/
+ 1143  fission package create --name hello-pkg --env java --src java-src-pkg.zip
+ 1144  ls
+ 1145  cd java28112025/
+ 1146  fission package create --name hello-pkg --env java --src java-src-pkg.zip
+ 1147  fission pkg list
+ 1148  fission pkg
+ 1149  fission pkg info
+ 1150  fission pkg info --name hello-pkg
+ 1151  fission function create --name hello-java --env java --pkg hello-pkg --entrypoint io.fission.HelloWorld
+ 1152  fission env create --name java --image ghcr.io/fission/jvm-env --builder ghcr.io/fission/jvm-builder --keeparchive --version 2
+ 1153  fission fn list
+ 1154  kubectl get pods
+ 1155  minikube info
+ 1156  minikube --help
+ 1157  minikube status
+ 1158  minikube stop
+ 1159  minikube start
+ 1160  minikube status
+ 1161  fission function create --name hello-java --env java --pkg hello-pkg --entrypoint io.fission.HelloWorld
+ 1162  kubectl get pods -n fission
+ 1163  kubectl describe pods -n fission webhook-5dbdfdc6cc-cd66w
+ 1164  kubectl get pods -n fission
+ 1165  fission function create --name hello-java --env java --pkg hello-pkg --entrypoint io.fission.HelloWorld
+ 1166  fission fn list
+ 1167  fission fn test --name hello-java
+ 1168  fission route create --method GET --url /hello-java --function hello-java
+ 1169  fission fn test --name hello-java
+ 1170  kubectl get svc -n fission
+ 1171  fission fn test --name hello-java
+ 1172  nano Fission/functions/java28112025/src/main/java/io/fission/HelloWorld.java 
+ 1173  fission pkg list
+ 1174  fission pkg delete --name hello-pkg
+ 1175  fission fn list
+ 1176  fission fn delete --name hello-java
+ 1177  fission pkg delete --name hello-pkg
+ 1178  fission env list
+ 1179  cd Fission/functions/java28112025/
+ 1180  fission package create --env java --src java-src-pkg.zip
+ 1181  fission pkg list
+ 1182  fission pkg info --name java-src-pkg-zip-d8ci
+ 1183  minikube start --driver=docker
+ 1184  helm list
+ 1185  helm repo list
+ 1186  helm repo remove fission-chars
+ 1187  helm repo remove fission-charts
+ 1188  fission
+ 1189  kubectl get ns
+ 1190  kubectl delete ns prj001
+ 1191  kubectl get ns
+ 1192  kubectl delete fission
+ 1193  kubectl delete ns fission
+ 1194  minikube info
+ 1195  minikube --help
+ 1196  minikube status
+ 1197  minikube start
+ 1198  fission
+ 1199  helm uninstall fission
+ 1200  helm list
+ 1201  helm 
+ 1202  helm list -n fission
+ 1203  helm show all
+ 1204  fission func lis
+ 1205  fission function list
+ 1206  kubectl delete ns fission
+ 1207  kubectl get ns
+ 1208  x
+ 1209  c
+ 1210  minikube status
+ 1211  minikube start
+ 1212  minikube status
+ 1213  minikube delete
+ 1214  minikube start
+ 1215  kubectl get ns
+ 1216  clear
+ 1217  docker
+ 1218  docker ps -a
+ 1219  clear
+ 1220  minikube status
+ 1221  sudo nano /etc/apt/sources.list
+ 1222  sudo nano /etc/resolv.conf 
+ 1223  helm list --all
+ 1224  helm repo list
+ 1225  fission
+ 1226  helm uninstall fission -n fission
+ 1227  clear
+ 1228  helm show all
+ 1229  helm show all fission-charts
+ 1230  helm show all fission-chart
+ 1231  helm list --all-namespaces
+ 1232  helm list
+ 1233  kubectl get ns
+ 1234  kubectl delete ns admin-paas paas-ten2 paas-ten3
+ 1235  kubectl get pods
+ 1236  kubectl get pods -a
+ 1237  kubectl get pods --all
+ 1238  kubectl get svc
+ 1239  kubectl get svc -a
+ 1240  kubectl get --help
+ 1241  kubectl get pods -A
+ 1242  kubectl get svc -A
+ 1243  clear
+ 1244  fission
+ 1245  fission check
+ 1246  helm 
+ 1247  helm repo
+ 1248  helm repo list
+ 1249  helm list -A
+ 1250  kubectl delete all --selector=app=fission -n fission
+ 1251  kubectl get all -n fission
+ 1252  clear
+ 1253  fission
+ 1254  which fission
+ 1255  sudo rm -f /usr/local/bin/fission 
+ 1256  fission
+ 1257  clear
+ 1258  helm repo add grafana https://grafana.github.io/helm-charts
+ 1259  helm repo update
+ 1260  helm repo list
+ 1261  kubectl create ns fission --dry-run=client -o yaml | kubectl apply -f -
+ 1262  kubectl create ns admin-paas --dry-run=client -o yaml | kubectl apply -f -
+ 1263  kubectl create -k "github.com/fission/fission/crds/v1?ref=v1.21.0"
+ 1264  helm install fission-prometheus   prometheus-community/kube-prometheus-stack   -n fission   --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false   --set grafana.enabled=true   --set prometheus.enabled=true
+ 1265  helm list -A
+ 1266  helm uninstall fission-prometheus
+ 1267  helm uninstall fission-prometheus -n fission
+ 1268  clear
+ 1269  helm install fission-prometheus   prometheus-community/kube-prometheus-stack   -n fission   --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false   --set grafana.enabled=true   --set prometheus.enabled=true
+ 1270  helm install fission fission-charts/fission-all   -n fission   --set analytics=false   --set routerServiceType=LoadBalancer   --set executorType=poolmgr   --set executor.poolmgr.poolsize=3   --set prometheus.enabled=true   --set serviceMonitor.enabled=true
+ 1271  kubectl get all -A
+ 1272  kubectl get all -A | grep fission
+ 1273  kubectl get ns
+ 1274  kubectl get sa
+ 1275  kubectl delete sa fission-builder fission-fetcher
+ 1276  kubectl get mutatingwebhookconfiguration
+ 1277  kuebctl delete mutatingwebhookconfiguration fission-mutating-webhooks
+ 1278  kubectl delete mutatingwebhookconfiguration fission-mutating-webhooks
+ 1279  kubectl get validatingwebhookconfiguration
+ 1280  kubectl delete validatingwebhookconfiguration fission-validating-webhooks
+ 1281  kubectl delete clusterrole fission-fetcher fission-builder fission-router
+ 1282  kubectl get clusterrole
+ 1283  kubectl get clusterroles
+ 1284  history
+ 1285  clear
+ 1286  minikube ip
+ 1287  kubectl get pods
+ 1288  minikube start
+ 1289  kubectl get clusterroles
+ 1290  kubectl get clusterroles | grep fission
+ 1291  kubectl delete clusterroles fission-v1-21-0-preupgrade
+ 1292  clear
+ 1293  kubectl helm list -A
+ 1294  helm list -A
+ 1295  helm install fission fission-charts/fission-all   -n fission   --set analytics=false   --set routerServiceType=LoadBalancer   --set executorType=poolmgr   --set executor.poolmgr.poolsize=3   --set prometheus.enabled=true   --set serviceMonitor.enabled=true
+ 1296  curl -Lo fission https://github.com/fission/fission/releases/download/v1.21.0/fission-v1.21.0-linux-amd64 && chmod +x fission && sudo mv fission /usr/local/bin/
+ 1297  clear
+ 1298  fission environment create --name python --image ghcr.io/fission/python-env --namespace admin-paas
+ 1299  fission env list -A
+ 1300  fission envlist
+ 1301  fission env list
+ 1302  fission env list -n admin-paas
+ 1303  fission environment create --name python --image ghcr.io/fission/python-env --namespace admin-paas
+ 1304  fission check
+ 1305  kubectl get pods -n fission
+ 1306  minikube start
+ 1307  fission check
+ 1308  kubectl get pods -n fission
+ 1309  kubectl describe pod executor-6b78748f68-8rn7j -n fission
+ 1310  kubectl pod logs executor-6b78748f68-8rn7j -n fission
+ 1311  kubectl logs executor-6b78748f68-8rn7j -n fission
+ 1312  clear
+ 1313  kubectl get pods -n fission
+ 1314  minikube status
+ 1315  kubectl get pods -n fission
+ 1316  kubectl get deployments -n fission
+ 1317  helm list -A
+ 1318  kubectl get ns
+ 1319  minikube start
+ 1320  fission
+ 1321  fission env list
+ 1322  kubectl get ns
+ 1323  fission check
+ 1324  kubectl get pods -n tenant1
+ 1325  fission function list -n tenant1
+ 1326  kubectl get pods -n tenant1 -l environmentName=python
+ 1327  kubectl get cm -n fission
+ 1328  kubectl get cm fission-core -n fission -o yaml
+ 1329  kubectl rollout restart deploy/executor -n fission
+ 1330  kubectl rollout restart deploy/router -n fission
+ 1331  kubectl rollout restart deploy/buildermgr -n fission
+ 1332  kubectl rollout restart deploy/kubewatcher -n fission
+ 1333  kubectl logs -n fission deploy/executor --tail=200 | grep -i "Checking function CRD access"
+ 1334  kubectl get deploy executor -n fission -o yaml | grep -i namespace -A2 -B2
+ 1335  kubectl edit deploy executor -n fission
+ 1336  kubectl edit deploy executor -n fission -o yaml
+ 1337  kubectl rollout restart deploy/executor -n fission
+ 1338  kubectl rollout restart deploy/router -n fission
+ 1339  kubectl rollout restart deploy/buildermgr -n fission
+ 1340  kubectl logs -n fission deploy/executor --tail=200 | grep -i "Checking function CRD access"
+ 1341  kubectl get pods -n fission
+ 1342  kubectl get deploy -n fission
+ 1343  kubectl get deploy executor -n fission -o jsonpath="{.spec.template.spec.containers[*].env}"
+ 1344  kubectl get deploy executor -n fission -o jsonpath="{.spec.template.spec.serviceAccountName}"
+ 1345  kubectl apply -f - <<EOF
+ 1346  apiVersion: rbac.authorization.k8s.io/v1
+ 1347  kind: ClusterRoleBinding
+ 1348  metadata:
+ 1349    name: fission-executor-crd-access
+ 1350  roleRef:
+ 1351    apiGroup: rbac.authorization.k8s.io
+ 1352    kind: ClusterRole
+ 1353    name: fission-crd
+ 1354  subjects:
+ 1355  - kind: ServiceAccount
+ 1356    name: fission-executor
+ 1357    namespace: fission
+ 1358  EOF
+ 1359  kubectl rollout restart deploy/executor -n fission
+ 1360  kubectl logs -n fission deploy/executor --tail=200 | grep -i "Checking function CRD access"
+ 1361  minikube start
+ 1362  fission fn list
+ 1363  kubectl get ns
+ 1364  fission fn list -n tcsns
+ 1365  fission check
+ 1366  kubectl get pods -n fission
+ 1367  kubectl get svc -n fission
+ 1368  fission check
+ 1369  fission fn list -n tcsns
+ 1370  fission fn 
+ 1371  fission fn getmeta --name hellojs -n tcsns
+ 1372  fission fn log --name hellojs -n tcsns
+ 1373  fission env 
+ 1374  fission env list
+ 1375  fission env list -n tcsns
+ 1376  fission env get --name nodejs -n tcsns
+ 1377  fission pods get --name nodejs -n tcsns
+ 1378  fission env pods --name nodejs -n tcsns
+ 1379  fission
+ 1380  fission package
+ 1381  fission package list -n tcsns
+ 1382  fission package info --name hellojs-79a11a89-571a-4a64-9f99-41dc4e481af5 -n tcsns
+ 1383  fission package getdeploy --name hellojs-79a11a89-571a-4a64-9f99-41dc4e481af5 -n tcsns
+ 1384  fission package getsrc --name hellojs-79a11a89-571a-4a64-9f99-41dc4e481af5 -n tcsns
+ 1385  clear
+ 1386  kubectl create ns testns
+ 1387  kubectl edit deploy/executor -n fission -o yaml
+ 1388  kubectl get pods -n fission
+ 1389  kubectl apply -n testns -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fission-executor-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fission-executor
+subjects:
+  - kind: ServiceAccount
+    name: fission-executor
+    namespace: fission
+EOF
+
+ 1390  fission env create --name nodejs --image fission/node-env --namespace tcsns
+ 1391  fission env create --name nodejs --image fission/node-env --namespace testns
+ 1392  ls
+ 1393  ls PaaS/
+ 1394  fission fn create   --name hello   --env nodejs   --code hello.js   --namespace testns
+ 1395  fission route create --function hello --namespace testns --url /testns/hello
+ 1396  kubectl get pods -n testns
+ 1397  kubectl get functiond
+ 1398  kubectl get functions
+ 1399  kubectl get functions --all-namespaces
+ 1400  kubectl get pods -n testns
+ 1401  fission fn test --name hello --namespace testns
+ 1402  kubectl get pods -n testns
+ 1403  kubectl logs -n fission deploy/executor --tail=200
+ 1404  kubectl apply -n testns -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fission-executor-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fission-executor
+subjects:
+  - kind: ServiceAccount
+    name: fission-executor
+    namespace: fission
+EOF
+
+ 1405  kubectl get rolebinding -n testns
+ 1406  kubectl rollout restart deployment executor -n fission
+ 1407  fission fn test --name hello --namespace testns
+ 1408  kubectl get rolebinding -n testns
+ 1409  kubectl logs -n fission deploy/executor --tail=200
+ 1410  fission fn test --name hello --namespace testns
+ 1411  kubectl apply -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fission-executor
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "endpoints", "configmaps", "events", "secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
+
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
+
+  - apiGroups: ["fission.io"]
+    resources: ["functions", "environments", "packages"]
+    verbs: ["get", "list", "watch"]
+
+  - apiGroups: ["extensions"]
+    resources: ["ingresses"]
+    verbs: ["get", "list", "watch"]
+
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+EOF
+
+ 1412  kubectl apply -n testns -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fission-executor-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fission-executor
+subjects:
+  - kind: ServiceAccount
+    name: fission-executor
+    namespace: fission
+EOF
+
+ 1413  kubectl rollout restart deployment executor -n fission
+ 1414  fission fn test --name hello --namespace testns
+ 1415  kubectl get pods -n testns
+ 1416  kubectl logs -n fission deploy/executor --tail=200
+ 1417  kubectl apply -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fission-executor
+rules:
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get", "list", "watch", "delete"]
+EOF
+
+ 1418  kubectl apply -n testns -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: fission-serviceaccount-manager
+rules:
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["get", "list", "create", "update", "delete", "patch"]
+EOF
+
+ 1419  kubectl apply -n testns -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fission-executor-sa-manager-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: fission-serviceaccount-manager
+subjects:
+  - kind: ServiceAccount
+    name: fission-executor
+    namespace: fission
+EOF
+
+ 1420  kubectl rollout restart deployment executor -n fission
+ 1421  kubectl get pods -n testns
+ 1422  fission fn test --name hello --namespace testns
+ 1423  kubectl logs -n fission deploy/executor --tail=200
+ 1424  kubectl get pods
+ 1425  kubectl get pods -n fission
+ 1426  nano fission-multins-roles.yaml
+ 1427  kubectl apply -f fission-multins-role.yaml
+ 1428  kubectl apply -f fission-multins-roles.yaml
+ 1429  kubectl get pods -n fission
+ 1430  kubectl get pods -n fission -l application=fission-executor
+ 1431  kubectl delete pod executor-7b47d6b547-v6d27 -n fission
+ 1432  kubectl get pods -n fission
+ 1433  fission fn create --name hellov2 --env nodejs --namespace testns --code hello.js
+ 1434  fission route create --function hellov2 --namespace testns --url /testns/hellov2
+ 1435  fission fn test --name hellov2 --namespace testns
+ 1436  kubectl logs -n fission deploy/executor --tail=200
+ 1437  clear
+ 1438  nano fission-multins.yaml
+ 1439  kubectl apply -f fission-executor-multins.yaml
+ 1440  kubectl apply -f fission-multins.yaml
+ 1441  kubectl logs -n fission deploy/executor --tail=200
+ 1442  kubectl rollout restart deployment executor -n fission
+ 1443  kubectl logs -n fission deploy/executor --tail=200
+ 1444  nano executor-multins-rbac.yaml
+ 1445  kubectl apply -f executor-multins-rbac.yaml
+ 1446  kubectl get pods -n fission
+ 1447  kubectl delete pod executor-5bfdd98d5-fnk6c -n fission
+ 1448  kubectl get pods -n fission
+ 1449  kubectl get role -n testns
+ 1450  kubectl get rolebinding -n testns
+ 1451  kubectl get sa -n testns
+ 1452  kubectl get pods -n testns
+ 1453  fission fn test --name hellov2 --namespace testns
+ 1454  fission fn test --name hello --namespace testns
+ 1455  kubectl get pods -n fission
+ 1456  kubectl get pods -n testns
+ 1457  kubectl logs -n fission deploy/executor --tail=200
+ 1458  kubectl get svc -n fission
+ 1459  curl http://192.168.49.2:31599/testns/hello
+ 1460  curl http://192.168.49.2:31599/testns/hellov2
+ 1461  fission route list -n testns
+ 1462  kubectl logs -n fission deploy/executor --tail=200
+ 1463  fission fn list
+ 1464  fission fn logs --name hello -n test ns
+ 1465  fission fn logs --name hello -n testns
+ 1466  fission fn logs --name hellov2 -n testns
+ 1467  kubectl get pods -n testns
+ 1468  kubectl get deploy router -n fission -o yaml | grep -A4 FISSION_RESOURCE_NAMESPACES
+ 1469  kubectl get deploy executor -n fission -o yaml | grep -A4 FISSION_RESOURCE_NAMESPACES
+ 1470  kubectl edit deploy/router -n fission -o yaml
+ 1471  kubectl rollout restart deployment router -n fission
+ 1472  kubectl get pods -n fission
+ 1473  fission fn test --name hello --namespace testns
+ 1474  kubectl logs -n fission deploy/router --tail=200
+ 1475  clear
+ 1476  nano fission-router-multins.yaml
+ 1477  kubectl get pods -n fission
+ 1478  kubectl delete pod router-56b6488655-tfcmf -n fission
+ 1479  kubectl get pods -n fission
+ 1480  kubectl apply -f fission-router-multins.yaml
+ 1481  kubectl get pods -n fission
+ 1482  kubectl delete pod router-56b6488655-tfcmf -n fission
+ 1483  kubectl delete pod router-56b6488655-rqj78 -n fission
+ 1484  kubectl get pods -n fission
+ 1485  fission fn test --name hello --namespace testns
+ 1486  history > fission_history_08_12_2025.txt

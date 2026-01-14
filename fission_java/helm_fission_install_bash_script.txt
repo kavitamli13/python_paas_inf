@@ -1,0 +1,127 @@
+#!/bin/bash
+set -e
+
+### -----------------------------
+### CONFIGURATION
+### -----------------------------
+FISSION_NAMESPACE="fission"
+PAASTEN_NAMESPACE="paas-ten2"
+FISSION_VERSION="1.20.0"   # Change if needed
+PYTHON_ENV="python"
+POOLSIZE=3
+
+echo "----------------------------------------"
+echo " Fission Automated Installation Script"
+echo "----------------------------------------"
+
+### -----------------------------
+### 1. Add Helm Repos
+### -----------------------------
+echo "[1/9] Adding Helm repositories..."
+
+helm repo add fission-charts https://fission.github.io/fission-charts/
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+
+helm repo update
+
+### -----------------------------
+### 2. Create namespaces
+### -----------------------------
+echo "[2/9] Creating namespaces..."
+
+kubectl create ns $FISSION_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+kubectl create ns $PAASTEN_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+
+### -----------------------------
+### 3. Install Fission CRDs
+### -----------------------------
+echo "[3/9] Installing Fission CRDs..."
+
+kubectl apply -f https://raw.githubusercontent.com/fission/fission/${FISSION_VERSION}/crds/fission-all-crds.yaml
+
+### -----------------------------
+### 4. Install Prometheus Stack
+### -----------------------------
+echo "[4/9] Installing Prometheus stack for metrics..."
+
+helm install fission-prometheus \
+  prometheus-community/kube-prometheus-stack \
+  -n $FISSION_NAMESPACE \
+  --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false \
+  --set grafana.enabled=true \
+  --set prometheus.enabled=true
+
+### -----------------------------
+### 5. Install Fission via Helm
+### -----------------------------
+echo "[5/9] Installing Fission core components..."
+
+helm install fission fission-charts/fission-all \
+  -n $FISSION_NAMESPACE \
+  --set analytics=false \
+  --set routerServiceType=LoadBalancer \
+  --set executorType=poolmgr \
+  --set executor.poolmgr.poolsize=$POOLSIZE \
+  --set prometheus.enabled=true \
+  --set serviceMonitor.enabled=true
+
+### -----------------------------
+### 6. Create python environment
+### -----------------------------
+echo "[6/9] Creating Python environment..."
+
+fission env create \
+  --name $PYTHON_ENV \
+  --image ghcr.io/fission/python-env \
+  -n $PAASTEN_NAMESPACE
+
+### -----------------------------
+### 7. Wait for Router LoadBalancer
+### -----------------------------
+echo "[7/9] Waiting for router external address..."
+
+sleep 20
+LB_IP=$(kubectl get svc router -n $FISSION_NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+if [[ -z "$LB_IP" ]]; then
+    LB_IP=$(kubectl get svc router -n $FISSION_NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+fi
+
+echo "Router LB = $LB_IP"
+
+### -----------------------------
+### 8. Create sample function
+### -----------------------------
+echo "[8/9] Creating sample Python function..."
+
+cat <<EOF > hello.py
+def main():
+    return "Hello from Fission Python!"
+EOF
+
+fission fn create --name hellopy \
+  --env $PYTHON_ENV \
+  --code hello.py \
+  -n $PAASTEN_NAMESPACE
+
+fission route create --function hellopy --url /hellopy --method GET -n $PAASTEN_NAMESPACE
+
+### -----------------------------
+### 9. Test
+### -----------------------------
+echo "[9/9] Testing function..."
+
+sleep 5
+
+if [[ -n "$LB_IP" ]]; then
+    curl http://$LB_IP/hellopy || true
+else
+    echo "Router LB not ready yet."
+fi
+
+echo "----------------------------------------"
+echo "Fission installation complete!"
+echo "Metrics:   kubectl port-forward svc/fission-prometheus-grafana 3000:80 -n fission"
+echo "Function:  curl http://$LB_IP/hellopy"
+echo "----------------------------------------"
