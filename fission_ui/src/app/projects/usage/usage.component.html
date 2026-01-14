@@ -1,0 +1,66 @@
+
+
+<ul class="breadcrumb pl-0">
+    <ng-container *ngFor="let bread of breadcrumb; let i=index">
+        
+        <li *ngIf="i != breadcrumb.length-1"><a [routerLink]='[bread.url]' [queryParams]="bread.params" routerLinkActive='active'>{{ bread.name }}</a></li>
+        <li *ngIf="i != 0 && i == breadcrumb.length-1"><a> {{bread.name}}</a></li>
+    </ng-container>
+</ul>
+
+<ngb-alert *ngIf="alertMsg" [dismissible]="true"  (close)="alertMsg = null">{{ alertMsg }}</ngb-alert>
+
+<div id="cover-caption">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form mt-1">
+                <div  class="justify-content-center col-12">
+                        <h5 class="display-8 text-truncate">Project Usage</h5>                              
+                     </div>
+                     <!-- <form class="justify-content-center form-inline">
+                        <div class="form-group  mt-2">
+                        <b>Start Time: &nbsp;</b>
+                        <input type="datetime-local"/>
+                        </div>
+                        <div class="form-group  mt-2">
+                            <b>End Time: &nbsp;</b>
+                            <input type="datetime-local"/>
+                            </div>
+                            
+                        </form>
+                        <div class="form-group mt-2">
+                            <button class="btn" style="border: 2px solid rgb(6, 6, 248);" (click)="getProjectUsage()">Get Usage</button>
+                        </div> -->
+                        <div *ngIf="!isprojectUsageListsNull" class="justify-content-center col-12 form-group mt-2">
+                            <b>Total Usage: {{ total }}</b>
+                        </div>
+                     </div>
+                     </div>
+                     </div>
+                     </div>
+                     
+
+
+<div *ngIf="!isprojectUsageListsNull" class="panel-body table-outer mt-1 p-0 rounded-top" style="width: 50%;
+margin-left: auto;
+margin-right: auto;">
+<table>
+    <thead>
+        <tr>
+        <th>Function Name</th>
+        <th>Usage</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr  *ngFor="let projectUsage of paginatedData">
+            <td>{{ projectUsage.functionName }}</td>
+            <td>{{ projectUsage.usage }}</td>
+        </tr>        
+    </tbody>
+</table>
+<ngb-pagination style="float: right;margin-top: 1rem;" [collectionSize]="collectionSize" [(page)]="currentPage" [pageSize]="pageSize" (pageChange)="refreshPagination()">
+</ngb-pagination>
+</div>
+
+
+

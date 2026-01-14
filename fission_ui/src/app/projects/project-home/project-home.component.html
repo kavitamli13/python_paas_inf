@@ -1,0 +1,87 @@
+
+<!-- <ul class="breadcrumb pl-0">
+    <ng-container *ngFor="let item of breadcrumb; let i=index">
+        <li *ngIf="i != breadcrumb.length-1"><a routerLink="/{{item.url}}">{{item.name}}</a></li>
+        <li *ngIf="i != 0 && i == breadcrumb.length-1"><a> {{item.name}}</a></li>
+    </ng-container>
+</ul> -->
+
+
+<div *ngIf="isProjectListNull">
+    <ngb-alert type="info" [dismissible]="false">No projects present. Please create a new one.</ngb-alert>
+</div>
+<div *ngIf="isFunctionListNull && !isProjectListNull">
+    <ngb-alert type="info" [dismissible]="false">No functions present. Please create a new one.</ngb-alert>
+</div>
+
+<div *ngIf="!isProjectListNull" class="text-center mt-3 mb-5" >
+    <button class="btn createBtn enableDelete" [ngClass]="{'enableDelete': isViewerFlag }" title="Create Function" [disabled]="isViewerFlag" routerLink="/projects/function" [queryParams]="{ action: 'createFunction', project:projectName }"><h5 style="margin: 0;">Create function +</h5></button>
+    
+    <!-- <img class="text-center createImg" (click)="isViewerFlag" routerLink="/function/create" [queryParams]="{ action: 'createFunction', project:projectName }" src="assets/images/addfunction.svg" title="Create Function"/> -->
+</div>
+
+
+
+
+
+<!-- Functions Table -->
+<div *ngIf="!isProjectListNull && !isFunctionListNull" >
+    <div class="panel-body table-outer mb-5 p-0 rounded-top" style="margin-left: auto;margin-right: auto;width:80%">
+    <table>
+        <thead>
+            <tr>
+                <th>Function Name</th>
+                <th>Created Time</th>
+                <th>Runtime</th>
+                <th>Status</th>
+                <th>Logs</th>
+                <th>Description</th>
+                <th>Delete</th>
+             </tr>
+        </thead>
+        <tbody>
+            <tr class="mb-5"  *ngFor="let function of paginatedData">
+                <td><a title="close" class="disabled" [ngClass]="{'disabled': isViewerFlag }" routerLink="/projects/function" [queryParams]="{ action: 'deployFunction', project:projectName,function:function.functionName }">{{ function.functionName }}</a></td>
+                <td>{{ function.createdTime | date: 'medium'}}</td>
+                <td>{{ function.runtime }}</td>
+                <td>{{ function.functionStatus }}</td>
+                <td><button title="Function Logs" class="btn createBtn" [disabled]="(function.functionStatus != 'DEPLOYED')" routerLink="/projects/function/logs" [queryParams]="{project:projectName,function:function.functionName }">Logs</button></td>
+                <td><button title="Function Description" class="btn createBtn" [disabled]="(function.functionStatus != 'DEPLOYED')" (click)="open(functionDescription);getFunctionDescription(function)">Description</button></td>
+                <!-- <td><button title="Delete Function" [disabled]="isViewerFlag" (click)="deleteFunction(function)">Delete</button></td> -->
+                <td (click)="isViewerFlag || deleteFunction(function)" class="text-center enableDelete" [ngClass]="{'enableDelete': isViewerFlag }"><img src="../../../assets/images/delete.svg" title="delete function"></td>
+            </tr>
+        </tbody>
+    </table>
+    <ngb-pagination style="float: right;margin-top: 1rem;" [collectionSize]="collectionSize" [(page)]="currentPage" [pageSize]="pageSize" (pageChange)="refreshPagination()">
+    </ngb-pagination>
+</div>
+</div>
+
+
+
+<ng-template #functionDescription let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title text-center" id="functionDescriptionModal">Function Description</h4>
+            <span aria-hidden="true" class="text-white" style="font-size: 160%;"  (click)="modal.dismiss('Cross click')">&times;</span>
+    </div>
+    <div class="modal-body" class="mt-3 mb-4">
+        <div class="container-fluid">
+            <div>
+                <b>Function Invocation Count: &nbsp;</b><span>{{functionDescription.invocationCount != '' ? '0' : functionDescription.invocationCount}}</span><br/> 
+    <b>Function URL:&nbsp;</b> 
+    <a [href]="functionUrl" target="_blank" rel="noopener noreferrer">{{functionUrl}}</a><br />
+    <!-- <span>{{ functionUrl }}</span><br/> -->
+    <b>Function Trigger:&nbsp;</b><span>{{ functionTriggerType }}</span><br/>
+    <b>Scale to Zero:&nbsp;</b><span>{{ scaleToZeroFlag }}</span><br/>
+    <b *ngIf="(functionDescription.annotations != null)">Function Annotations:</b>
+    <div *ngFor="let item of functionAnnotations | keyvalue">
+       <b>{{item.key}}</b> : <span>{{item.value}}</span>
+    </div>    
+            </div>
+        </div>
+    </div>
+  
+</ng-template>
+
+
+

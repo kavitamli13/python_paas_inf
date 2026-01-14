@@ -1,0 +1,75 @@
+
+<ul class="breadcrumb pl-0">
+    <ng-container *ngFor="let bread of breadcrumb; let i=index">
+        
+        <li *ngIf="i != breadcrumb.length-1"><a [routerLink]='[bread.url]' [queryParams]="bread.params" routerLinkActive='active'>{{ bread.name }}</a></li>
+        <li *ngIf="i != 0 && i == breadcrumb.length-1"><a> {{bread.name}}</a></li>
+    </ng-container>
+</ul>
+
+<ngb-alert type="info" *ngIf="emptyLogsFlag" [dismissible]="true" (close)="emptyLogsFlag = false">No Logs Found</ngb-alert>
+<ngb-alert *ngIf="alertMsg" [dismissible]="true"  (close)="alertMsg = null">{{ alertMsg }}</ngb-alert>
+<div id="cover-caption">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form mt-1">
+                <div  class="justify-content-center col-12">
+                        <h5 class="display-8 text-truncate">Function Logs</h5>                              
+                     </div>
+                     <div style="border: 2px solid rgb(3, 47, 99);">
+                <form class="justify-content-center form-inline" [formGroup]="functionLogsForm">
+                    <div class="form-group  mt-2">
+                    <b>Project Name: &nbsp;</b>
+                    <input type="text" formControlName="projectName" id="projectName" class="fadeIn second" name="projectName">
+                    </div>
+                    <div class="form-group mt-2">
+                    <b>Function Name: &nbsp;</b>
+                    <input type="text" formControlName="functionName" id="functionName" class="fadeIn second" name="functionName">
+                </div>
+                <div class="justify-content-center form-group mt-2">
+                    <b class="required-field">Logs limit:</b>&nbsp;
+                    <input type="number" formControlName="limits" id="limits" class="fadeIn second"
+         name="limits" placeholder="limits" [ngClass]="{ 'is-invalid':submitted && f.limits.errors }">
+                    <div *ngIf="submitted && f.limits.errors" class="justify-content-center invalid-feedback form-group">
+                        <div *ngIf="f.limits.errors.required">Please enter limit</div>
+                    </div>
+                </div>
+                <div class="justify-content-center form-group mt-2 mb-1">
+                    <b class="required-field">Get Logs from:</b>&nbsp;
+                    <input type="datetime-local" formControlName="timestamp" id="timestamp" class="fadeIn second"
+         name="timestamp" placeholder="timestamp" [ngClass]="{ 'is-invalid':submitted && f.timestamp.errors }"/>
+                    <div *ngIf="submitted && f.timestamp.errors" class="invalid-feedback">
+                        <div *ngIf="f.timestamp.errors.required">Please select a Time</div>
+                    </div>
+                </div>               
+            </form>       
+                                     
+                <div class="form-group mt-2">
+                    <button class="btn" style="border: 2px solid rgb(6, 6, 248);" (click)="getFunctionLogs()">Get Logs</button>
+                </div>                    
+            </div>         
+            
+        </div>
+                </div>
+                </div>
+                </div>
+                <div *ngIf="!isFunctionLogsNull" class="panel-body table-outer mt-1 p-0 rounded-top" style="width: 85%;
+                margin-left: auto;
+                margin-right: auto;">
+                    <table>
+                        <thead>         
+                            <tr>
+                            <th>Timestamp</th>
+                            <th>Text</th>
+                        </tr>   
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let functionLog of paginatedData">                
+                                <td>{{ functionLog.timestamp | date:'medium'}}</td>
+                                <td>{{ functionLog.text}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ngb-pagination style="float: right;margin-top: 1rem;" [collectionSize]="collectionSize" [(page)]="currentPage" [pageSize]="pageSize" (pageChange)="refreshPagination()">
+                    </ngb-pagination>
+                </div>

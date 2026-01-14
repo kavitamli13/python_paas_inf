@@ -1,0 +1,41 @@
+.table-outer{
+    border: 1px solid #ccc;
+    width: 80%;
+    text-align: center;
+    padding: 10px;
+    table{
+    
+    // margin-bottom: 20px;
+    thead{
+    tr{
+    background: rgba(73,155,234,1);
+    background: -moz-linear-gradient(left, rgba(73,155,234,1) 6%, rgba(61,138,212,1) 19%, rgba(29,89,149,1) 56%, rgba(18,73,128,1) 68%);
+    background: -webkit-gradient(left top, right top, color-stop(6%, rgba(73,155,234,1)), color-stop(19%, rgba(61,138,212,1)), color-stop(56%, rgba(29,89,149,1)), color-stop(68%, rgba(18,73,128,1)));
+    background: -webkit-linear-gradient(left, rgba(73,155,234,1) 6%, rgba(61,138,212,1) 19%, rgba(29,89,149,1) 56%, rgba(18,73,128,1) 68%);
+    background: -o-linear-gradient(left, rgba(73,155,234,1) 6%, rgba(61,138,212,1) 19%, rgba(29,89,149,1) 56%, rgba(18,73,128,1) 68%);
+    background: -ms-linear-gradient(left, rgba(73,155,234,1) 6%, rgba(61,138,212,1) 19%, rgba(29,89,149,1) 56%, rgba(18,73,128,1) 68%);
+    background: linear-gradient(to right, rgba(73,155,234,1) 6%, rgba(61,138,212,1) 19%, rgba(29,89,149,1) 56%, rgba(18,73,128,1) 68%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#124980', GradientType=1 );
+    color: #fff;
+    th{
+        border: 1px solid #ccc;
+    padding: 10px
+    }
+    }
+    }
+    tbody{
+    tr{
+    // border: 1px solid #ccc;
+    td{
+        border: 1px solid #ccc;
+    padding: 10px;
+    }
+    }
+    }
+    
+    }
+    }
+
+    .createBtn{
+        border: 2px solid #023769;
+    }

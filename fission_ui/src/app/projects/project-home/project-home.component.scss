@@ -1,0 +1,14 @@
+
+
+    .createBtn{
+        border: 2px solid #023769;
+    }
+
+    .enableDelete{
+        cursor: not-allowed !important;
+    }
+
+    a.disabled {
+        pointer-events: none;
+        cursor: not-allowed !important;
+      }

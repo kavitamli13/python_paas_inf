@@ -1,0 +1,125 @@
+
+<ngb-alert *ngIf="alertMessage" [dismissible]="true" (close)="alertMessage = null">{{ alertMessage }}</ngb-alert>
+
+<img (click)="open(addUser)" class="text-center" src="../../../assets/images/Add User.svg" title="Add user">
+
+
+
+<ng-template #addUser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title text-center" id="addUserModal">Add user</h4>
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+            <span aria-hidden="true" class="text-white" style="font-size: 160%;"  (click)="modal.dismiss('Cross click')">&times;</span>
+        <!-- </button> -->
+    </div>
+    <div class="modal-body" class="mt-4">
+        <div class="container-fluid">
+            <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label class="required-field" for="userId">Email-id</label>
+                    <input type="text" formControlName="userId" id="userId" class="fadeIn second" name="userId"
+                        placeholder="Email ID" (keypress)="emailClick()" [ngClass]="{ 'is-invalid':submitted && f.userId.errors }"><br />
+                        <div *ngIf="submitted && f.userId.errors" class="invalid-feedback">
+                            <div *ngIf="f.userId.errors.required">Please enter your Email Id</div>
+                            <div *ngIf="f.userId.errors.email">Email must be a valid email address</div>
+                        </div>
+                    <label for="userName">User name</label>
+                    <input type="text" formControlName="name" id="name" class="fadeIn second" name="userId"
+                        placeholder="User name" (keypress)="nameClick()"><br />
+                    <label class="required-field" for="userName">Role</label>
+                    <select  type="text" formControlName="orgRoleId" id="orgRoleId" class="fadeIn second" name="userId"
+                        placeholder="role id" (change)="roleClick()">   
+                        <option value="" disabled>Choose Role</option>
+                        <option *ngFor="let role of userRoles" [value]="role.roleId">{{role.roleName}}</option>
+                    </select>
+                    
+                    <!-- <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Please your name</div>
+                    </div> -->
+                    <div *ngIf="submitted && f.orgRoleId.errors" class="invalid-feedback">
+                        <div *ngIf="f.orgRoleId.errors.required">Please select a role</div>
+                    </div>
+                </div>
+                <div class="form-group text-center">
+                    <button [disabled]="enableLogin" class="btn btn-blue partial-border-rad py-2 px-5 mr-2 resetBtn">Add</button>
+                        <button class="btn btn-blue partial-border-rad py-2 px-5 mr-2 resetBtn" (click)="resetAddUserForm()" >Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Cancel</button>
+    </div> -->
+</ng-template>
+
+
+
+<!-- <div>
+    <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="login">Input User Details</label>
+            <input type="text" formControlName="userId" id="userId" class="fadeIn second" name="userId"
+                placeholder="Email ID" (keypress)="emailClick()">
+            <input type="text" formControlName="name" id="name" class="fadeIn second" name="userId"
+                placeholder="User name" (keypress)="nameClick()">
+            <select type="text" formControlName="orgRoleId" id="orgRoleId" class="fadeIn second" name="userId"
+                placeholder="Role ID" (keypress)="roleClick()">
+                <option disabled>Select a role</option>
+                <option *ngFor="let role of userRoles" [value]="role.id">{{role.name}}</option>
+            </select>
+
+            <div *ngIf="submitted && f.userId.errors" class="invalid-feedback">
+                <div *ngIf="f.userId.errors.required">Please enter your Email Id</div>
+                <div *ngIf="f.userId.errors.email">Email must be a valid email address</div>
+            </div>
+            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">Please your name</div>
+            </div>
+            <div *ngIf="submitted && f.orgRoleId.errors" class="invalid-feedback">
+                <div *ngIf="f.orgRoleId.errors.required">Please select a role</div>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <button [disabled]="loading" class="btn btn-blue partial-border-rad py-2 px-5 mr-2 enableLogin"
+                [ngClass]="{'enableLogin': enableLogin }">Add</button>
+        </div>
+    </form>
+</div> -->
+
+
+
+<!-- users table div -->
+
+<div class="panel-body table-outer mb-5 p-0 rounded-top">
+    <table class="center">
+        <thead>
+            <tr>
+                <th>User Id</th>
+                <th>User name</th>
+                <th>Role</th>
+                <th>Last login</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="mb-5" *ngFor="let user of paginatedData">
+                <td>{{user.userId}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.orgRole}}</td>
+                <td>{{user.lastLogin | date:'medium'}}</td>
+                <td (click)=deleteUser(user) class="text-center"><img src="../../../assets/images/delete.svg" title="delete user"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="d-flex justify-content-between p-2">
+    <ngb-pagination [collectionSize]="collectionSize" [(page)]="currentPage" [pageSize]="pageSize" (pageChange)="refreshPagination()">
+    </ngb-pagination>
+</div>
+
+
+
+
+    

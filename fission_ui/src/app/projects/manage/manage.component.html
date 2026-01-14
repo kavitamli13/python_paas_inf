@@ -1,0 +1,139 @@
+
+
+<ul class="breadcrumb pl-0">
+    <ng-container *ngFor="let bread of breadcrumb; let i=index">
+        
+        <li *ngIf="i != breadcrumb.length-1"><a [routerLink]='[bread.url]' [queryParams]="bread.params" routerLinkActive='active'>{{ bread.name }}</a></li>
+        <li *ngIf="i != 0 && i == breadcrumb.length-1"><a> {{bread.name}}</a></li>
+    </ng-container>
+</ul>
+
+<ngb-alert *ngIf="isProjectUsersNull" >Please add users to the project</ngb-alert >
+<ngb-alert *ngIf="alertMsg" [dismissible]="true"  (close)="alertMsg = null">{{ alertMsg }}</ngb-alert>
+<div id="cover-caption">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form mt-2">
+                <div  class="col-12">
+                    <h5 class="display-8 text-truncate">Project Users</h5>                
+                </div>
+            </div>
+        </div>
+                <div class="justify-content-center mb-4">
+                    <button class="btn" style="border: 2px solid rgb(24, 9, 233); float: inline-start;"   title="Project usage" routerLink="/projects/usage" [queryParams]="{ action: 'usageProject',id:projectName }">Project usage</button>                                       
+                    
+                    <button class="btn" style="border: 2px solid red;float: right;" (click)="deleteProject()" title="Delete Project">Delete project&nbsp;<img  src="../../../assets/images/delete.svg" ></button>
+                    <!-- <img (click)="deleteProject()" class="float-right deleteImg" src="../../../assets/images/delete.svg" title="Delete Project"> -->
+                </div>
+                <div>
+                    <img (click)="open(addUser)" class="ml-10" src="../../../assets/images/Add User.svg" title="Add User to Project">
+                </div>
+            
+    </div>
+</div>
+                 
+
+
+
+<div *ngIf="!isProjectUsersNull" class="table-outer mt-3 p-0 rounded-top" style="width: 85%;
+margin-left: auto;
+margin-right: auto;">
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>User Name</th>
+                <th>Role</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of paginatedData">
+                <td>{{ user.userId }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.projectRoleName }}</td>
+                <td (click)="open(modifyUser);editUserFlag(user)"><img src="../../../assets/images/editRequest.svg"
+                    title="edit user role"></td>
+                <td (click)=deleteUser(user) class="text-center"><img src="../../../assets/images/delete.svg"
+                    title="delete user"></td>
+            </tr>
+        </tbody>
+    </table>
+    <ngb-pagination style="float: right;margin-top: 1rem;" [collectionSize]="collectionSize" [(page)]="currentPage" [pageSize]="pageSize" (pageChange)="refreshPagination()">
+    </ngb-pagination>
+</div>
+
+
+<ng-template #addUser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title text-center" id="addUserModal">Add user</h4>
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"> -->
+            <span aria-hidden="true" class="text-white" style="font-size: 160%;"  (click)="modal.dismiss('Cross click')">&times;</span>
+        <!-- </button> -->
+    </div>
+    <div class="modal-body" class="mt-4">
+        <div class="container-fluid">
+            <form [formGroup]="addUserForm" (ngSubmit)= "onSubmit()">
+                <div class="form-group">
+                    <label class="required-field"  for="userId" >User Id:</label>
+                    <input type="text" formControlName="userId" id="userId" class="fadeIn second"
+                     name="userId" placeholder="email id" (keypress)="emailClick()" [ngClass]="{ 'is-invalid':submitted && f.userId.errors }">
+                    <div *ngIf="submitted && f.userId.errors" class="invalid-feedback">
+                        <div *ngIf="f.userId.errors.required">Please enter Email Id</div>
+                        <div *ngIf="f.userId.errors.email">Email must be a valid email address</div>
+                    </div>
+                </div>
+                <label class="required-field"  for="roleId">Project Role</label>
+                <select formControlName="roleId" (change)="roleSelect()">
+                    <option *ngFor="let role of ProjectRoles" [value]="role.roleId">{{role.roleName}}
+                    </option>
+                 </select>
+                
+                    <div *ngIf="submitted && f.roleId.errors" class="invalid-feedback">
+                        <div *ngIf="f.roleId.errors.required">Please select role</div>
+                    </div>
+                
+                
+                <div class="form-group text-center">
+                    <button [disabled]="enableAdd" class="btn btn-blue addBtn">Add user</button>
+                    <button class="btn btn-blue addBtn float-right" (click)="resetAddUserForm()">Reset</button>
+                </div>
+                </form>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #modifyUser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title text-center" id="modifyUserModal">Modify user role</h4>
+            <span aria-hidden="true" class="text-white" style="font-size: 160%;"  (click)="modal.dismiss('Cross click')">&times;</span>
+    </div>
+    <div class="modal-body" class="mt-4">
+        <div class="container-fluid">
+            <form [formGroup]="editUserForm">
+                <div class="form-group">
+                <label>User Id: </label>
+                <input type="text" formControlName="userId" id="userId"><br/>
+                <label for="roleId">Select Project Role</label>
+                <select formControlName="roleId">
+                    <option *ngFor="let role of ProjectRoles" [value]="role.roleId">{{role.roleName}}
+                    </option>
+                </select>
+                <div *ngIf="submitted && f.roleId.errors" class="invalid-feedback">
+                    <div *ngIf="f.roleId.errors.required">Please select role</div>
+                </div>
+            </div>
+            
+            
+            <div class="form-group text-center">
+                <button class="btn btn-blue addBtn" (click)= "editUserRole()">Modify</button>
+            </div>  
+            </form>
+        </div>
+    </div>   
+</ng-template>
+
+
+
+

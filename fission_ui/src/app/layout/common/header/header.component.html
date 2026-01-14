@@ -1,0 +1,71 @@
+<header class="header bg-dark-gradient">
+  <nav class="navbar navbar-expand-lg navbar-dark pt-0 pb-0">
+   <!-- <div class="container container-fluid">-->
+      <div class="container-fluid">
+      <div class="collapse navbar-collapse top-nav" id="navbarResponsive">
+        <ul *ngIf="isRootUser" class="navbar-nav d-flex align-items-center">
+          <li class="nav-item">
+            <h6 class="row text-white" >Root Dashboard - USER MANAGEMENT</h6>
+          </li>
+        </ul>
+        <ul *ngIf="!isRootUser" class="navbar-nav d-flex align-items-center">
+          <!-- <li class="nav-item"> -->
+            
+            <h6 class="row text-white" >Projects :</h6>
+            <select [(ngModel)]='projectName'  (change)="getProjectObject($event)">
+              <option *ngFor="let project of projectsList">{{project.projectName}}</option>
+          </select>
+          <img *ngIf="isORGAdminFlag" (click)="open(createProject)" class="text-center createImg" src="../../../../assets/images/folderPlus.svg" title="Create Project"/>
+          <!-- </li> -->
+        </ul>
+
+        <ul class="navbar-nav ml-auto right-nav">
+          <li *ngIf="!isRootUser" class="nav-item mr-2">
+              <img *ngIf="projectOwnerFlag" routerLink="/projects/manage" [queryParams]="{ action: 'manageProject', project:projectName }"  class="text-center manageImg" src="assets/images/manage.svg" title="Manage Project"/>
+          </li>
+   
+
+           <li class="nav-item dropdown custom-right-section" ngbDropdown>              
+                <img src="assets/images/ImageGroup.svg" width="70" class="">
+
+            <a href="javascript:void(0)" class="nav-link userText ml-2" ngbDropdownToggle>
+                <span  class="text-white font-weight-bold ">{{userName}}</span>
+              </a>
+              <div class="dropdown-menu-right" ngbDropdownMenu>
+                <a class="dropdown-item">change password</a>
+                <a class="dropdown-item cursor" (click)="logOut()">Log Out</a>
+            </div>           
+
+
+            </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <ng-template #createProject let-modal>
+      <div class="modal-header">
+          <h4 class="modal-title text-center" id="createProjectModal">Create Project</h4>
+              <span aria-hidden="true" class="text-white" style="font-size: 160%;"  (click)="modal.dismiss('Cross click')">&times;</span>
+      </div>
+      <div class="modal-body" class="mt-4">
+          <div class="container-fluid">
+              <form [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
+                  <label class="required-field" for="userId">Project Name</label>
+                  <input type="text" formControlName="projectName" id="projectName" class="fadeIn second" name="project"
+                      placeholder="project name" (keypress)="projectNameClick()" [ngClass]="{ 'is-invalid':submitted && f.projectName.errors }"><br/>
+                      <div *ngIf="submitted && f.projectName.errors" class="invalid-feedback">
+                          <div *ngIf="f.projectName.errors.required">Please enter a Project Name</div>
+                          <div *ngIf="f.projectName.errors.pattern">Project name should not have Captitals,Spaces and Special characters. "_","-" are permitted</div>
+                      </div>
+                      <div class="form-group text-center mt-2">
+                      <button [disabled]="enableCreateProject" class="btn btn-blue createBtn">Create</button>
+                      </div>
+              </form>
+          </div>
+      </div>
+  </ng-template>
+  
+</header>
+
+<ngb-alert *ngIf="alertMessage" [dismissible]="true" (close)="alertMessage = null">{{ alertMessage }}</ngb-alert>

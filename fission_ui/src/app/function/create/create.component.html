@@ -1,0 +1,293 @@
+<ul class="breadcrumb pl-0">
+    <ng-container *ngFor="let bread of breadcrumb; let i=index">
+
+        <li *ngIf="i != breadcrumb.length-1"><a [routerLink]='[bread.url]' [queryParams]="bread.params"
+                routerLinkActive='active'>{{ bread.name }}</a></li>
+        <li *ngIf="i != 0 && i == breadcrumb.length-1"><a> {{bread.name}}</a></li>
+    </ng-container>
+</ul>
+
+<ngb-alert *ngIf="alertMsg" [dismissible]="true" (close)="alertMsg = null">{{ alertMsg }}</ngb-alert>
+
+<div id="cover-caption">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form mt-1">
+                <div class="justify-content-center col-12">
+                    <h5 class="display-10 text-truncate"><b>Function Creation</b></h5>
+                </div>
+
+                <form class="justify-content-center form-inline" [formGroup]="createFunctionForm">
+                    <div class="form-group row mt-2 align-items-center">
+  <label class="col-sm-3 form-label-fixed text-end required-field">
+    Function Type:
+  </label>
+
+  <div class="col-sm-6">
+    <select formControlName="functionType" class="form-control uniform-input">
+      <option value="Code Function">Code Function</option>
+      <option value="Container Image">Container Image</option>
+    </select>
+  </div>
+</div>
+                    <!-- <div class="form-group justify-content-center mt-1">
+							<b class="required-field">Function Name: </b>&nbsp;
+							<input type="text" formControlName="functionName" id="functionName" class="fadeIn second" name="functionName"
+                            placeholder="Function Name" [ngClass]="{ 'is-invalid':submitted && f.functionName.errors }"><br/>
+                            <div *ngIf="submitted && f.functionName.errors" class="form-inline justify-content-center invalid-feedback">
+                                <div *ngIf="f.functionName.errors.required">Please enter a Function Name</div>
+								<div *ngIf="f.functionName.errors.pattern">Function name should not have Captitals,Spaces and Special characters. "_","-" are permitted</div>
+                            </div>
+                        </div>
+                        <div class="justify-content-center form-inline mt-3">
+                        <b class="required-field">Runtime: </b>&nbsp;
+                        <select formControlName="runtime" (change)="changeFileNames($event)" [ngClass]="{ 'is-invalid':submitted && f.runtime.errors }">
+                            <option *ngFor="let eachruntime of functionRuntimes" [value]="eachruntime.id">{{ eachruntime.name }}
+                            </option>
+                        </select>
+                        <div *ngIf="submitted && f.runtime.errors" class="justify-content-center form-inline invalid-feedback">
+                            <div *ngIf="f.runtime.errors.required">Please Select Runtime</div>
+                        </div>                     
+                    </div>  
+						<div class="form-group justify-content-center mt-1">
+							<b class="required-field">Function Image: </b>&nbsp;
+							<input type="text" formControlName="functionImage" id="functionImage" class="fadeIn second" name="functionImage"
+                            placeholder="Function Image" [ngClass]="{ 'is-invalid':submitted && f.functionImage.errors }"><br/>
+                            <div *ngIf="submitted && f.functionImage.errors" class="form-inline justify-content-center invalid-feedback">
+                                <div *ngIf="f.functionImage.errors.required">Please enter a Function Image</div>
+                            </div>
+                        </div>
+                    <div class="justify-content-center form-inline mt-1">
+                        <b class="required-field">Infra Requirement: </b>&nbsp;
+                        <select formControlName="infraRequirement" (change)="changeFileNames($event)" [ngClass]="{ 'is-invalid':submitted && f.infraRequirement.errors }">
+                            <option *ngFor="let eachInfraReq of infraRequirements" [value]="eachInfraReq.id">{{ eachInfraReq.name }}
+                            </option>
+                        </select>
+                        <div *ngIf="submitted && f.infraRequirement.errors" class="justify-content-center form-inline invalid-feedback">
+                            <div *ngIf="f.infraRequirement.errors.required">Please Select Infra Requirement</div>
+                        </div>                     
+                    </div> -->
+
+
+                    <div class="container">
+
+                        <!-- Function Name -->
+                        <div class="form-group row mt-2 align-items-center">
+                            <label class="col-sm-3 form-label-fixed text-end required-field">
+                                Function Name:
+                            </label>
+
+                            <div class="col-sm-6">
+                                <input type="text" formControlName="functionName" class="form-control uniform-input"
+                                    placeholder="Function Name"
+                                    [ngClass]="{ 'is-invalid': submitted && f.functionName.errors }">
+
+                                <div *ngIf="submitted && f.functionName.errors" class="invalid-feedback d-block">
+                                    <div *ngIf="f.functionName.errors.required">Please enter a Function Name</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Runtime -->
+                        <div class="form-group row mt-3 align-items-center">
+                            <label class="col-sm-3 form-label-fixed text-end required-field">
+                                Runtime:
+                            </label>
+
+                            <div class="col-sm-6">
+                                <select formControlName="runtime" class="form-control uniform-input"
+                                    (change)="changeFileNames($event)"
+                                    [ngClass]="{ 'is-invalid': submitted && f.runtime.errors }">
+                                    <option *ngFor="let r of functionRuntimes" [value]="r.id">{{ r.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <!-- Function Image -->
+                        <div class="form-group row mt-3 align-items-center">
+                            <label class="col-sm-3 form-label-fixed text-end required-field">
+                                Function Image:
+                            </label>
+
+                            <div class="col-sm-6">
+                                <input type="text" formControlName="functionImage" class="form-control uniform-input"
+                                    placeholder="Function Image"
+                                    [ngClass]="{ 'is-invalid': submitted && f.functionImage.errors }">
+
+                                <div *ngIf="submitted && f.functionImage.errors" class="invalid-feedback d-block">
+                                    <div *ngIf="f.functionImage.errors.required">Please enter a Function Image</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Infra Requirement -->
+                        <div class="form-group row mt-3 align-items-center">
+                            <label class="col-sm-3 form-label-fixed text-end required-field">
+                                Infra Requirement:
+                            </label>
+
+                            <div class="col-sm-6">
+                                <select formControlName="infraRequirement" class="form-control uniform-input"
+                                    [ngClass]="{ 'is-invalid': submitted && f.infraRequirement.errors }">
+
+                                    <option *ngFor="let i of infraRequirements" [value]="i.id">{{ i.name }}</option>
+                                </select>
+
+                                <div *ngIf="submitted && f.infraRequirement.errors" class="invalid-feedback d-block">
+                                    <div *ngIf="f.infraRequirement.errors.required">Please Select Infra Requirement
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <table>
+                            <thead>
+                                <th>{{ handlerFileName }}</th>
+                                <th>{{ dependencyFileName }}</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><textarea formControlName="handlerFileContent" id="handlerFileContent"
+                                            class="fadeIn second" name="handlerFileContent"
+                                            placeholder="handler file content" rows="10" cols="50"></textarea></td>
+                                    <td><textarea formControlName="dependencyFileContent" id="dependencyFileContent"
+                                            class="fadeIn second" name="dependencyFileContent"
+                                            placeholder="dependency file content" rows="10" cols="50"></textarea></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-group mt-2">
+                        <button class="btn"
+                            style="border: 1px solid rgb(95, 95, 194);background:  rgb(95, 95, 194);color: white;"
+                            (click)="createFunction()" [disabled]="createFunctionFlag">Create Function</button>
+                    </div>
+                </form>
+
+                <div *ngIf="userMsg" class="justify-content-center mt-2">
+                    <hr class="horizontal">
+                    <p>{{ userMsg }}</p>
+                </div>
+
+                <div class="justify-content-center mt-2" *ngIf="createFunctionErrorFlag">
+                    <hr class="horizontal">
+                    <button class="btn" style="border: 2px solid red;"
+                        (click)="viewErrorLog();open(functionErrorLog)">View error log</button>
+                </div>
+                <!-- <div *ngIf="(functionBuildLog != '')" class="justify-content-center col-12">
+                    <textarea cols="150" rows="10">{{ functionBuildLog }}</textarea>
+                </div> -->
+
+                <div *ngIf="deployFlag && !isFunctionAlreadyDeployed" class="justify-content-center col-12 mt-2">
+                    <hr class="horizontal">
+                    <button class="btn" style="background:rgb(2, 2, 75);color: white;"
+                        (click)="open(deployFunctionModal)"><b>Deploy</b></button>
+                </div>
+                <div *ngIf="isFunctionAlreadyDeployed" class="justify-content-center mt-2">
+                    <hr class="horizontal">
+                    <button class="btn" style="border: 2px solid rgb(3, 88, 18);"
+                        (click)="open(functionDescription)">View Function Description</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #deployFunctionModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title text-center" id="deployFunctionModalId">Deploy Function</h4>
+        <span aria-hidden="true" class="text-white" style="font-size: 160%;"
+            (click)="modal.dismiss('Cross click')">&times;</span>
+    </div>
+    <div class="modal-body" class="mt-4">
+        <div class="container-fluid">
+            <form class="justify-content-center" [formGroup]="deployFunctionForm" disabled>
+                <div>
+                    <b>Do you want to scale to zero: &nbsp;</b>
+                    <b>
+                        <input type="radio" value="true" formControlName="scaleToZero">
+                        <span>Yes&nbsp;&nbsp;</span>
+                    </b>
+                    <b>
+                        <input type="radio" value="false" formControlName="scaleToZero">
+                        <span>No</span>
+                    </b>
+                </div>
+                <div class="mt-2">
+                    <b>Choose type of trigger: &nbsp;</b>
+                    <select formControlName="triggerType" (change)="changeTriggerType($event)">
+                        <option *ngFor="let eachtrigger of triggerTypes" [value]="eachtrigger.id">{{ eachtrigger.name }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mt-2" *ngIf="kafkaFlag">
+                    <b>Enter Kafka topic:&nbsp;</b>
+                    <input type="text" formControlName="topic">
+                </div>
+                <div class="mt-2" *ngIf="cronFlag">
+                    <b>Enter CRON Expression:&nbsp;</b>
+                    <input type="text" formControlName="schedule">
+                </div>
+
+            </form>
+            <div class="form-group text-center mt-3">
+                <button class="btn btn-blue partial-border-rad py-2 px-5 mr-2 cancelBtn"
+                    (click)="deployFunction()">Deploy</button>
+                <button class="btn btn-blue partial-border-rad py-2 px-5 mr-2 cancelBtn"
+                    (click)="resetdeployFunctionForm()">Reset</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #functionErrorLog let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title text-center" id="functionErrorLog">Error Log</h4>
+        <span aria-hidden="true" class="text-white" style="font-size: 160%;"
+            (click)="modal.dismiss('Cross click')">&times;</span>
+    </div>
+    <div class="modal-body" class="mt-4">
+        <div class="container-fluid">
+            <div class="justify-content-center col-12 mt-2">
+                <textarea cols="100" rows="15">{{ functionBuildLog }}</textarea>
+            </div>
+            <div class="form-group text-center">
+                <!-- <button class="btn btn-blue partial-border-rad py-2 px-5 mr-2 cancelBtn" (click)="closeModal()" >close</button> -->
+            </div>
+
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #functionDescription let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title text-center" id="functionErrorLog">Function Description</h4>
+        <span aria-hidden="true" class="text-white" style="font-size: 160%;"
+            (click)="modal.dismiss('Cross click')">&times;</span>
+    </div>
+    <div class="modal-body" class="mt-3">
+        <div class="container-fluid">
+            <div class="justify-content-center col-12 mt-2">
+                <b>Function Invocation Count :&nbsp; </b><span>{{invocationCount != '' ? '0' :
+                    invocationCount}}</span><br />
+                <b>Function URL :&nbsp; </b>
+                <a [href]="functionUrl" target="_blank" rel="noopener noreferrer">{{functionUrl}}</a><br />
+                <!-- <span>{{ functionUrl }}</span><br/> -->
+                <b>Function Trigger :&nbsp; </b><span>{{ triggerType }}</span><br />
+                <b>Scale to Zero :&nbsp; </b><span>{{ scaleToZeroFlag }}</span><br />
+                <b *ngIf="(functionAnnotations != null)">Function Annotations:</b>
+                <div *ngFor="let item of functionAnnotations | keyvalue">
+                    <b>{{item.key}}</b> :&nbsp; <span>{{item.value}}</span>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <!-- <button class="btn btn-blue partial-border-rad py-2 px-5 mr-2 cancelBtn" (click)="closeModal()" >close</button> -->
+            </div>
+        </div>
+    </div>
+</ng-template>

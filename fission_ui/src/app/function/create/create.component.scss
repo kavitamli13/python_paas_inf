@@ -1,0 +1,56 @@
+#cover {
+    
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+#cover-caption {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* only used for background overlay not needed for centering */
+form:before {
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    
+    z-index: -1;
+    border-radius: 10px;
+    // pointer-events: none;
+}
+
+.form-label-fixed {
+  white-space: nowrap;
+  color: #000;
+  font-weight: 700;
+}
+
+.uniform-input {
+  width: 100%;
+  min-width: 280px;
+}
+
+
+.horizontal{
+    margin-top: 1rem;
+    width:100%;
+    /* margin-bottom: 1rem; */
+    border: 0;
+    border-top: 1px solid rgb(0 0 0);
+}
+
+.cancelBtn{
+    background:#1d48a9f5;
+    font-weight: bold;
+    // cursor: not-allowed !important;
+    color: white;
+    // font-weight: 100 !important;
+}
