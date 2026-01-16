@@ -89,6 +89,9 @@ helm upgrade --install apisix apisix/apisix \
   \
   --set prometheus.enabled=true \
   --set plugins[0]=prometheus \
+  --set apisix.prometheus.enabled=true \
+  --set apisix.prometheus.port=9091 \
+  --set apisix.prometheus.path=/apisix/prometheus/metrics
   \
   --set nginxConfig.http.client_header_buffer_size=32k \
   --set nginxConfig.http.large_client_header_buffers[0]=8 \
