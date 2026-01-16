@@ -1,7 +1,7 @@
 kubectl create namespace monitoring
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-prom-values.yaml
+cat <<EOF > "prom-helm-values.yaml"
 alertmanager:
   enabled: true
 grafana:
@@ -40,6 +40,7 @@ prometheus:
             requests:
               storage: 50Gi
           storageClassName: cinder-standard
+EOF
 
 helm install monitoring prometheus-community/kube-prometheus-stack   -n monitoring   -f prom-values.yaml
 
